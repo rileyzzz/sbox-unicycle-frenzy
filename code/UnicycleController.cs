@@ -31,6 +31,8 @@ internal partial class UnicycleController : BasePlayerController
 	private float pedalStartPosition;
 	private float pedalTargetPosition;
 	private TimeSince timeSincePedalStart;
+	private bool prevGrounded;
+	private Vector3 prevVelocity;
 
 	public UnicycleController()
 	{
@@ -100,11 +102,20 @@ internal partial class UnicycleController : BasePlayerController
 			var dir = Rotation.Forward;
 			Velocity = dir * spd;
 		}
+
+		prevGrounded = GroundEntity != null;
+		prevVelocity = Velocity;
 	}
 
 	private bool ShouldFall()
 	{
 		var spd = Velocity.WithZ( 0 ).Length;
+
+		if ( GroundEntity != null && !prevGrounded )
+		{
+			if ( prevVelocity.z < -500 ) 
+				return true;
+		}
 
 		if ( GroundEntity != null && spd > 5 )
 		{
@@ -218,7 +229,7 @@ internal partial class UnicycleController : BasePlayerController
 		var spd = Velocity.WithZ( 0 ).Length;
 		spd *= PerfectPedalMultiplier;
 
-		if( Pawn.IsLocalPawn )
+		if ( Pawn.IsLocalPawn )
 		{
 			new Perlin();
 			// sound + particle
