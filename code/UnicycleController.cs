@@ -60,10 +60,8 @@ internal partial class UnicycleController : BasePlayerController
 		Gravity();
 		CheckGround();
 		CheckJump();
+		DoSlope();
 		Friction();
-
-		// todo:	gradually lean in direction we're already leaning
-		//			roll w/ ground normal
 
 		// lerp pedals into place, adding velocity and lean
 		if ( timeSincePedalStart < timeToReachTarget + Time.Delta )
@@ -89,18 +87,18 @@ internal partial class UnicycleController : BasePlayerController
 
 		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * 5f );
 
-		if ( pl.IsServer && ShouldFall() )
+		if ( ShouldFall() )
 		{
-			// check fall in player?
-			pl.Fall();
-			return;
+			if ( pl.IsServer )
+			{
+				pl.Fall();
+			}
 		}
 
 		if ( GroundEntity != null )
 		{
-			var spd = Velocity.WithZ( 0 ).Length;
-			var dir = Rotation.Forward;
-			Velocity = dir * spd;
+			// clip velocity to our look direction, this is how we turn
+			Velocity = ClipVelocity( Velocity, Rotation.Right );
 		}
 
 		prevGrounded = GroundEntity != null;
@@ -113,7 +111,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( GroundEntity != null && !prevGrounded )
 		{
-			if ( prevVelocity.z < -500 ) 
+			if ( prevVelocity.z < -500 )
 				return true;
 		}
 
@@ -149,6 +147,29 @@ internal partial class UnicycleController : BasePlayerController
 
 		Position = mover.Position;
 		Velocity = mover.Velocity;
+	}
+
+	private void DoSlope()
+	{
+		if ( GroundEntity == null ) return;
+		if ( GroundNormal.z.AlmostEqual( 1, .05f ) ) return;
+
+		var heading = Vector3.Dot( GroundNormal, Rotation.Forward.WithZ( 0 ).Normal );
+		var goBack = heading < 0;
+		var dir = Vector3.Cross( GroundNormal, goBack ? Rotation.Left : Rotation.Right ).Normal;
+
+		var left = Vector3.Cross( GroundNormal, Vector3.Up ).Normal;
+		var slopeDir = Vector3.Cross( GroundNormal, left ).Normal;
+		var strength = Math.Abs( Vector3.Dot( dir, slopeDir ) );
+
+		var velocityVector = dir * 0f.LerpTo( 150f, strength );
+
+		Velocity += velocityVector * Time.Delta;
+
+		if ( Debug )
+		{
+			DebugOverlay.Line( Position, Position + velocityVector, Color.Red );
+		}
 	}
 
 	private void CheckGround()
@@ -266,6 +287,23 @@ internal partial class UnicycleController : BasePlayerController
 		float rad = aAngle * MathX.DegreeToRadian( .5f );
 		aAxis *= MathF.Sin( rad );
 		return new Quaternion( aAxis.x, aAxis.y, aAxis.z, MathF.Cos( rad ) );
+	}
+
+	Vector3 ClipVelocity( Vector3 vel, Vector3 norm, float overbounce = 1.0f )
+	{
+		var backoff = Vector3.Dot( vel, norm ) * overbounce;
+		var o = vel - (norm * backoff);
+
+		// garry: I don't totally understand how we could still
+		//		  be travelling towards the norm, but the hl2 code
+		//		  does another check here, so we're going to too.
+		var adjust = Vector3.Dot( o, norm );
+		if ( adjust >= 1.0f ) return o;
+
+		adjust = MathF.Min( adjust, -1.0f );
+		o -= norm * adjust;
+
+		return o;
 	}
 
 }
