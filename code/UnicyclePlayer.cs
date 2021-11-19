@@ -24,6 +24,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Controller = new UnicycleController();
 		Animator = new UnicycleAnimator();
 
+		EnableAllCollisions = true;
 		EnableDrawing = true;
 
 		Unicycle = new ModelEntity();
@@ -63,6 +64,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		ShakeCameraOnClient();
 		RagdollOnClient();
+	}
+
+	public void ClearCheckpoints()
+	{
+		Host.AssertServer();
+
+		checkpoints.Clear();
 	}
 
 	public void Fall()
@@ -113,7 +121,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	private void SetRotationOnClient( Rotation rotation )
 	{
 		overrideRot = true;
-		rotOverride = rotation;	
+		rotOverride = rotation;
 	}
 
 	[ClientRpc]
