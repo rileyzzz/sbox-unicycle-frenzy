@@ -3,7 +3,10 @@
 
     <div class="pedal"><div @ref="LeftPedal" class="fill"></div></div>
     <div class="pedal"><div @ref="RightPedal" class="fill"></div></div>
-    <div class="lean"><div @ref="Lean" class="cube"></div></div>
+    <div class="lean">
+        <div @ref="AbsLean" class="point abs"></div>
+        <div @ref="LocalLean" class="point local"></div>
+    </div>
     <label class="note">
         Bind Q to +iv_prev
         Bind E to +iv_use

@@ -7,7 +7,8 @@ internal class PedalTest : Panel
 
 	public Panel LeftPedal { get; set; }
 	public Panel RightPedal { get; set; }
-	public Panel Lean { get; set; }
+	public Panel AbsLean { get; set; }
+	public Panel LocalLean { get; set; }
 
 	public override void Tick()
 	{
@@ -22,11 +23,19 @@ internal class PedalTest : Panel
 		LeftPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = leftTop * 100f };
 		RightPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = rightTop * 100f };
 
-		var rollAlpha = controller.Lean.roll.LerpInverse( -30f, 30f );
-		var pitchAlpha = controller.Lean.pitch.LerpInverse( 30f, -30f );
+		var absLean = controller.Rotation.Angles();
+		var absRollAlpha = absLean.roll.LerpInverse( -30f, 30f );
+		var absPitchAlpha = absLean.pitch.LerpInverse( 30f, -30f );
 
-		Lean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = rollAlpha * 100f };
-		Lean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = pitchAlpha * 100f };
+		AbsLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = absRollAlpha * 100f };
+		AbsLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = absPitchAlpha * 100f };
+
+		var localLean = controller.Lean;
+		var localRollAlpha = localLean.roll.LerpInverse( -30f, 30f );
+		var localPitchAlpha = localLean.pitch.LerpInverse( 30f, -30f );
+
+		LocalLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = localRollAlpha * 100f };
+		LocalLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = localPitchAlpha * 100f };
 	}
 
 }
