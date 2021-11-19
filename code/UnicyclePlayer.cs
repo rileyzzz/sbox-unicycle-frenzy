@@ -27,6 +27,9 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		EnableAllCollisions = true;
 		EnableDrawing = true;
 
+		var c = Controller as UnicycleController;
+		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, c.Mins, c.Maxs );
+
 		Unicycle = new ModelEntity();
 		Unicycle.SetModel( "models/citizen_props/wheel01.vmdl" );
 		Unicycle.SetParent( this, null, new Transform( 0f, Rotation.Identity, .5f ) );

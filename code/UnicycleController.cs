@@ -33,7 +33,9 @@ internal partial class UnicycleController : BasePlayerController
 	private TimeSince timeSincePedalStart;
 	private bool prevGrounded;
 	private Vector3 prevVelocity;
-	private float lift = 10f; // review..
+
+	public Vector3 Mins => new Vector3( -8, -8, 0 );
+	public Vector3 Maxs => new Vector3( 8, 8, 48 );
 
 	public UnicycleController()
 	{
@@ -113,6 +115,11 @@ internal partial class UnicycleController : BasePlayerController
 		prevVelocity = Velocity;
 	}
 
+	public override TraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0 )
+	{
+		return TraceBBox( start, end, Mins, Maxs, liftFeet );
+	}
+
 	private bool ShouldFall()
 	{
 		var spd = Velocity.WithZ( 0 ).Length;
@@ -145,10 +152,8 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void Move()
 	{
-		var mins = new Vector3( -15, -15, lift );
-		var maxs = new Vector3( +15, +15, 48 );
 		var mover = new MoveHelper( Position, Velocity );
-		mover.Trace = mover.Trace.Size( mins, maxs ).Ignore( Pawn );
+		mover.Trace = mover.Trace.Size( Mins, Maxs ).Ignore( Pawn );
 		mover.MaxStandableAngle = 46.0f;
 		mover.WallBounce = 0f;
 		mover.TryMoveWithStep( Time.Delta, 16 );
@@ -160,7 +165,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void StayOnGround()
 	{
 		var start = Position + Vector3.Up * 2;
-		var end = Position + Vector3.Down * (16 + lift);
+		var end = Position + Vector3.Down * 16;
 
 		// See how far up we can go without getting stuck
 		var trace = TraceBBox( Position, start );
@@ -178,7 +183,7 @@ internal partial class UnicycleController : BasePlayerController
 		// float flDelta = fabs( mv->GetAbsOrigin().z - trace.m_vEndPos.z );
 		// if ( flDelta > 0.5f * DIST_EPSILON )
 
-		Position = trace.EndPos + Vector3.Up * lift;
+		Position = trace.EndPos + Vector3.Up;
 	}
 
 	private void DoSlope()
@@ -206,7 +211,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void CheckGround()
 	{
-		var tr = TraceBBox( Position + Vector3.Up * 2, Position + Vector3.Down * (lift + 4) );
+		var tr = TraceBBox( Position + Vector3.Up * 2, Position + Vector3.Down * 4 );
 
 		if ( !tr.Hit )
 		{
