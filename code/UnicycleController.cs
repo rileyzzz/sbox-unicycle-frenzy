@@ -81,6 +81,12 @@ internal partial class UnicycleController : BasePlayerController
 		Lean = Angles.Lerp( Lean, Angles.Zero, recover * Time.Delta );
 		Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * 40;
 
+		// accumulate lean if they're not centered
+		var absLean = Rotation.Angles();
+		var addPitch = Math.Abs( absLean.pitch ) > 3.5f ? absLean.pitch : 0;
+		var addRoll = Math.Abs( absLean.roll ) > 3.5f ? absLean.roll : 0;
+		Lean += new Angles( addPitch, 0, addRoll ) * Time.Delta;
+
 		// ground normal -> forward -> Lean
 		var targetRot = FromToRotation( Vector3.Up, GroundNormal );
 		targetRot *= Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
