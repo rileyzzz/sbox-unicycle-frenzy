@@ -33,6 +33,7 @@ internal partial class UnicycleController : BasePlayerController
 	private TimeSince timeSincePedalStart;
 	private bool prevGrounded;
 	private Vector3 prevVelocity;
+	private float lift = 10f; // review..
 
 	public UnicycleController()
 	{
@@ -99,6 +100,7 @@ internal partial class UnicycleController : BasePlayerController
 		{
 			// clip velocity to our look direction, this is how we turn
 			Velocity = ClipVelocity( Velocity, Rotation.Right );
+			StayOnGround();
 		}
 
 		prevGrounded = GroundEntity != null;
@@ -137,7 +139,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void Move()
 	{
-		var mins = new Vector3( -15, -15, 0 );
+		var mins = new Vector3( -15, -15, lift );
 		var maxs = new Vector3( +15, +15, 48 );
 		var mover = new MoveHelper( Position, Velocity );
 		mover.Trace = mover.Trace.Size( mins, maxs ).Ignore( Pawn );
@@ -147,6 +149,30 @@ internal partial class UnicycleController : BasePlayerController
 
 		Position = mover.Position;
 		Velocity = mover.Velocity;
+	}
+
+	private void StayOnGround()
+	{
+		var start = Position + Vector3.Up * 2;
+		var end = Position + Vector3.Down * (16 + lift);
+
+		// See how far up we can go without getting stuck
+		var trace = TraceBBox( Position, start );
+		start = trace.EndPos;
+
+		// Now trace down from a known safe position
+		trace = TraceBBox( start, end );
+
+		if ( trace.Fraction <= 0 ) return;
+		if ( trace.Fraction >= 1 ) return;
+		if ( trace.StartedSolid ) return;
+		//if ( Vector3.GetAngle( Vector3.Up, trace.Normal ) > GroundAngle ) return;
+
+		// This is incredibly hacky. The real problem is that trace returning that strange value we can't network over.
+		// float flDelta = fabs( mv->GetAbsOrigin().z - trace.m_vEndPos.z );
+		// if ( flDelta > 0.5f * DIST_EPSILON )
+
+		Position = trace.EndPos + Vector3.Up * lift;
 	}
 
 	private void DoSlope()
@@ -174,7 +200,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void CheckGround()
 	{
-		var tr = TraceBBox( Position, Position + Vector3.Down * 11f );
+		var tr = TraceBBox( Position + Vector3.Up * 2, Position + Vector3.Down * (lift + 4) );
 
 		if ( !tr.Hit )
 		{
@@ -185,7 +211,6 @@ internal partial class UnicycleController : BasePlayerController
 		Velocity = Velocity.WithZ( 0 );
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
-		Position = Position.WithZ( tr.EndPos.z + 10 );
 	}
 
 	private void CheckJump()
