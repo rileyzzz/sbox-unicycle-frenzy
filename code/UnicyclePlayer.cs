@@ -1,5 +1,7 @@
 ﻿using Sandbox;
 using Sandbox.ScreenShake;
+using System.Collections.Generic;
+using System.Linq;
 
 internal partial class UnicyclePlayer : Sandbox.Player
 {
@@ -8,6 +10,9 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	public ModelEntity Unicycle { get; set; }
 
 	private Clothing.Container clothing;
+	private List<CheckpointFlag> checkpoints = new();
+	private Vector3 lastCheckpointPosition;
+	private Rotation lastCheckpointRotation;
 
 	public override void Respawn()
 	{
@@ -38,6 +43,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		}
 
 		clothing.DressEntity( this );
+
+		GotoLastCheckpoint();
 	}
 
 	public override void OnKilled()
@@ -63,6 +70,50 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Host.AssertServer();
 
 		Game.Current.DoPlayerSuicide( Client );
+	}
+
+	public void TrySetCheckpoint( CheckpointFlag checkpoint )
+	{
+		Host.AssertServer();
+
+		if ( checkpoints.Contains( checkpoint ) ) return;
+		checkpoints.Add( checkpoint );
+		lastCheckpointPosition = Position;
+		lastCheckpointRotation = Rotation;
+	}
+
+	public void GotoLastCheckpoint()
+	{
+		Host.AssertServer();
+
+		var cp = checkpoints.LastOrDefault();
+		if ( !cp.IsValid() ) return;
+
+		ResetInterpolation();
+
+		Position = lastCheckpointPosition + Vector3.Up * 10;
+		Rotation = lastCheckpointRotation;
+		Velocity = Vector3.Zero;
+
+		SetRotationOnClient( lastCheckpointRotation );
+	}
+
+	public override void BuildInput( InputBuilder input )
+	{
+		base.BuildInput( input );
+
+		if ( !overrideRot ) return;
+		input.ViewAngles = rotOverride.Angles();
+		overrideRot = false;
+	}
+
+	private bool overrideRot;
+	private Rotation rotOverride;
+	[ClientRpc]
+	private void SetRotationOnClient( Rotation rotation )
+	{
+		overrideRot = true;
+		rotOverride = rotation;	
 	}
 
 	[ClientRpc]
