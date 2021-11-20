@@ -281,10 +281,10 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		if ( Input.Pressed( InputButton.Prev ) && PedalPosition >= -.4f )
+		if ( Input.Pressed( InputButton.Attack1 ) && PedalPosition >= -.4f )
 			SetPedalTarget( -1f, PedalTime, true );
 
-		if ( Input.Pressed( InputButton.Use ) && PedalPosition <= .4f )
+		if ( Input.Pressed( InputButton.Attack2 ) && PedalPosition <= .4f )
 			SetPedalTarget( 1f, PedalTime, true );
 	}
 
