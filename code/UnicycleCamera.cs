@@ -10,7 +10,7 @@ internal class UnicycleCamera : Camera
 		if ( pawn == null ) return;
 
 		var center = pawn.Position + Vector3.Up * 64;
-		var distance = 130.0f * pawn.Scale;
+		var distance = 150.0f * pawn.Scale;
 		var targetPos = center + Input.Rotation.Forward * -distance;
 
 		var tr = Trace.Ray( center, targetPos )

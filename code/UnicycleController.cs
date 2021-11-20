@@ -6,6 +6,9 @@ using Sandbox.ScreenShake;
 internal partial class UnicycleController : BasePlayerController
 {
 
+	[ConVar.Replicated( "debug_uf_turnwithmouse" )]
+	public static bool TurnWithMouse { get; set; } = false;
+
 	[Net, Predicted]
 	public float PedalPosition { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
 	[Net, Predicted]
@@ -34,8 +37,8 @@ internal partial class UnicycleController : BasePlayerController
 	private bool prevGrounded;
 	private Vector3 prevVelocity;
 
-	public Vector3 Mins => new Vector3( -8, -8, 0 );
-	public Vector3 Maxs => new Vector3( 8, 8, 48 );
+	public Vector3 Mins => new( -8, -8, 0 );
+	public Vector3 Maxs => new( 8, 8, 48 );
 
 	public UnicycleController()
 	{
@@ -49,19 +52,17 @@ internal partial class UnicycleController : BasePlayerController
 		EyeRot = Rotation.Identity;
 	}
 
+	private Rotation targetFwd;
 	public override void Simulate()
 	{
 		base.Simulate();
 
 		if ( Pawn is not UnicyclePlayer pl ) return;
-
 		if ( unstuck.TestAndFix() ) return;
 
 		SetTag( "sitting" );
 		TryPedal();
-		Move();
 		Gravity();
-		CheckGround();
 		CheckJump();
 		DoSlope();
 		Friction();
@@ -78,46 +79,56 @@ internal partial class UnicycleController : BasePlayerController
 			MovePedals( delta );
 		}
 
-		// momentum helps keep us straight
-		var recover = Velocity.WithZ( 0 ).Length / 200f;
-		Lean = Angles.Lerp( Lean, Angles.Zero, recover * Time.Delta );
-		Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * 40;
+		// lean from input
+		Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * 80;
 
 		// accumulate lean if they're not centered
 		var absLean = Rotation.Angles();
-		var addPitch = Math.Abs( absLean.pitch ) > 3.5f ? absLean.pitch : 0;
-		var addRoll = Math.Abs( absLean.roll ) > 3.5f ? absLean.roll : 0;
+		var addPitch = Math.Abs( absLean.pitch ) > 1f ? absLean.pitch : 0;
+		var addRoll = Math.Abs( absLean.roll ) > 1f ? absLean.roll : 0;
 		Lean += new Angles( addPitch, 0, addRoll ) * Time.Delta;
 
-		// ground normal -> forward -> Lean
+		// momentum helps keep us straight
+		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
+		Lean = Angles.Lerp( Lean, Angles.Zero, recover * Time.Delta );
+
+		// do rotation if we're in the air or moving a little bit
+		if ( GroundEntity == null || Velocity.Length > 10 )
+		{
+			var inputFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
+			targetFwd = Rotation.Slerp( targetFwd, inputFwd, Time.Delta * 2f );
+		}
+		else
+		{
+			targetFwd = Rotation;
+		}
+
 		var targetRot = FromToRotation( Vector3.Up, GroundNormal );
-		targetRot *= Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
+		targetRot *= targetFwd;
 		targetRot *= Rotation.From( Lean );
 
 		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * 5f );
+		Velocity = ClipVelocity( Velocity, Rotation.Right );
 
-		if ( ShouldFall() )
-		{
-			if ( pl.IsServer )
-			{
-				pl.Fall();
-			}
-		}
+		if ( Velocity.Length.AlmostEqual( 0, 1 ) ) Velocity = 0;
 
-		if ( GroundEntity != null )
-		{
-			// clip velocity to our look direction, this is how we turn
-			Velocity = ClipVelocity( Velocity, Rotation.Right );
-			StayOnGround();
-		}
+		// go
+		Move();
+		CheckGround();
+
+		// fall?
+		if ( pl.IsServer && ShouldFall() )
+			pl.Fall();
 
 		prevGrounded = GroundEntity != null;
 		prevVelocity = Velocity;
-	}
 
-	public override TraceResult TraceBBox( Vector3 start, Vector3 end, float liftFeet = 0 )
-	{
-		return TraceBBox( start, end, Mins, Maxs, liftFeet );
+		if ( Debug )
+		{
+			DebugOverlay.Text( Position, "Speed: " + Velocity.Length );
+			DebugOverlay.Text( Position + Vector3.Down * 3, "Grounded: " + (GroundEntity != null) );
+			DebugOverlay.Text( Position + Vector3.Down * 6, "GroundNormal: " + GroundNormal );
+		}
 	}
 
 	private bool ShouldFall()
@@ -132,7 +143,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( GroundEntity != null && spd > 5 )
 		{
-			var d = MathF.Abs( Vector3.Dot( Rotation.Forward, Velocity.WithZ( 0 ).Normal ) );
+			var d = MathF.Abs( Vector3.Dot( Rotation.Forward, prevVelocity.WithZ( 0 ).Normal ) );
 			if ( d < .8f )
 				return true;
 		}
@@ -154,12 +165,15 @@ internal partial class UnicycleController : BasePlayerController
 	{
 		var mover = new MoveHelper( Position, Velocity );
 		mover.Trace = mover.Trace.Size( Mins, Maxs ).Ignore( Pawn );
-		mover.MaxStandableAngle = 46.0f;
-		mover.WallBounce = 0f;
-		mover.TryMoveWithStep( Time.Delta, 16 );
+		mover.TryMove( Time.Delta );
 
 		Position = mover.Position;
 		Velocity = mover.Velocity;
+
+		if ( GroundEntity != null )
+		{
+			StayOnGround();
+		}
 	}
 
 	private void StayOnGround()
@@ -183,7 +197,7 @@ internal partial class UnicycleController : BasePlayerController
 		// float flDelta = fabs( mv->GetAbsOrigin().z - trace.m_vEndPos.z );
 		// if ( flDelta > 0.5f * DIST_EPSILON )
 
-		Position = trace.EndPos + Vector3.Up;
+		Position = trace.EndPos + Vector3.Up * 5;
 	}
 
 	private void DoSlope()
@@ -199,19 +213,21 @@ internal partial class UnicycleController : BasePlayerController
 		var slopeDir = Vector3.Cross( GroundNormal, left ).Normal;
 		var strength = Math.Abs( Vector3.Dot( dir, slopeDir ) );
 
-		var velocityVector = dir * 0f.LerpTo( 150f, strength );
+		var velocityVector = dir * 0f.LerpTo( 800f, strength );
 
 		Velocity += velocityVector * Time.Delta;
 
 		if ( Debug )
 		{
-			DebugOverlay.Line( Position, Position + velocityVector, Color.Red );
+			DebugOverlay.Line( Position, Position + velocityVector, Color.Red, 5f );
 		}
 	}
 
 	private void CheckGround()
 	{
-		var tr = TraceBBox( Position + Vector3.Up * 2, Position + Vector3.Down * 4 );
+		var tr = Trace.Sphere( 3f, Position + Vector3.Up * 3f , Position + Vector3.Down * 5 )
+			.Ignore( Pawn )
+			.Run();
 
 		if ( !tr.Hit )
 		{
@@ -219,9 +235,13 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		Velocity = Velocity.WithZ( 0 );
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
+
+		if ( !prevGrounded )
+		{
+			StayOnGround();
+		}
 	}
 
 	private void CheckJump()
@@ -283,16 +303,13 @@ internal partial class UnicycleController : BasePlayerController
 		if ( Math.Abs( prevStart ) <= .95f ) return;
 		if ( prevStartTime > PedalTime ) return;
 
-		var spd = Velocity.WithZ( 0 ).Length;
-		spd *= PerfectPedalMultiplier;
-
 		if ( Pawn.IsLocalPawn )
 		{
 			new Perlin();
 			// sound + particle
 		}
 
-		Velocity = Velocity.Normal * spd;
+		Velocity *= PerfectPedalMultiplier;
 	}
 
 	private void MovePedals( float delta )
@@ -306,18 +323,18 @@ internal partial class UnicycleController : BasePlayerController
 		var strengthAlpha = Math.Abs( pedalStartPosition );
 		var strength = MinPedalStrength.LerpTo( MaxPedalStrength, strengthAlpha );
 
-		Lean += new Angles( 0, 0, 30f * Math.Sign( delta ) * Time.Delta );
+		Lean += new Angles( 0, 0, 15f * Math.Sign( delta ) * Time.Delta );
 		Velocity += Rotation.Forward * strength * Math.Abs( delta );
 	}
 
-	public static Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
+	Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
 	{
 		Vector3 axis = Vector3.Cross( aFrom, aTo );
 		float angle = Vector3.GetAngle( aFrom, aTo );
 		return AngleAxis( angle, axis.Normal );
 	}
 
-	public static Rotation AngleAxis( float aAngle, Vector3 aAxis )
+	Rotation AngleAxis( float aAngle, Vector3 aAxis )
 	{
 		aAxis = aAxis.Normal;
 		float rad = aAngle * MathX.DegreeToRadian( .5f );
