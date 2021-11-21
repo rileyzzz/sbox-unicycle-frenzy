@@ -260,7 +260,9 @@ internal partial class UnicycleController : BasePlayerController
 		if ( GroundEntity == null ) return;
 		if ( !Input.Pressed( InputButton.Jump ) ) return;
 
-		Velocity += Rotation.Up * JumpStrength;
+		var jumpDir = Rotation.FromPitch( Rotation.Pitch() ).Up;
+
+		Velocity += jumpDir * JumpStrength;
 		GroundEntity = null;
 	}
 
