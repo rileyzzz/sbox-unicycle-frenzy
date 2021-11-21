@@ -32,6 +32,7 @@ internal partial class UnicycleController : BasePlayerController
 	public float TurnSpeed { get; set; } = 5f;
 
 
+	private string groundSurface;
 	private Unstuck unstuck;
 	private float timeToReachTarget;
 	private float pedalStartPosition;
@@ -54,6 +55,15 @@ internal partial class UnicycleController : BasePlayerController
 		base.FrameSimulate();
 
 		EyeRot = Rotation.Identity;
+
+		if ( Debug )
+		{
+			DebugOverlay.Text( Position, "Speed: " + Velocity.Length );
+			DebugOverlay.Text( Position + Vector3.Down * 3, "Grounded: " + (GroundEntity != null) );
+			DebugOverlay.Text( Position + Vector3.Down * 6, "GroundNormal: " + GroundNormal );
+			DebugOverlay.Text( Position + Vector3.Down * 9, "Surface: " + groundSurface );
+			DebugOverlay.Text( Position + Vector3.Down * 12, "Water Level: " + Pawn.WaterLevel.Fraction );
+		}
 	}
 
 	public override void Simulate()
@@ -106,7 +116,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * TurnSpeed );
 
-		if ( GroundEntity != null )
+		if ( GroundEntity != null && Velocity.Length > 10 )
 			Velocity = ClipVelocity( Velocity, Rotation.Right );
 
 		// go
@@ -118,13 +128,6 @@ internal partial class UnicycleController : BasePlayerController
 
 		prevGrounded = GroundEntity != null;
 		prevVelocity = Velocity;
-
-		if ( Debug )
-		{
-			DebugOverlay.Text( Position, "Speed: " + Velocity.Length );
-			DebugOverlay.Text( Position + Vector3.Down * 3, "Grounded: " + (GroundEntity != null) );
-			DebugOverlay.Text( Position + Vector3.Down * 6, "GroundNormal: " + GroundNormal );
-		}
 	}
 
 	private bool ShouldFall()
@@ -156,6 +159,12 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void Move()
 	{
+		if ( Velocity.Length < 1.0f )
+		{
+			Velocity = Vector3.Zero;
+			return;
+		}
+
 		var mover = new MoveHelper( Position, Velocity );
 		mover.Trace = mover.Trace.Size( Mins, Maxs ).Ignore( Pawn );
 		mover.TryMove( Time.Delta );
@@ -229,6 +238,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
+		groundSurface = tr.Surface.Name;
 
 		if ( !prevGrounded )
 		{
@@ -258,11 +268,29 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void Friction()
 	{
-		// temp shit
-		if ( GroundEntity != null )
+		var speed = Velocity.Length;
+		if ( speed < 0.1f ) return;
+
+		var drop = speed * Time.Delta * .1f * GetSurfaceFriction();
+		var newspeed = Math.Max( speed - drop, 0 );
+
+		if ( newspeed != speed )
 		{
-			Velocity *= .99f;
+			newspeed /= speed;
+			Velocity *= newspeed;
 		}
+	}
+
+	private float GetSurfaceFriction()
+	{
+		// todo: snow, gravel
+		return groundSurface switch
+		{
+			"mud" => 5.0f,
+			"sand" => 20.0f,
+			"dirt" => 2.0f,
+			_ => 1.0f,
+		};
 	}
 
 	private void TryPedal()
@@ -314,9 +342,15 @@ internal partial class UnicycleController : BasePlayerController
 
 		var strengthAlpha = Math.Abs( pedalStartPosition );
 		var strength = MinPedalStrength.LerpTo( MaxPedalStrength, strengthAlpha );
+		var addVelocity = Rotation.Forward * strength * Math.Abs( delta );
 
-		Lean += new Angles( 0, 0, 15f * Math.Sign( delta ) * Time.Delta );
-		Velocity += Rotation.Forward * strength * Math.Abs( delta );
+		if ( Velocity.Length < 1f )
+		{
+			addVelocity = addVelocity.AddClamped( addVelocity * 999f, 1f );
+		}
+
+		Lean += new Angles( 0, 0, 15f * delta );
+		Velocity += addVelocity;
 	}
 
 	Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
