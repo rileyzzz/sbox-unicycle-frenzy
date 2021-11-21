@@ -32,6 +32,8 @@ internal partial class UnicycleController : BasePlayerController
 	public float TurnSpeed { get; set; } = 5f;
 	[Net]
 	public float SlopeSpeed { get; set; } = 1600f;
+	[Net]
+	public float BrakeStrength { get; set; } = 3f;
 
 
 	private string groundSurface;
@@ -77,6 +79,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		SetTag( "sitting" );
 		TryPedal();
+		TryBrake();
 		Gravity();
 		CheckJump();
 		DoSlope();
@@ -265,7 +268,7 @@ internal partial class UnicycleController : BasePlayerController
 	{
 		if ( GroundEntity != null )
 		{
-			if( Vector3.GetAngle(GroundNormal, Vector3.Up) <= 5 )
+			if ( Vector3.GetAngle( GroundNormal, Vector3.Up ) <= 5 )
 			{
 				Velocity = Velocity.WithZ( 0 );
 			}
@@ -315,6 +318,14 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( Input.Pressed( InputButton.Attack2 ) && PedalPosition <= .4f )
 			SetPedalTarget( 1f, PedalTime, true );
+	}
+
+	private void TryBrake()
+	{
+		if ( GroundEntity == null ) return;
+		if ( !Input.Down( InputButton.Duck ) ) return;
+
+		Velocity = Velocity.LerpTo( Vector3.Zero, Time.Delta * BrakeStrength ).WithZ( Velocity.z );
 	}
 
 	private void SetPedalTarget( float target, float timeToReach, bool tryBoost = false )
