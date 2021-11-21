@@ -30,6 +30,8 @@ internal partial class UnicycleController : BasePlayerController
 	public float LeanSpeed { get; set; } = 80f;
 	[Net]
 	public float TurnSpeed { get; set; } = 5f;
+	[Net]
+	public float SlopeSpeed { get; set; } = 1600f;
 
 
 	private string groundSurface;
@@ -63,6 +65,8 @@ internal partial class UnicycleController : BasePlayerController
 			DebugOverlay.Text( Position + Vector3.Down * 6, "GroundNormal: " + GroundNormal );
 			DebugOverlay.Text( Position + Vector3.Down * 9, "Surface: " + groundSurface );
 			DebugOverlay.Text( Position + Vector3.Down * 12, "Water Level: " + Pawn.WaterLevel.Fraction );
+
+			DebugOverlay.Line( Position, Position + Velocity, Color.Yellow );
 		}
 	}
 
@@ -136,7 +140,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( GroundEntity != null && !prevGrounded )
 		{
-			if ( prevVelocity.z < -500 )
+			if ( prevVelocity.z < -1000 )
 				return true;
 		}
 
@@ -150,8 +154,9 @@ internal partial class UnicycleController : BasePlayerController
 		var ang = Rotation.Angles();
 		var aroll = Math.Abs( ang.roll );
 		var apitch = Math.Abs( ang.pitch );
+		var maxLean = GroundEntity != null ? MaxLean : 180;
 
-		if ( aroll > MaxLean || apitch > MaxLean )
+		if ( aroll > maxLean || apitch > maxLean )
 			return true;
 
 		return false;
@@ -167,15 +172,11 @@ internal partial class UnicycleController : BasePlayerController
 
 		var mover = new MoveHelper( Position, Velocity );
 		mover.Trace = mover.Trace.Size( Mins, Maxs ).Ignore( Pawn );
+		mover.MaxStandableAngle = 75f;
 		mover.TryMove( Time.Delta );
 
 		Position = mover.Position;
 		Velocity = mover.Velocity;
-
-		if ( GroundEntity != null )
-		{
-			StayOnGround();
-		}
 	}
 
 	private void StayOnGround()
@@ -205,18 +206,23 @@ internal partial class UnicycleController : BasePlayerController
 	private void DoSlope()
 	{
 		if ( GroundEntity == null ) return;
-		if ( GroundNormal.z.AlmostEqual( 1, .05f ) ) return;
+
+		var slopeAngle = Vector3.GetAngle( GroundNormal, Vector3.Up );
+		if ( slopeAngle == 0 ) return;
 
 		var heading = Vector3.Dot( GroundNormal, Rotation.Forward.WithZ( 0 ).Normal );
-		var goBack = heading < 0;
-		var dir = Vector3.Cross( GroundNormal, goBack ? Rotation.Left : Rotation.Right ).Normal;
+		var dir = Vector3.Cross( GroundNormal, Rotation.Right ).Normal;
 
 		var left = Vector3.Cross( GroundNormal, Vector3.Up ).Normal;
 		var slopeDir = Vector3.Cross( GroundNormal, left ).Normal;
-		var strength = Math.Abs( Vector3.Dot( dir, slopeDir ) );
-		var velocityVector = dir * 0f.LerpTo( 800f, strength );
+		var strengthRatio = slopeAngle / 90f;
+		var strength = SlopeSpeed * strengthRatio * Math.Abs( Vector3.Dot( dir, slopeDir ) );
+		var velocityVector = dir * strength * Math.Sign( heading );
 
-		Velocity += velocityVector * Time.Delta;
+		var spd = Velocity.Length;
+		spd += strength * Time.Delta * Math.Sign( heading );
+
+		Velocity = dir * spd;
 
 		if ( Debug )
 		{
@@ -259,7 +265,10 @@ internal partial class UnicycleController : BasePlayerController
 	{
 		if ( GroundEntity != null )
 		{
-			Velocity = Velocity.WithZ( 0 );
+			if( Vector3.GetAngle(GroundNormal, Vector3.Up) <= 5 )
+			{
+				Velocity = Velocity.WithZ( 0 );
+			}
 			return;
 		}
 
