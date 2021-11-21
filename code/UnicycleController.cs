@@ -23,7 +23,7 @@ internal partial class UnicycleController : BasePlayerController
 	[Net]
 	public float JumpStrength { get; set; } = 300f;
 	[Net]
-	public float PerfectPedalMultiplier { get; set; } = 1.25f;
+	public float PerfectPedalBoost { get; set; } = 50f;
 	[Net]
 	public float MaxLean { get; set; } = 45f;
 	[Net]
@@ -338,7 +338,8 @@ internal partial class UnicycleController : BasePlayerController
 			// sound + particle
 		}
 
-		Velocity *= PerfectPedalMultiplier;
+		var spd = Velocity.Length + PerfectPedalBoost;
+		Velocity *= spd / Velocity.Length;
 	}
 
 	private void MovePedals( float delta )
