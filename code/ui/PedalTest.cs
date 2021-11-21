@@ -19,20 +19,21 @@ internal class PedalTest : Panel
 
 		var leftTop = controller.PedalPosition.LerpInverse( 1f, -1f );
 		var rightTop = controller.PedalPosition.LerpInverse( -1f, 1f );
+		var maxLean = controller.MaxLean;
 
 		LeftPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = leftTop * 100f };
 		RightPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = rightTop * 100f };
 
 		var absLean = controller.Rotation.Angles();
-		var absRollAlpha = absLean.roll.LerpInverse( -30f, 30f );
-		var absPitchAlpha = absLean.pitch.LerpInverse( 30f, -30f );
+		var absRollAlpha = absLean.roll.LerpInverse( -maxLean, maxLean );
+		var absPitchAlpha = absLean.pitch.LerpInverse( maxLean, -maxLean );
 
 		AbsLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = absRollAlpha * 100f };
 		AbsLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = absPitchAlpha * 100f };
 
 		var localLean = controller.Lean;
-		var localRollAlpha = localLean.roll.LerpInverse( -30f, 30f );
-		var localPitchAlpha = localLean.pitch.LerpInverse( 30f, -30f );
+		var localRollAlpha = localLean.roll.LerpInverse( -maxLean, maxLean );
+		var localPitchAlpha = localLean.pitch.LerpInverse( maxLean, -maxLean );
 
 		LocalLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = localRollAlpha * 100f };
 		LocalLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = localPitchAlpha * 100f };

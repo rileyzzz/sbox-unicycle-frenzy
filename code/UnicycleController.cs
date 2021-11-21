@@ -6,9 +6,6 @@ using Sandbox.ScreenShake;
 internal partial class UnicycleController : BasePlayerController
 {
 
-	[ConVar.Replicated( "debug_uf_turnwithmouse" )]
-	public static bool TurnWithMouse { get; set; } = false;
-
 	[Net, Predicted]
 	public float PedalPosition { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
 	[Net, Predicted]
@@ -27,6 +24,12 @@ internal partial class UnicycleController : BasePlayerController
 	public float JumpStrength { get; set; } = 300f;
 	[Net]
 	public float PerfectPedalMultiplier { get; set; } = 1.25f;
+	[Net]
+	public float MaxLean { get; set; } = 45f;
+	[Net]
+	public float LeanSpeed { get; set; } = 80f;
+	[Net]
+	public float TurnSpeed { get; set; } = 5f;
 
 
 	private Unstuck unstuck;
@@ -36,6 +39,7 @@ internal partial class UnicycleController : BasePlayerController
 	private TimeSince timeSincePedalStart;
 	private bool prevGrounded;
 	private Vector3 prevVelocity;
+	private Rotation targetFwd;
 
 	public Vector3 Mins => new( -8, -8, 0 );
 	public Vector3 Maxs => new( 8, 8, 48 );
@@ -52,11 +56,8 @@ internal partial class UnicycleController : BasePlayerController
 		EyeRot = Rotation.Identity;
 	}
 
-	private Rotation targetFwd;
 	public override void Simulate()
 	{
-		base.Simulate();
-
 		if ( Pawn is not UnicyclePlayer pl ) return;
 		if ( unstuck.TestAndFix() ) return;
 
@@ -80,20 +81,16 @@ internal partial class UnicycleController : BasePlayerController
 		}
 
 		// lean from input
-		Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * 80;
-
-		// accumulate lean if they're not centered
-		var absLean = Rotation.Angles();
-		var addPitch = Math.Abs( absLean.pitch ) > 1f ? absLean.pitch : 0;
-		var addRoll = Math.Abs( absLean.roll ) > 1f ? absLean.roll : 0;
-		Lean += new Angles( addPitch, 0, addRoll ) * Time.Delta;
+		Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * LeanSpeed;
 
 		// momentum helps keep us straight
 		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
 		Lean = Angles.Lerp( Lean, Angles.Zero, recover * Time.Delta );
 
 		// do rotation if we're in the air or moving a little bit
-		if ( GroundEntity == null || Velocity.Length > 10 )
+		var spd = Velocity.WithZ( 0 ).Length;
+		var grounded = GroundEntity != null;
+		if ( (!grounded && spd < 50) || (grounded && spd > 20) )
 		{
 			var inputFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
 			targetFwd = Rotation.Slerp( targetFwd, inputFwd, Time.Delta * 2f );
@@ -107,16 +104,15 @@ internal partial class UnicycleController : BasePlayerController
 		targetRot *= targetFwd;
 		targetRot *= Rotation.From( Lean );
 
-		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * 5f );
-		Velocity = ClipVelocity( Velocity, Rotation.Right );
+		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * TurnSpeed );
 
-		if ( Velocity.Length.AlmostEqual( 0, 1 ) ) Velocity = 0;
+		if ( GroundEntity != null )
+			Velocity = ClipVelocity( Velocity, Rotation.Right );
 
 		// go
 		Move();
 		CheckGround();
 
-		// fall?
 		if ( pl.IsServer && ShouldFall() )
 			pl.Fall();
 
@@ -141,21 +137,18 @@ internal partial class UnicycleController : BasePlayerController
 				return true;
 		}
 
-		if ( GroundEntity != null && spd > 5 )
-		{
-			var d = MathF.Abs( Vector3.Dot( Rotation.Forward, prevVelocity.WithZ( 0 ).Normal ) );
-			if ( d < .8f )
-				return true;
-		}
+		//if ( GroundEntity != null && spd > 5 )
+		//{
+		//	var d = MathF.Abs( Vector3.Dot( Rotation.Forward, prevVelocity.WithZ( 0 ).Normal ) );
+		//	if ( d < .8f )
+		//		return true;
+		//}
 
 		var ang = Rotation.Angles();
 		var aroll = Math.Abs( ang.roll );
 		var apitch = Math.Abs( ang.pitch );
 
-		if ( aroll > 30 || apitch > 30 )
-			return true;
-
-		if ( aroll + apitch > 45 )
+		if ( aroll > MaxLean || apitch > MaxLean )
 			return true;
 
 		return false;
@@ -212,7 +205,6 @@ internal partial class UnicycleController : BasePlayerController
 		var left = Vector3.Cross( GroundNormal, Vector3.Up ).Normal;
 		var slopeDir = Vector3.Cross( GroundNormal, left ).Normal;
 		var strength = Math.Abs( Vector3.Dot( dir, slopeDir ) );
-
 		var velocityVector = dir * 0f.LerpTo( 800f, strength );
 
 		Velocity += velocityVector * Time.Delta;
@@ -225,7 +217,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void CheckGround()
 	{
-		var tr = Trace.Sphere( 3f, Position + Vector3.Up * 3f , Position + Vector3.Down * 5 )
+		var tr = Trace.Sphere( 3f, Position + Vector3.Up * 3f, Position + Vector3.Down * 5 )
 			.Ignore( Pawn )
 			.Run();
 
