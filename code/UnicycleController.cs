@@ -6,6 +6,12 @@ using Sandbox.ScreenShake;
 internal partial class UnicycleController : BasePlayerController
 {
 
+	[ConVar.Replicated( "uf_debug_nofall" )]
+	public static bool NoFall { get; set; } = false;
+
+	[ConVar.Replicated( "uf_debug_nolean" )]
+	public static bool NoLean { get; set; } = false;
+
 	[Net, Predicted]
 	public float PedalPosition { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
 	[Net, Predicted]
@@ -31,13 +37,13 @@ internal partial class UnicycleController : BasePlayerController
 	[Net]
 	public float TurnSpeed { get; set; } = 5f;
 	[Net]
-	public float SlopeSpeed { get; set; } = 1600f;
+	public float SlopeSpeed { get; set; } = 800f;
 	[Net]
 	public float BrakeStrength { get; set; } = 3f;
 
 
 	private string groundSurface;
-	private Unstuck unstuck;
+	private UnicycleUnstuck unstuck;
 	private float timeToReachTarget;
 	private float pedalStartPosition;
 	private float pedalTargetPosition;
@@ -107,6 +113,7 @@ internal partial class UnicycleController : BasePlayerController
 		// do rotation if we're in the air or moving a little bit
 		var spd = Velocity.WithZ( 0 ).Length;
 		var grounded = GroundEntity != null;
+
 		if ( (!grounded && spd < 50) || (grounded && spd > 20) )
 		{
 			var inputFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
@@ -117,14 +124,15 @@ internal partial class UnicycleController : BasePlayerController
 			targetFwd = Rotation;
 		}
 
-		var targetRot = FromToRotation( Vector3.Up, GroundNormal );
+		var fromUp = grounded ? Vector3.Up : Rotation.Up;
+		var targetUp = grounded ? GroundNormal : Vector3.Up;
+		var targetRot = FromToRotation( fromUp, targetUp );
 		targetRot *= targetFwd;
-		targetRot *= Rotation.From( Lean );
+		if ( !NoLean ) targetRot *= Rotation.From( Lean );
 
 		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * TurnSpeed );
 
-		if ( GroundEntity != null && Velocity.Length > 10 )
-			Velocity = ClipVelocity( Velocity, Rotation.Right );
+		if ( grounded ) Velocity = ClipVelocity( Velocity, Rotation.Right );
 
 		// go
 		Move();
@@ -133,13 +141,13 @@ internal partial class UnicycleController : BasePlayerController
 		if ( pl.IsServer && ShouldFall() )
 			pl.Fall();
 
-		prevGrounded = GroundEntity != null;
+		prevGrounded = grounded;
 		prevVelocity = Velocity;
 	}
 
 	private bool ShouldFall()
 	{
-		var spd = Velocity.WithZ( 0 ).Length;
+		if ( NoFall ) return false;
 
 		if ( GroundEntity != null && !prevGrounded )
 		{
@@ -147,6 +155,7 @@ internal partial class UnicycleController : BasePlayerController
 				return true;
 		}
 
+		//var spd = Velocity.WithZ( 0 ).Length;
 		//if ( GroundEntity != null && spd > 5 )
 		//{
 		//	var d = MathF.Abs( Vector3.Dot( Rotation.Forward, prevVelocity.WithZ( 0 ).Normal ) );
@@ -222,14 +231,11 @@ internal partial class UnicycleController : BasePlayerController
 		var strength = SlopeSpeed * strengthRatio * Math.Abs( Vector3.Dot( dir, slopeDir ) );
 		var velocityVector = dir * strength * Math.Sign( heading );
 
-		var spd = Velocity.Length;
-		spd += strength * Time.Delta * Math.Sign( heading );
-
-		Velocity = dir * spd;
+		Velocity += velocityVector * Time.Delta;
 
 		if ( Debug )
 		{
-			DebugOverlay.Line( Position, Position + velocityVector, Color.Red, 5f );
+			DebugOverlay.Line( Position, Position + velocityVector, Color.Red );
 		}
 	}
 
@@ -260,9 +266,8 @@ internal partial class UnicycleController : BasePlayerController
 		if ( GroundEntity == null ) return;
 		if ( !Input.Pressed( InputButton.Jump ) ) return;
 
-		var jumpDir = Rotation.FromPitch( Rotation.Pitch() ).Up;
-
-		Velocity += jumpDir * JumpStrength;
+		Lean = Angles.Zero;
+		Velocity += Rotation.Up * JumpStrength;
 		GroundEntity = null;
 	}
 
