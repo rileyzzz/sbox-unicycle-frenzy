@@ -246,6 +246,12 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void CheckGround()
 	{
+		if ( Velocity.z > 140f )
+		{
+			GroundEntity = null;
+			return;
+		}
+
 		var tr = Trace.Sphere( 3f, Position + Vector3.Up * 3f, Position + Vector3.Down * 5 )
 			.Ignore( Pawn )
 			.Run();
