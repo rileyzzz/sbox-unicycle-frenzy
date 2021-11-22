@@ -31,7 +31,7 @@ internal partial class UnicycleController : BasePlayerController
 	[Net]
 	public float PerfectPedalBoost { get; set; } = 50f;
 	[Net]
-	public float MaxLean { get; set; } = 45f;
+	public float MaxLean { get; set; } = 35f;
 	[Net]
 	public float LeanSpeed { get; set; } = 80f;
 	[Net]
@@ -40,6 +40,8 @@ internal partial class UnicycleController : BasePlayerController
 	public float SlopeSpeed { get; set; } = 800f;
 	[Net]
 	public float BrakeStrength { get; set; } = 3f;
+	[Net]
+	public bool UseMomentum { get; set; } = false;
 
 
 	private string groundSurface;
@@ -107,8 +109,11 @@ internal partial class UnicycleController : BasePlayerController
 		Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * LeanSpeed;
 
 		// momentum helps keep us straight
-		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
-		Lean = Angles.Lerp( Lean, Angles.Zero, recover * Time.Delta );
+		if ( UseMomentum )
+		{
+			var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
+			Lean = Angles.Lerp( Lean, Angles.Zero, recover * Time.Delta );
+		}
 
 		// do rotation if we're in the air or moving a little bit
 		var spd = Velocity.WithZ( 0 ).Length;
