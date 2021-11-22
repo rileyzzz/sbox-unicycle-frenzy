@@ -42,6 +42,8 @@ internal partial class UnicycleController : BasePlayerController
 	public float BrakeStrength { get; set; } = 3f;
 	[Net]
 	public bool UseMomentum { get; set; } = false;
+	[Net]
+	public float StopSpeed { get; set; } = 35f;
 
 
 	private string groundSurface;
@@ -137,7 +139,16 @@ internal partial class UnicycleController : BasePlayerController
 
 		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * TurnSpeed );
 
-		if ( grounded ) Velocity = ClipVelocity( Velocity, Rotation.Right );
+		if ( grounded )
+		{
+			Velocity = ClipVelocity( Velocity, Rotation.Right );
+
+			// zero velocity if on flat ground and moving slow
+			if ( Velocity.Length < StopSpeed && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5f )
+			{
+				Velocity = 0;
+			}
+		}
 
 		// go
 		Move();
@@ -181,43 +192,13 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void Move()
 	{
-		if ( Velocity.Length < 1.0f )
-		{
-			Velocity = Vector3.Zero;
-			return;
-		}
-
 		var mover = new MoveHelper( Position, Velocity );
 		mover.Trace = mover.Trace.Size( Mins, Maxs ).Ignore( Pawn );
 		mover.MaxStandableAngle = 75f;
-		mover.TryMove( Time.Delta );
+		mover.TryMoveWithStep( Time.Delta, 12 );
 
 		Position = mover.Position;
 		Velocity = mover.Velocity;
-	}
-
-	private void StayOnGround()
-	{
-		var start = Position + Vector3.Up * 2;
-		var end = Position + Vector3.Down * 16;
-
-		// See how far up we can go without getting stuck
-		var trace = TraceBBox( Position, start );
-		start = trace.EndPos;
-
-		// Now trace down from a known safe position
-		trace = TraceBBox( start, end );
-
-		if ( trace.Fraction <= 0 ) return;
-		if ( trace.Fraction >= 1 ) return;
-		if ( trace.StartedSolid ) return;
-		//if ( Vector3.GetAngle( Vector3.Up, trace.Normal ) > GroundAngle ) return;
-
-		// This is incredibly hacky. The real problem is that trace returning that strange value we can't network over.
-		// float flDelta = fabs( mv->GetAbsOrigin().z - trace.m_vEndPos.z );
-		// if ( flDelta > 0.5f * DIST_EPSILON )
-
-		Position = trace.EndPos + Vector3.Up * 5;
 	}
 
 	private void DoSlope()
@@ -246,15 +227,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void CheckGround()
 	{
-		if ( Velocity.z > 140f )
-		{
-			GroundEntity = null;
-			return;
-		}
-
-		var tr = Trace.Sphere( 3f, Position + Vector3.Up * 3f, Position + Vector3.Down * 5 )
-			.Ignore( Pawn )
-			.Run();
+		var tr = TraceBBox( Position, Position + Vector3.Down * 4f, Mins, Maxs, 3f );
 
 		if ( !tr.Hit )
 		{
@@ -268,7 +241,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( !prevGrounded )
 		{
-			StayOnGround();
+			Position = tr.EndPos + tr.Normal * 3f;
 		}
 	}
 
@@ -277,8 +250,10 @@ internal partial class UnicycleController : BasePlayerController
 		if ( GroundEntity == null ) return;
 		if ( !Input.Pressed( InputButton.Jump ) ) return;
 
+		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
+
 		Lean = Angles.Zero;
-		Velocity += Rotation.Up * JumpStrength;
+		Velocity += up * JumpStrength;
 		GroundEntity = null;
 	}
 
@@ -367,8 +342,7 @@ internal partial class UnicycleController : BasePlayerController
 			// sound + particle
 		}
 
-		var spd = Velocity.Length + PerfectPedalBoost;
-		Velocity *= spd / Velocity.Length;
+		Velocity += Rotation.Forward.WithZ( 0 ) * PerfectPedalBoost;
 	}
 
 	private void MovePedals( float delta )
@@ -383,13 +357,13 @@ internal partial class UnicycleController : BasePlayerController
 		var strength = MinPedalStrength.LerpTo( MaxPedalStrength, strengthAlpha );
 		var addVelocity = Rotation.Forward * strength * Math.Abs( delta );
 
-		if ( Velocity.Length < 1f )
-		{
-			addVelocity = addVelocity.AddClamped( addVelocity * 999f, 1f );
-		}
-
 		Lean += new Angles( 0, 0, 15f * delta );
 		Velocity += addVelocity;
+
+		if ( !Velocity.Length.AlmostEqual( 0 ) && Velocity.Length < StopSpeed )
+		{
+			Velocity *= StopSpeed / Velocity.Length;
+		}
 	}
 
 	Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
