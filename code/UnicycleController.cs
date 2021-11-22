@@ -171,6 +171,20 @@ internal partial class UnicycleController : BasePlayerController
 				return true;
 		}
 
+		if ( prevVelocity.Length > StopSpeed )
+		{
+			var wallTrStart = Position;
+			var wallTrEnd = wallTrStart + prevVelocity * Time.Delta;
+			var tr = TraceBBox( wallTrStart, wallTrEnd, Mins, Maxs );
+
+			if ( tr.Hit && Vector3.GetAngle( tr.Normal, Vector3.Up ) > 85f )
+			{
+				var d = Vector3.Dot( tr.Normal, prevVelocity );
+				if ( d < -.3f )
+					return true;
+			}
+		}
+
 		//var spd = Velocity.WithZ( 0 ).Length;
 		//if ( GroundEntity != null && spd > 5 )
 		//{
