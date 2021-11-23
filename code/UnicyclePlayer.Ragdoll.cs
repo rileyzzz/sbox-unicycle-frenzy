@@ -4,8 +4,7 @@ using Sandbox.ScreenShake;
 internal partial class UnicyclePlayer
 {
 
-	[ClientRpc]
-	private void RagdollOnClient()
+	private void RagdollModel( ModelEntity modelEnt )
 	{
 		var ent = new ModelEntity();
 		ent.Position = Position;
@@ -15,11 +14,12 @@ internal partial class UnicyclePlayer
 		ent.UsePhysicsCollision = true;
 		ent.EnableAllCollisions = true;
 		ent.CollisionGroup = CollisionGroup.Debris;
-		ent.SetModel( GetModelName() );
-		ent.CopyBonesFrom( this );
-		ent.CopyBodyGroups( this );
-		ent.CopyMaterialGroup( this );
-		ent.TakeDecalsFrom( this );
+		ent.SetModel( modelEnt.GetModelName() );
+		ent.CopyBonesFrom( modelEnt );
+		ent.CopyBodyGroups( modelEnt );
+		ent.CopyMaterialGroup( modelEnt );
+		ent.TakeDecalsFrom( modelEnt );
+		ent.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
 		ent.EnableHitboxes = true;
 		ent.EnableAllCollisions = true;
 		ent.SurroundingBoundsMode = SurroundingBoundsType.Physics;
@@ -36,7 +36,7 @@ internal partial class UnicyclePlayer
 		ent.SetInteractsWith( CollisionLayer.WORLD_GEOMETRY );
 		ent.SetInteractsExclude( CollisionLayer.Player | CollisionLayer.Debris );
 
-		foreach ( var child in Children )
+		foreach ( var child in modelEnt.Children )
 		{
 			if ( !child.Tags.Has( "clothes" ) ) continue;
 			if ( child is not ModelEntity e ) continue;
@@ -57,6 +57,13 @@ internal partial class UnicyclePlayer
 		}
 
 		ent.DeleteAsync( 10.0f );
+	}
+
+	[ClientRpc]
+	private void RagdollOnClient()
+	{
+		RagdollModel( this );
+		RagdollModel( Terry );
 	}
 
 }

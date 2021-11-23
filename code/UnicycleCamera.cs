@@ -21,7 +21,7 @@ internal class UnicycleCamera : Camera
 		Position = tr.EndPos;
 		Rotation = Input.Rotation;
 
-		FieldOfView = 70;
+		FieldOfView = 80;
 
 		Viewer = null;
 	}
