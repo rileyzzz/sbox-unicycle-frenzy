@@ -17,21 +17,21 @@ internal class PedalTest : Panel
 		if ( Local.Pawn is not UnicyclePlayer player ) return;
 		if ( player.Controller is not UnicycleController controller ) return;
 
-		var leftTop = controller.PedalPosition.LerpInverse( 1f, -1f );
-		var rightTop = controller.PedalPosition.LerpInverse( -1f, 1f );
+		var leftTop = player.PedalPosition.LerpInverse( 1f, -1f );
+		var rightTop = player.PedalPosition.LerpInverse( -1f, 1f );
 		var maxLean = controller.MaxLean;
 
 		LeftPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = leftTop * 100f };
 		RightPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = rightTop * 100f };
 
-		var absLean = controller.Rotation.Angles();
+		var absLean = player.Rotation.Angles();
 		var absRollAlpha = absLean.roll.LerpInverse( -maxLean, maxLean );
 		var absPitchAlpha = absLean.pitch.LerpInverse( maxLean, -maxLean );
 
 		AbsLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = absRollAlpha * 100f };
 		AbsLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = absPitchAlpha * 100f };
 
-		var localLean = controller.Lean;
+		var localLean = player.Lean;
 		var localRollAlpha = localLean.roll.LerpInverse( -maxLean, maxLean );
 		var localPitchAlpha = localLean.pitch.LerpInverse( maxLean, -maxLean );
 

@@ -12,10 +12,6 @@ internal partial class UnicycleController : BasePlayerController
 	[ConVar.Replicated( "uf_debug_nolean" )]
 	public static bool NoLean { get; set; } = false;
 
-	[Net, Predicted]
-	public float PedalPosition { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
-	[Net, Predicted]
-	public Angles Lean { get; set; }
 	[Net]
 	public float PedalTime { get; set; } = .75f;
 	[Net]
@@ -45,17 +41,12 @@ internal partial class UnicycleController : BasePlayerController
 	[Net]
 	public float StopSpeed { get; set; } = 35f;
 
-
 	private string groundSurface;
-	private UnicycleUnstuck unstuck;
-	private float timeToReachTarget;
-	private float pedalStartPosition;
-	private float pedalTargetPosition;
-	private TimeSince timeSincePedalStart;
 	private bool prevGrounded;
 	private Vector3 prevVelocity;
-	private Rotation targetFwd;
+	private UnicycleUnstuck unstuck;
 
+	private UnicyclePlayer pl => Pawn as UnicyclePlayer;
 	public Vector3 Mins => new( -8, -8, 0 );
 	public Vector3 Maxs => new( 8, 8, 48 );
 
@@ -84,7 +75,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	public override void Simulate()
 	{
-		if ( Pawn is not UnicyclePlayer pl ) return;
+		if ( pl == null ) return;
 		if ( unstuck.TestAndFix() ) return;
 
 		SetTag( "sitting" );
@@ -96,25 +87,25 @@ internal partial class UnicycleController : BasePlayerController
 		Friction();
 
 		// lerp pedals into place, adding velocity and lean
-		if ( timeSincePedalStart < timeToReachTarget + Time.Delta )
+		if ( pl.TimeSincePedalStart < pl.TimeToReachTarget + Time.Delta )
 		{
-			var a = timeSincePedalStart / timeToReachTarget;
+			var a = pl.TimeSincePedalStart / pl.TimeToReachTarget;
 			a = Easing.EaseOut( a );
 
-			var newPosition = pedalStartPosition.LerpTo( pedalTargetPosition, a );
-			var delta = newPosition - PedalPosition;
+			var newPosition = pl.PedalStartPosition.LerpTo( pl.PedalTargetPosition, a );
+			var delta = newPosition - pl.PedalPosition;
 
 			MovePedals( delta );
 		}
 
 		// lean from input
-		Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * LeanSpeed;
+		pl.Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * LeanSpeed;
 
 		// momentum helps keep us straight
 		if ( UseMomentum )
 		{
 			var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
-			Lean = Angles.Lerp( Lean, Angles.Zero, recover * Time.Delta );
+			pl.Lean = Angles.Lerp( pl.Lean, Angles.Zero, recover * Time.Delta );
 		}
 
 		// do rotation if we're in the air or moving a little bit
@@ -124,18 +115,18 @@ internal partial class UnicycleController : BasePlayerController
 		if ( (!grounded && spd < 50) || (grounded && spd > 20) )
 		{
 			var inputFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
-			targetFwd = Rotation.Slerp( targetFwd, inputFwd, Time.Delta * 2f );
+			pl.TargetForward = Rotation.Slerp( pl.TargetForward, inputFwd, Time.Delta * 2f );
 		}
 		else
 		{
-			targetFwd = Rotation;
+			pl.TargetForward = Rotation;
 		}
 
 		var fromUp = grounded ? Vector3.Up : Rotation.Up;
 		var targetUp = grounded ? GroundNormal : Vector3.Up;
 		var targetRot = FromToRotation( fromUp, targetUp );
-		targetRot *= targetFwd;
-		if ( !NoLean ) targetRot *= Rotation.From( Lean );
+		targetRot *= pl.TargetForward;
+		if ( !NoLean ) targetRot *= Rotation.From( pl.Lean );
 
 		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * TurnSpeed );
 
@@ -266,7 +257,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
 
-		Lean = Angles.Zero;
+		pl.Lean = Angles.Zero;
 		Velocity += up * JumpStrength;
 		GroundEntity = null;
 	}
@@ -314,16 +305,16 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void TryPedal()
 	{
-		if ( !PedalPosition.AlmostEqual( 0f, .1f ) && timeSincePedalStart > PedalResetAfter )
+		if ( !pl.PedalPosition.AlmostEqual( 0f, .1f ) && pl.TimeSincePedalStart > PedalResetAfter )
 		{
 			SetPedalTarget( 0f, PedalResetTime );
 			return;
 		}
 
-		if ( Input.Pressed( InputButton.Attack1 ) && PedalPosition >= -.4f )
+		if ( Input.Pressed( InputButton.Attack1 ) && pl.PedalPosition >= -.4f )
 			SetPedalTarget( -1f, PedalTime, true );
 
-		if ( Input.Pressed( InputButton.Attack2 ) && PedalPosition <= .4f )
+		if ( Input.Pressed( InputButton.Attack2 ) && pl.PedalPosition <= .4f )
 			SetPedalTarget( 1f, PedalTime, true );
 	}
 
@@ -337,13 +328,13 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void SetPedalTarget( float target, float timeToReach, bool tryBoost = false )
 	{
-		var prevStart = PedalPosition;
-		var prevStartTime = timeSincePedalStart;
+		var prevStart = pl.PedalPosition;
+		var prevStartTime = pl.TimeSincePedalStart;
 
-		timeSincePedalStart = 0;
-		timeToReachTarget = timeToReach;
-		pedalStartPosition = PedalPosition;
-		pedalTargetPosition = target;
+		pl.TimeSincePedalStart = 0;
+		pl.TimeToReachTarget = timeToReach;
+		pl.PedalStartPosition = pl.PedalPosition;
+		pl.PedalTargetPosition = target;
 
 		if ( !tryBoost ) return;
 		if ( GroundEntity == null ) return;
@@ -361,17 +352,17 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void MovePedals( float delta )
 	{
-		PedalPosition += delta;
+		pl.PedalPosition += delta;
 
 		// don't add velocity when pedals are returning to idle or in air..
-		if ( pedalTargetPosition == 0 ) return;
+		if ( pl.PedalTargetPosition == 0 ) return;
 		if ( GroundEntity == null ) return;
 
-		var strengthAlpha = Math.Abs( pedalStartPosition );
+		var strengthAlpha = Math.Abs( pl.PedalStartPosition );
 		var strength = MinPedalStrength.LerpTo( MaxPedalStrength, strengthAlpha );
 		var addVelocity = Rotation.Forward * strength * Math.Abs( delta );
 
-		Lean += new Angles( 0, 0, 15f * delta );
+		pl.Lean += new Angles( 0, 0, 15f * delta );
 		Velocity += addVelocity;
 
 		if ( !Velocity.Length.AlmostEqual( 0 ) && Velocity.Length < StopSpeed )

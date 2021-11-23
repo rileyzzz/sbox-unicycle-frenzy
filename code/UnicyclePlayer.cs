@@ -9,6 +9,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	[Net]
 	public ModelEntity Unicycle { get; set; }
 
+
 	private Clothing.Container clothing;
 	private List<CheckpointFlag> checkpoints = new();
 	private Vector3 lastCheckpointPosition;
@@ -19,6 +20,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		base.Respawn();
 
 		SetModel( "models/citizen/citizen.vmdl" );
+		ResetMovement();
 
 		Camera = new UnicycleCamera();
 		Controller = new UnicycleController();
@@ -34,6 +36,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Unicycle.SetModel( "models/citizen_props/wheel01.vmdl" );
 		Unicycle.SetParent( this, null, new Transform( 0f, Rotation.Identity, .5f ) );
 		Unicycle.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+		
 
 		if ( clothing == null )
 		{
@@ -76,13 +79,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		checkpoints.Clear();
 	}
 
-	public void Fall()
-	{
-		Host.AssertServer();
-
-		Game.Current.DoPlayerSuicide( Client );
-	}
-
 	public void TrySetCheckpoint( CheckpointFlag checkpoint )
 	{
 		Host.AssertServer();
@@ -107,24 +103,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Velocity = Vector3.Zero;
 
 		SetRotationOnClient( lastCheckpointRotation );
-	}
-
-	public override void BuildInput( InputBuilder input )
-	{
-		base.BuildInput( input );
-
-		if ( !overrideRot ) return;
-		input.ViewAngles = rotOverride.Angles();
-		overrideRot = false;
-	}
-
-	private bool overrideRot;
-	private Rotation rotOverride;
-	[ClientRpc]
-	private void SetRotationOnClient( Rotation rotation )
-	{
-		overrideRot = true;
-		rotOverride = rotation;
 	}
 
 	[ClientRpc]
