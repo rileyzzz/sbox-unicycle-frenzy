@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using Sandbox.ScreenShake;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,12 +7,11 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 	[Net]
 	public ModelEntity Unicycle { get; set; }
+	[Net]
+	public List<Checkpoint> Checkpoints { get; set; } = new();
 
 
 	private Clothing.Container clothing;
-	private List<CheckpointFlag> checkpoints = new();
-	private Vector3 lastCheckpointPosition;
-	private Rotation lastCheckpointRotation;
 
 	public override void Respawn()
 	{
@@ -68,7 +66,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		Camera = new SpectateRagdollCamera();
 
-		ShakeCameraOnClient();
 		RagdollOnClient();
 	}
 
@@ -76,96 +73,33 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	{
 		Host.AssertServer();
 
-		checkpoints.Clear();
+		Checkpoints.Clear();
 	}
 
-	public void TrySetCheckpoint( CheckpointFlag checkpoint )
+	public void TrySetCheckpoint( Checkpoint checkpoint )
 	{
 		Host.AssertServer();
 
-		if ( checkpoints.Contains( checkpoint ) ) return;
-		checkpoints.Add( checkpoint );
-		lastCheckpointPosition = Position;
-		lastCheckpointRotation = Rotation;
+		if ( Checkpoints.Contains( checkpoint ) ) return;
+		Checkpoints.Add( checkpoint );
 	}
 
 	public void GotoLastCheckpoint()
 	{
 		Host.AssertServer();
 
-		var cp = checkpoints.LastOrDefault();
+		var cp = Checkpoints.LastOrDefault();
 		if ( !cp.IsValid() ) return;
 
 		ResetInterpolation();
+		ResetMovement();
 
-		Position = lastCheckpointPosition + Vector3.Up * 10;
-		Rotation = lastCheckpointRotation;
+		cp.GetSpawnPoint( out Vector3 position, out Rotation rotation );
+		Position = position + Vector3.Up * 5;
+		Rotation = rotation;
 		Velocity = Vector3.Zero;
 
-		SetRotationOnClient( lastCheckpointRotation );
-	}
-
-	[ClientRpc]
-	private void ShakeCameraOnClient()
-	{
-		if ( IsLocalPawn )
-		{
-			new Perlin( 2f, 2, 3 );
-		}
-	}
-
-	[ClientRpc]
-	private void RagdollOnClient()
-	{
-		var ent = new ModelEntity();
-		ent.Position = Position;
-		ent.Rotation = Rotation;
-		ent.Scale = Scale;
-		ent.MoveType = MoveType.Physics;
-		ent.UsePhysicsCollision = true;
-		ent.EnableAllCollisions = true;
-		ent.CollisionGroup = CollisionGroup.Debris;
-		ent.SetModel( GetModelName() );
-		ent.CopyBonesFrom( this );
-		ent.CopyBodyGroups( this );
-		ent.CopyMaterialGroup( this );
-		ent.TakeDecalsFrom( this );
-		ent.EnableHitboxes = true;
-		ent.EnableAllCollisions = true;
-		ent.SurroundingBoundsMode = SurroundingBoundsType.Physics;
-		ent.RenderColor = RenderColor;
-		ent.PhysicsGroup.Velocity = Velocity;
-
-		if ( Local.Pawn == this )
-		{
-			//ent.EnableDrawing = false; wtf
-		}
-
-		ent.SetInteractsAs( CollisionLayer.Debris );
-		ent.SetInteractsWith( CollisionLayer.WORLD_GEOMETRY );
-		ent.SetInteractsExclude( CollisionLayer.Player | CollisionLayer.Debris );
-
-		foreach ( var child in Children )
-		{
-			if ( !child.Tags.Has( "clothes" ) ) continue;
-			if ( child is not ModelEntity e ) continue;
-
-			var model = e.GetModelName();
-
-			var clothing = new ModelEntity();
-			clothing.SetModel( model );
-			clothing.SetParent( ent, true );
-			clothing.RenderColor = e.RenderColor;
-			clothing.CopyBodyGroups( e );
-			clothing.CopyMaterialGroup( e );
-		}
-
-		if ( this is Player pl )
-		{
-			pl.Corpse = ent;
-		}
-
-		ent.DeleteAsync( 10.0f );
+		SetRotationOnClient( rotation );
 	}
 
 }

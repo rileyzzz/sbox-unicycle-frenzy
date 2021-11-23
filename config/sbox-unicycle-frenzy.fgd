@@ -14,14 +14,20 @@
 ]
 
 //
-// CheckpointFlag
+// Checkpoint
 //
-@PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/checkpoint_flag.vmdl" ) = uf_checkpoint : "Sets a checkpoint when you come near it"
+@PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/editor/playerstart.vmdl", fixedbounds, lightModeTint, "255 100 255", "255 255 255" ) box_world_aligned( "mins", "maxs" ) 
+metadata
+{
+	entity_tool_name = "Player Checkpoint"
+	entity_tool_group = "Unicycle Frenzy"
+	entity_tool_tip = "Defines a checkpoint where the player will respawn after falling"
+}
+= uf_checkpoint : "Defines a checkpoint where the player will respawn after falling"
 [
-	radius(float) : "Checkpoint Radius" : "100" : ""
+	mins(vector) : "Checkpoint mins" : "-75 -75 0" : ""
+	maxs(vector) : "Checkpoint maxs" : "75 75 100" : ""
 	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
-
-	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
 ]
 
 //
