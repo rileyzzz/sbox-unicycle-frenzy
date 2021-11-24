@@ -40,7 +40,7 @@ internal partial class Checkpoint : Entity
 		{
 			if ( player is not UnicyclePlayer pl ) continue;
 			var bounds = new BBox( Position + Mins, Position + Maxs );
-			if ( !bounds.Contains( pl.WorldSpaceBounds ) ) continue;
+			if ( !bounds.Overlaps( pl.WorldSpaceBounds ) ) continue;
 
 			pl.TrySetCheckpoint( this );
 		}
