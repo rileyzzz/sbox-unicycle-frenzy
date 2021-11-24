@@ -246,7 +246,7 @@ internal partial class UnicycleController : BasePlayerController
 		GroundNormal = tr.Normal;
 		groundSurface = tr.Surface.Name;
 
-		Position = tr.EndPos + tr.Normal * 1f;
+		Position = tr.EndPos + Vector3.Up * 1f;
 	}
 
 	private void CheckJump()
