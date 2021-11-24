@@ -63,11 +63,13 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( Debug )
 		{
+			var intpos = new Vector3( (int)Position.x, (int)Position.y, (int)Position.z );
 			DebugOverlay.Text( Position, "Speed: " + Velocity.Length );
-			DebugOverlay.Text( Position + Vector3.Down * 3, "Grounded: " + (GroundEntity != null) );
-			DebugOverlay.Text( Position + Vector3.Down * 6, "GroundNormal: " + GroundNormal );
-			DebugOverlay.Text( Position + Vector3.Down * 9, "Surface: " + groundSurface );
-			DebugOverlay.Text( Position + Vector3.Down * 12, "Water Level: " + Pawn.WaterLevel.Fraction );
+			DebugOverlay.Text( Position + Vector3.Down * 3, "Position: " + intpos );
+			DebugOverlay.Text( Position + Vector3.Down * 6, "Grounded: " + (GroundEntity != null) );
+			DebugOverlay.Text( Position + Vector3.Down * 9, "GroundNormal: " + GroundNormal );
+			DebugOverlay.Text( Position + Vector3.Down * 12, "Surface: " + groundSurface );
+			DebugOverlay.Text( Position + Vector3.Down * 15, "Water Level: " + Pawn.WaterLevel.Fraction );
 
 			DebugOverlay.Line( Position, Position + Velocity, Color.Yellow );
 		}
@@ -244,10 +246,7 @@ internal partial class UnicycleController : BasePlayerController
 		GroundNormal = tr.Normal;
 		groundSurface = tr.Surface.Name;
 
-		if ( !prevGrounded )
-		{
-			Position = tr.EndPos + tr.Normal * 3f;
-		}
+		Position = tr.EndPos + tr.Normal * 1f;
 	}
 
 	private void CheckJump()
