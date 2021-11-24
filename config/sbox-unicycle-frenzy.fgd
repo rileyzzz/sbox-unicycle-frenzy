@@ -67,6 +67,23 @@ metadata
 ]
 
 //
+// LeaderboardPost
+//
+@PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/leaderboard_post.vmdl" ) 
+metadata
+{
+	entity_tool_name = "Leaderboard Post"
+	entity_tool_group = "Unicycle Frenzy"
+	entity_tool_tip = "Shows a leaderboard in-game"
+}
+= uf_leaderboard : "Shows a leaderboard in-game"
+[
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
+//
 // ResetProgressTrigger
 //
 @SolidClass base(BaseProperties_sbox_unicycle_frenzy) tags( Trigger ) 
