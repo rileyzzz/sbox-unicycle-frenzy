@@ -21,6 +21,7 @@ internal partial class UnicyclePlayer
 	[Net, Predicted]
 	public Rotation TargetForward { get; set; }
 
+	private bool overrideRot;
 	private Rotation rotOverride;
 
 	public void Fall()
@@ -45,14 +46,15 @@ internal partial class UnicyclePlayer
 	{
 		base.BuildInput( input );
 
-		if ( rotOverride == Quaternion.Identity ) return;
+		if ( !overrideRot ) return;
 		input.ViewAngles = rotOverride.Angles();
-		rotOverride = Quaternion.Identity;
+		overrideRot = false;
 	}
 
 	[ClientRpc]
 	private void SetRotationOnClient( Rotation rotation )
 	{
+		overrideRot = true;
 		rotOverride = rotation;
 	}
 
