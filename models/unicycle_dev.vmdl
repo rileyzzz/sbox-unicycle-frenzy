@@ -69,20 +69,65 @@
 					{
 						_class = "PhysicsShapeCylinder"
 						parent_bone = "Wheel"
-						surface_prop = "default"
+						surface_prop = "rubber"
 						collision_prop = "default"
 						radius = 12.478203
-						point0 = [ 1.978808, 0.0, 0.0 ]
-						point1 = [ -1.875623, 0.0, 0.0 ]
+						point0 = [ 0.0, 1.97881, 0.0 ]
+						point1 = [ 0.0, -1.87562, 0.0 ]
 					},
 					{
 						_class = "PhysicsShapeBox"
 						parent_bone = "Root"
+						surface_prop = "plastic"
+						collision_prop = "default"
+						origin = [ 0.0, 6.481153, -37.049946 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						dimensions = [ 10.0, 16.62484, 4.911106 ]
+					},
+					{
+						_class = "PhysicsShapeCapsule"
+						parent_bone = "Root"
+						surface_prop = "metal"
+						collision_prop = "default"
+						radius = 4.208615
+						point0 = [ 0.092907, 7.323256, -30.307583 ]
+						point1 = [ 0.092907, 7.323256, -28.575573 ]
+					},
+					{
+						_class = "PhysicsShapeCapsule"
+						parent_bone = "Root"
+						surface_prop = "metal"
+						collision_prop = "default"
+						radius = 1.209281
+						point0 = [ 3.524197, 7.052279, -25.291306 ]
+						point1 = [ 3.524197, 7.052279, -12.650721 ]
+					},
+					{
+						_class = "PhysicsShapeCapsule"
+						parent_bone = "Root"
+						surface_prop = "metal"
+						collision_prop = "default"
+						radius = 1.209281
+						point0 = [ -3.402739, 7.289431, -25.092741 ]
+						point1 = [ -3.402739, 7.289431, -12.452156 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = "Pedals"
 						surface_prop = "default"
 						collision_prop = "default"
-						origin = [ 0.0, 3.475934, -34.937901 ]
-						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 10.0, 16.951866, 20.324188 ]
+						origin = [ -0.105281, -3.179623, 2.880862 ]
+						angles = [ -0.000008, -0.000045, -31.190134 ]
+						dimensions = [ 3.613734, 4.51153, 7.385475 ]
+					},
+					{
+						_class = "PhysicsShapeBox"
+						parent_bone = "Pedals"
+						surface_prop = "default"
+						collision_prop = "default"
+						origin = [ -0.105272, -17.08847, -3.731661 ]
+						angles = [ -0.000008, -0.000045, -31.190134 ]
+						dimensions = [ 3.613734, 4.51153, 8.815107 ]
 					},
 				]
 			},
