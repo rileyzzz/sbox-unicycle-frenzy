@@ -29,9 +29,11 @@ internal partial class UnicycleController : BasePlayerController
 	[Net]
 	public float MaxLean { get; set; } = 35f;
 	[Net]
-	public float LeanSpeed { get; set; } = 80f;
+	public float LeanSpeed { get; set; } = 160f;
 	[Net]
-	public float TurnSpeed { get; set; } = 5f;
+	public float GroundTurnSpeed { get; set; } = 2f;
+	[Net]
+	public float AirTurnSpeed { get; set; } = 1.5f;
 	[Net]
 	public float SlopeSpeed { get; set; } = 800f;
 	[Net]
@@ -40,6 +42,8 @@ internal partial class UnicycleController : BasePlayerController
 	public bool UseMomentum { get; set; } = false;
 	[Net]
 	public float StopSpeed { get; set; } = 35f;
+	[Net]
+	public float SlopeTipStrength { get; set; } = 2.5f;
 
 	private string groundSurface;
 	private bool prevGrounded;
@@ -101,46 +105,58 @@ internal partial class UnicycleController : BasePlayerController
 		}
 
 		// lean from input
-		pl.Lean += new Angles( Input.Forward, 0, -Input.Left ) * Time.Delta * LeanSpeed;
+		var addlean = new Angles( Input.Forward, 0, -Input.Left ) * LeanSpeed * Time.Delta;
+		var newAngles = Rotation.Angles() + addlean;
+		Rotation = Rotation.From( newAngles );
 
-		// momentum helps keep us straight
-		if ( UseMomentum )
-		{
-			var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
-			pl.Lean = Angles.Lerp( pl.Lean, Angles.Zero, recover * Time.Delta );
-		}
+		// recover tilt from momentum and input
+		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
+		var tilt = pl.Tilt;
+		tilt = Angles.Lerp( tilt, Angles.Zero, recover * Time.Delta );
 
-		// do rotation if we're in the air or moving a little bit
+		// uneven ground will make us tip if we're not attentive
+		var dir = Vector3.Cross( GroundNormal, Rotation.Right ).Normal;
+		var slopeAng = Rotation.LookAt( dir, Vector3.Up ).Angles().WithYaw( 0 );
+		tilt += slopeAng * SlopeTipStrength * Time.Delta;
+
+		if ( Math.Sign( addlean.pitch ) != Math.Sign( tilt.pitch ) ) tilt.pitch += addlean.pitch * .5f;
+		if ( Math.Sign( addlean.roll ) != Math.Sign( tilt.roll ) ) tilt.roll += addlean.roll * .5f;
+
+		pl.Tilt = tilt;
+
 		var spd = Velocity.WithZ( 0 ).Length;
 		var grounded = GroundEntity != null;
 
-		if ( (!grounded && spd < 50) || (grounded && spd > 20) )
-		{
-			var inputFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
-			pl.TargetForward = Rotation.Slerp( pl.TargetForward, inputFwd, Time.Delta * 2f );
-		}
-		else
-		{
-			pl.TargetForward = Rotation;
-		}
-
-		var fromUp = grounded ? Vector3.Up : Rotation.Up;
-		var targetUp = grounded ? GroundNormal : Vector3.Up;
-		var targetRot = FromToRotation( fromUp, targetUp );
-		targetRot *= pl.TargetForward;
-		if ( !NoLean ) targetRot *= Rotation.From( pl.Lean );
-
-		Rotation = Rotation.Slerp( Rotation, targetRot, Time.Delta * TurnSpeed );
-
 		if ( grounded )
 		{
-			Velocity = ClipVelocity( Velocity, Rotation.Right );
+			if ( spd > 20 )
+			{
+				var targetFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
+				pl.TargetForward = Rotation.Slerp( pl.TargetForward, targetFwd, GroundTurnSpeed * Time.Delta );
+			}
+			else
+			{
+				pl.TargetForward = Rotation;
+			}
+
+			var targetRot = FromToRotation( Vector3.Up, GroundNormal );
+			targetRot *= pl.TargetForward;
+			targetRot *= Rotation.From( pl.Tilt );
+			Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
+
+			var yawRot = Rotation.FromYaw( Rotation.Yaw() );
+			Velocity = ClipVelocity( Velocity, yawRot.Right );
 
 			// zero velocity if on flat ground and moving slow
 			if ( Velocity.Length < StopSpeed && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5f )
 			{
 				Velocity = 0;
 			}
+		}
+
+		if ( !grounded && spd < 50 )
+		{
+			//
 		}
 
 		// go
@@ -168,7 +184,7 @@ internal partial class UnicycleController : BasePlayerController
 		{
 			var wallTrStart = Position;
 			var wallTrEnd = wallTrStart + prevVelocity * Time.Delta;
-			var tr = TraceBBox( wallTrStart, wallTrEnd, Mins, Maxs );
+			var tr = TraceBBox( wallTrStart, wallTrEnd, Mins + Vector3.Up * 16, Maxs );
 
 			if ( tr.Hit && Vector3.GetAngle( tr.Normal, Vector3.Up ) > 85f )
 			{
@@ -178,20 +194,15 @@ internal partial class UnicycleController : BasePlayerController
 			}
 		}
 
-		//var spd = Velocity.WithZ( 0 ).Length;
-		//if ( GroundEntity != null && spd > 5 )
-		//{
-		//	var d = MathF.Abs( Vector3.Dot( Rotation.Forward, prevVelocity.WithZ( 0 ).Normal ) );
-		//	if ( d < .8f )
-		//		return true;
-		//}
-
 		var ang = Rotation.Angles();
 		var aroll = Math.Abs( ang.roll );
 		var apitch = Math.Abs( ang.pitch );
 		var maxLean = GroundEntity != null ? MaxLean : 180;
 
 		if ( aroll > maxLean || apitch > maxLean )
+			return true;
+
+		if ( aroll + apitch > maxLean * 1.55f )
 			return true;
 
 		return false;
@@ -242,11 +253,24 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
+		if ( Vector3.Dot( Velocity.Normal, tr.Normal ) > .1f )
+		{
+			DebugOverlay.Text( tr.EndPos, "FIX ME", 10f );
+			DebugOverlay.Line( tr.EndPos, tr.EndPos + tr.Normal * 100f, Color.Red, 10f );
+			GroundEntity = null;
+			return;
+		}
+
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
 		groundSurface = tr.Surface.Name;
 
 		Position = tr.EndPos + Vector3.Up * 1f;
+
+		if ( !prevGrounded )
+		{
+			pl.Tilt = Rotation.Angles().WithYaw( 0 );
+		}
 	}
 
 	private void CheckJump()
@@ -256,7 +280,6 @@ internal partial class UnicycleController : BasePlayerController
 
 		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
 
-		pl.Lean = Angles.Zero;
 		Velocity += up * JumpStrength;
 		GroundEntity = null;
 	}
@@ -361,7 +384,7 @@ internal partial class UnicycleController : BasePlayerController
 		var strength = MinPedalStrength.LerpTo( MaxPedalStrength, strengthAlpha );
 		var addVelocity = Rotation.Forward * strength * Math.Abs( delta );
 
-		pl.Lean += new Angles( 0, 0, 15f * delta );
+		pl.Tilt += new Angles( 0, 0, 15f * delta );
 		Velocity += addVelocity;
 
 		if ( !Velocity.Length.AlmostEqual( 0 ) && Velocity.Length < StopSpeed )

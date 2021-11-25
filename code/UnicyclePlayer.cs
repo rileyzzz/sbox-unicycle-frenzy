@@ -60,6 +60,17 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		RagdollOnClient();
 	}
 
+	public override void Simulate( Client cl )
+	{
+		base.Simulate( cl );
+
+		if ( GetActiveController() == DevController )
+		{
+			TargetForward = Rotation;
+			Tilt = Angles.Zero;
+		}
+	}
+
 	public void ClearCheckpoints()
 	{
 		Host.AssertServer();
@@ -82,15 +93,14 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		var cp = Checkpoints.LastOrDefault();
 		if ( !cp.IsValid() ) return;
 
-		ResetInterpolation();
-		ResetMovement();
-
 		cp.GetSpawnPoint( out Vector3 position, out Rotation rotation );
 		Position = position + Vector3.Up * 5;
 		Rotation = rotation;
 		Velocity = Vector3.Zero;
 
 		SetRotationOnClient( rotation );
+		ResetInterpolation();
+		ResetMovement();
 	}
 
 }

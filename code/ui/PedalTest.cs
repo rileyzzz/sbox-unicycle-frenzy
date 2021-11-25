@@ -31,7 +31,7 @@ internal class PedalTest : Panel
 		AbsLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = absRollAlpha * 100f };
 		AbsLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = absPitchAlpha * 100f };
 
-		var localLean = player.Lean;
+		var localLean = player.Tilt;
 		var localRollAlpha = localLean.roll.LerpInverse( -maxLean, maxLean );
 		var localPitchAlpha = localLean.pitch.LerpInverse( maxLean, -maxLean );
 

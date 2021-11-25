@@ -9,7 +9,7 @@ internal partial class UnicyclePlayer
 	[Net, Predicted]
 	public float PedalPosition { get; set; }
 	[Net, Predicted]
-	public Angles Lean { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
+	public Angles Tilt { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
 	[Net, Predicted]
 	public float TimeToReachTarget { get; set; }
 	[Net, Predicted]
@@ -33,7 +33,7 @@ internal partial class UnicyclePlayer
 	public void ResetMovement()
 	{
 		PedalPosition = default;
-		Lean = default;
+		Tilt = default;
 		TimeToReachTarget = default;
 		PedalStartPosition = default;
 		PedalTargetPosition = default;
