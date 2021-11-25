@@ -43,6 +43,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		clothing.DressEntity( Terry );
 
+		ResetPedalsOnClient();
 		GotoLastCheckpoint();
 	}
 
@@ -102,6 +103,12 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		SetRotationOnClient( rotation );
 		ResetInterpolation();
 		ResetMovement();
+	}
+
+	[ClientRpc]
+	private void ResetPedalsOnClient()
+	{
+		(Animator as UnicycleAnimator)?.ResetPedals();
 	}
 
 }
