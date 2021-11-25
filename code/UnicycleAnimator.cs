@@ -11,7 +11,7 @@ internal class UnicycleAnimator : StandardPlayerAnimator
 
 		if ( Pawn is not UnicyclePlayer pl ) return;
 
-		pl.ResetBone( "Pedals" );
+		pl.ResetBones();
 	}
 
 	public override void DoRotation( Rotation idealRotation )
