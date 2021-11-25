@@ -28,8 +28,9 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		EnableDrawing = true;
 
 		Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
-		Terry.SetParent( this, "Seat", new Transform( Vector3.Zero, Rotation.Identity, 1f ) );
-		Terry.LocalPosition = Vector3.Down * 30;
+		Terry.SetParent( this, "Seat" );
+		Terry.SetAnimBool( "b_sit", true );
+		Terry.LocalPosition = Vector3.Down * 15;
 
 		var c = Controller as UnicycleController;
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, c.Mins, c.Maxs );
