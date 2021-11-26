@@ -309,6 +309,8 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void Friction()
 	{
+		if ( GroundEntity == null ) return;
+
 		var speed = Velocity.Length;
 		if ( speed < 0.1f ) return;
 
