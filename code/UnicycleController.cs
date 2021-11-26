@@ -105,6 +105,9 @@ internal partial class UnicycleController : BasePlayerController
 			MovePedals( delta );
 		}
 
+		var spd = Velocity.WithZ( 0 ).Length;
+		var grounded = GroundEntity != null;
+
 		// lean from input
 		var addlean = new Angles( Input.Forward, 0, -Input.Left ) * LeanSpeed * Time.Delta;
 		var newAngles = Rotation.Angles() + addlean;
@@ -120,13 +123,18 @@ internal partial class UnicycleController : BasePlayerController
 		var slopeAng = Rotation.LookAt( dir, Vector3.Up ).Angles().WithYaw( 0 );
 		tilt += slopeAng * SlopeTipStrength * Time.Delta;
 
+		// accel and decel will make us pitch
+		if ( grounded && prevGrounded )
+		{
+			var speedChange = prevVelocity.Length - Velocity.Length;
+			tilt += new Angles( speedChange * 3f * Time.Delta, 0, 0 );
+		}
+
+
 		if ( Math.Sign( addlean.pitch ) != Math.Sign( tilt.pitch ) ) tilt.pitch += addlean.pitch * .5f;
 		if ( Math.Sign( addlean.roll ) != Math.Sign( tilt.roll ) ) tilt.roll += addlean.roll * .5f;
 
 		pl.Tilt = tilt;
-
-		var spd = Velocity.WithZ( 0 ).Length;
-		var grounded = GroundEntity != null;
 
 		if ( grounded )
 		{
