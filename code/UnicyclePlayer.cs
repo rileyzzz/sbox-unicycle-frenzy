@@ -60,6 +60,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Camera = new SpectateRagdollCamera();
 
 		RagdollOnClient();
+
+		UnicycleFrenzy.BroadcastSound( To.Everyone, "crash_1", Position );
 	}
 
 	public override void Simulate( Client cl )
