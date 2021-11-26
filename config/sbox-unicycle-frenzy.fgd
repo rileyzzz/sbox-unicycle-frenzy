@@ -27,7 +27,6 @@ metadata
 [
 	mins(vector) : "Checkpoint mins" : "-75 -75 0" : ""
 	maxs(vector) : "Checkpoint maxs" : "75 75 100" : ""
-	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 ]
 
 //
