@@ -11,6 +11,9 @@ internal class LeaderboardPost : ModelEntity
 		base.Spawn();
 
 		SetModel( "models/leaderboard_post.vmdl" );
+		SetupPhysicsFromModel( PhysicsMotionType.Static );
+
+		EnableAllCollisions = true;
 	}
 
 	public override void ClientSpawn()
