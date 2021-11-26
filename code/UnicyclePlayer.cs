@@ -71,6 +71,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			TargetForward = Rotation;
 			Tilt = Angles.Zero;
 		}
+
+		SimulateSound();
 	}
 
 	public void ClearCheckpoints()

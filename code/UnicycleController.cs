@@ -45,7 +45,8 @@ internal partial class UnicycleController : BasePlayerController
 	[Net]
 	public float SlopeTipStrength { get; set; } = 2.5f;
 
-	private string groundSurface;
+	public string GroundSurface { get; private set; }
+
 	private bool prevGrounded;
 	private Vector3 prevVelocity;
 	private UnicycleUnstuck unstuck;
@@ -72,7 +73,7 @@ internal partial class UnicycleController : BasePlayerController
 			DebugOverlay.Text( Position + Vector3.Down * 3, "Position: " + intpos );
 			DebugOverlay.Text( Position + Vector3.Down * 6, "Grounded: " + (GroundEntity != null) );
 			DebugOverlay.Text( Position + Vector3.Down * 9, "GroundNormal: " + GroundNormal );
-			DebugOverlay.Text( Position + Vector3.Down * 12, "Surface: " + groundSurface );
+			DebugOverlay.Text( Position + Vector3.Down * 12, "Surface: " + GroundSurface );
 			DebugOverlay.Text( Position + Vector3.Down * 15, "Water Level: " + Pawn.WaterLevel.Fraction );
 
 			DebugOverlay.Line( Position, Position + Velocity, Color.Yellow );
@@ -263,7 +264,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
-		groundSurface = tr.Surface.Name;
+		GroundSurface = tr.Surface.Name;
 
 		Position = tr.EndPos + Vector3.Up * 1f;
 
@@ -316,7 +317,7 @@ internal partial class UnicycleController : BasePlayerController
 	private float GetSurfaceFriction()
 	{
 		// todo: snow, gravel
-		return groundSurface switch
+		return GroundSurface switch
 		{
 			"mud" => 5.0f,
 			"sand" => 20.0f,
