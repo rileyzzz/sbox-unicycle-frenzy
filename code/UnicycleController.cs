@@ -9,41 +9,25 @@ internal partial class UnicycleController : BasePlayerController
 	[ConVar.Replicated( "uf_debug_nofall" )]
 	public static bool NoFall { get; set; } = false;
 
-	[ConVar.Replicated( "uf_debug_nolean" )]
-	public static bool NoLean { get; set; } = false;
+	[ConVar.Replicated( "uf_debug_notilt" )]
+	public static bool NoTilt { get; set; } = false;
 
-	[Net]
-	public float PedalTime { get; set; } = .75f;
-	[Net]
-	public float PedalResetAfter { get; set; } = 1.5f;
-	[Net]
-	public float PedalResetTime { get; set; } = .75f;
-	[Net]
-	public float MinPedalStrength { get; set; } = 10f;
-	[Net]
-	public float MaxPedalStrength { get; set; } = 50f;
-	[Net]
-	public float JumpStrength { get; set; } = 300f;
-	[Net]
-	public float PerfectPedalBoost { get; set; } = 50f;
-	[Net]
-	public float MaxLean { get; set; } = 35f;
-	[Net]
-	public float LeanSpeed { get; set; } = 160f;
-	[Net]
-	public float GroundTurnSpeed { get; set; } = 2f;
-	[Net]
-	public float AirTurnSpeed { get; set; } = 1.5f;
-	[Net]
-	public float SlopeSpeed { get; set; } = 800f;
-	[Net]
-	public float BrakeStrength { get; set; } = 3f;
-	[Net]
-	public bool UseMomentum { get; set; } = false;
-	[Net]
-	public float StopSpeed { get; set; } = 35f;
-	[Net]
-	public float SlopeTipStrength { get; set; } = 2.5f;
+	public float PedalTime => .75f;
+	public float PedalResetAfter => 1.5f;
+	public float PedalResetTime => .75f;
+	public float MinPedalStrength => 10f;
+	public float MaxPedalStrength => 50f;
+	public float JumpStrength => 300f;
+	public float PerfectPedalBoost => 50f;
+	public float MaxLean => 35f;
+	public float LeanSpeed => 160f;
+	public float GroundTurnSpeed => 2f;
+	public float AirTurnSpeed => 1.5f;
+	public float SlopeSpeed => 800f;
+	public float BrakeStrength => 3f;
+	public bool UseMomentum => false;
+	public float StopSpeed => 35f;
+	public float SlopeTipStrength => 2.5f;
 
 	public string GroundSurface { get; private set; }
 
@@ -85,13 +69,15 @@ internal partial class UnicycleController : BasePlayerController
 		if ( pl == null ) return;
 		if ( unstuck.TestAndFix() ) return;
 
-		SetTag( "sitting" );
-		TryPedal();
-		TryBrake();
-		Gravity();
+		var beforeGrounded = GroundEntity != null;
+		var beforeVelocity = Velocity;
+
+		CheckPedal();
+		CheckBrake();
 		CheckJump();
+		DoFriction();
 		DoSlope();
-		Friction();
+		DoTilt();
 
 		// lerp pedals into place, adding velocity and lean
 		if ( pl.TimeSincePedalStart < pl.TimeToReachTarget + Time.Delta )
@@ -105,68 +91,8 @@ internal partial class UnicycleController : BasePlayerController
 			MovePedals( delta );
 		}
 
-		var spd = Velocity.WithZ( 0 ).Length;
-		var grounded = GroundEntity != null;
-
-		// lean from input
-		var addlean = new Angles( Input.Forward, 0, -Input.Left ) * LeanSpeed * Time.Delta;
-		var newAngles = Rotation.Angles() + addlean;
-		Rotation = Rotation.From( newAngles );
-
-		// recover tilt from momentum and input
-		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
-		var tilt = pl.Tilt;
-		tilt = Angles.Lerp( tilt, Angles.Zero, recover * Time.Delta );
-
-		// uneven ground will make us tip if we're not attentive
-		var dir = Vector3.Cross( GroundNormal, Rotation.Right ).Normal;
-		var slopeAng = Rotation.LookAt( dir, Vector3.Up ).Angles().WithYaw( 0 );
-		tilt += slopeAng * SlopeTipStrength * Time.Delta;
-
-		// accel and decel will make us pitch
-		if ( grounded && prevGrounded )
-		{
-			var speedChange = prevVelocity.Length - Velocity.Length;
-			tilt += new Angles( speedChange * 3f * Time.Delta, 0, 0 );
-		}
-
-
-		if ( Math.Sign( addlean.pitch ) != Math.Sign( tilt.pitch ) ) tilt.pitch += addlean.pitch * .5f;
-		if ( Math.Sign( addlean.roll ) != Math.Sign( tilt.roll ) ) tilt.roll += addlean.roll * .5f;
-
-		pl.Tilt = tilt;
-
-		if ( grounded )
-		{
-			if ( spd > 20 )
-			{
-				var targetFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
-				pl.TargetForward = Rotation.Slerp( pl.TargetForward, targetFwd, GroundTurnSpeed * Time.Delta );
-			}
-			else
-			{
-				pl.TargetForward = Rotation;
-			}
-
-			var targetRot = FromToRotation( Vector3.Up, GroundNormal );
-			targetRot *= pl.TargetForward;
-			targetRot *= Rotation.From( pl.Tilt );
-			Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
-
-			var yawRot = Rotation.FromYaw( Rotation.Yaw() );
-			Velocity = ClipVelocity( Velocity, yawRot.Right );
-
-			// zero velocity if on flat ground and moving slow
-			if ( Velocity.Length < StopSpeed && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5f )
-			{
-				Velocity = 0;
-			}
-		}
-
-		if ( !grounded && spd < 50 )
-		{
-			//
-		}
+		DoTurn();
+		Gravity();
 
 		// go
 		Move();
@@ -175,8 +101,8 @@ internal partial class UnicycleController : BasePlayerController
 		if ( pl.IsServer && ShouldFall() )
 			pl.Fall();
 
-		prevGrounded = grounded;
-		prevVelocity = Velocity;
+		prevGrounded = beforeGrounded;
+		prevVelocity = beforeVelocity;
 	}
 
 	private bool ShouldFall()
@@ -282,17 +208,6 @@ internal partial class UnicycleController : BasePlayerController
 		}
 	}
 
-	private void CheckJump()
-	{
-		if ( GroundEntity == null ) return;
-		if ( !Input.Pressed( InputButton.Jump ) ) return;
-
-		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
-
-		Velocity += up * JumpStrength;
-		GroundEntity = null;
-	}
-
 	private void Gravity()
 	{
 		if ( GroundEntity != null )
@@ -307,7 +222,7 @@ internal partial class UnicycleController : BasePlayerController
 		Velocity -= new Vector3( 0, 0, 800f * Time.Delta );
 	}
 
-	private void Friction()
+	private void DoFriction()
 	{
 		if ( GroundEntity == null ) return;
 
@@ -324,19 +239,93 @@ internal partial class UnicycleController : BasePlayerController
 		}
 	}
 
-	private float GetSurfaceFriction()
+	private void DoTilt()
 	{
-		// todo: snow, gravel
-		return GroundSurface switch
+		if ( NoTilt )
 		{
-			"mud" => 5.0f,
-			"sand" => 20.0f,
-			"dirt" => 2.0f,
-			_ => 1.0f,
-		};
+			pl.Tilt = Angles.Zero;
+			return;
+		}
+
+		// lean from input
+		var addlean = new Angles( Input.Forward, 0, -Input.Left ) * LeanSpeed * Time.Delta;
+		var newAngles = Rotation.Angles() + addlean;
+		Rotation = Rotation.From( newAngles );
+
+		// recover tilt from momentum and input
+		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
+		var tilt = pl.Tilt;
+		tilt = Angles.Lerp( tilt, Angles.Zero, recover * Time.Delta );
+
+		// uneven ground will make us tip if we're not attentive
+		var dir = Vector3.Cross( GroundNormal, Rotation.Right ).Normal;
+		var slopeAng = Rotation.LookAt( dir, Vector3.Up ).Angles().WithYaw( 0 );
+		tilt += slopeAng * SlopeTipStrength * Time.Delta;
+
+		// accel and decel will make us pitch
+		if ( GroundEntity != null )
+		{
+			var speedChange = prevVelocity.WithZ( 0 ).Length - Velocity.WithZ( 0 ).Length;
+			tilt += new Angles( speedChange * 3f * Time.Delta, 0, 0 );
+		}
+
+
+		if ( Math.Sign( addlean.pitch ) != Math.Sign( tilt.pitch ) ) tilt.pitch += addlean.pitch * .5f;
+		if ( Math.Sign( addlean.roll ) != Math.Sign( tilt.roll ) ) tilt.roll += addlean.roll * .5f;
+
+		pl.Tilt = tilt;
 	}
 
-	private void TryPedal()
+	private void DoTurn()
+	{
+		var spd = Velocity.WithZ( 0 ).Length;
+		var grounded = GroundEntity != null;
+
+		if ( grounded )
+		{
+			if ( spd > 20 )
+			{
+				var targetFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
+				pl.TargetForward = Rotation.Slerp( pl.TargetForward, targetFwd, GroundTurnSpeed * Time.Delta );
+			}
+			else
+			{
+				pl.TargetForward = Rotation;
+			}
+
+			var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
+			targetRot *= pl.TargetForward;
+			targetRot *= Rotation.From( pl.Tilt );
+			Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
+
+			var yawRot = Rotation.FromYaw( Rotation.Yaw() );
+			Velocity = ClipVelocity( Velocity, yawRot.Right );
+
+			// zero velocity if on flat ground and moving slow
+			if ( Velocity.Length < StopSpeed && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5f )
+			{
+				Velocity = 0;
+			}
+		}
+
+		if ( !grounded && spd < 50 )
+		{
+			//
+		}
+	}
+
+	private void CheckJump()
+	{
+		if ( GroundEntity == null ) return;
+		if ( !Input.Pressed( InputButton.Jump ) ) return;
+
+		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
+
+		Velocity += up * JumpStrength;
+		GroundEntity = null;
+	}
+
+	private void CheckPedal()
 	{
 		if ( !pl.PedalPosition.AlmostEqual( 0f, .1f ) && pl.TimeSincePedalStart > PedalResetAfter )
 		{
@@ -351,7 +340,7 @@ internal partial class UnicycleController : BasePlayerController
 			SetPedalTarget( 1f, PedalTime, true );
 	}
 
-	private void TryBrake()
+	private void CheckBrake()
 	{
 		if ( GroundEntity == null ) return;
 		if ( !Input.Down( InputButton.Duck ) ) return;
@@ -402,6 +391,18 @@ internal partial class UnicycleController : BasePlayerController
 		{
 			Velocity *= StopSpeed / Velocity.Length;
 		}
+	}
+
+	private float GetSurfaceFriction()
+	{
+		// todo: snow, gravel
+		return GroundSurface switch
+		{
+			"mud" => 5.0f,
+			"sand" => 20.0f,
+			"dirt" => 2.0f,
+			_ => 1.0f,
+		};
 	}
 
 	Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )

@@ -1,50 +1,46 @@
 ﻿using Sandbox;
+using System;
 
 internal class UnicycleAnimator : StandardPlayerAnimator
 {
 
-	private float prevPedal;
+	private float prevPedalPosition;
 
-	public void ResetPedals()
+	public override void FrameSimulate()
 	{
-		prevPedal = 0f;
+		base.FrameSimulate();
 
-		if ( Pawn is not UnicyclePlayer pl ) return;
+		if ( Pawn is not UnicyclePlayer pl || pl.Health <= 0 ) return;
 
-		pl.ResetBones();
+		// wheel
+		var tx = pl.GetBoneTransform( "Wheel" );
+		var radius = tx.Position.z - Position.z;
+		var distance = Velocity.Length;
+		var angle = distance * (180f / (float)Math.PI) / radius;
+		var txRot = tx.WithRotation( tx.Rotation.RotateAroundAxis( Vector3.Left, angle * Time.Delta ) );
+		pl.SetBone( "Wheel", txRot );
+
+		// pedals
+		// todo: lerp towards target rotation
+		var tx2 = pl.GetBoneTransform( "Pedals" );
+		var pedalDelta = pl.PedalPosition - prevPedalPosition;
+		if ( pedalDelta.AlmostEqual( 0f ) ) return;
+		var pedalAngle = MathF.Abs( pedalDelta ) * 90f;
+		var pedalRot = tx2.Rotation.RotateAroundAxis( Vector3.Left, pedalAngle );
+
+		var tx2Rot = tx2.WithRotation( pedalRot );
+		pl.SetBone( "Pedals", tx2Rot );
+
+		prevPedalPosition = pl.PedalPosition;
 	}
 
 	public override void DoRotation( Rotation idealRotation )
 	{
 		if ( Pawn is not UnicyclePlayer pl || pl.Health <= 0 ) return;
-		
+		if ( pl.GetActiveController() is UnicycleController ) return;
+
 		// rotate when dev camera
-		if ( pl.GetActiveController() is not UnicycleController )
-		{
-			Rotation = idealRotation;
-			ResetPedals();
-			return;
-		}
-
-		if ( Pawn.IsServer ) return;
-
-		// todo: bet animgraph can do this better
-
-		var wheel = pl.GetBoneIndex( "Wheel" );
-		var tx = pl.GetBoneTransform( wheel );
-		var txRot = tx.WithRotation( tx.Rotation.RotateAroundAxis( Vector3.Left, Pawn.Velocity.WithZ( 0 ).Length * Time.Delta ) );
-
-		pl.SetBone( wheel, txRot );
-
-		var pedalDelta = System.Math.Abs( pl.PedalPosition - prevPedal );
-
-		var pedals = pl.GetBoneIndex( "Pedals" );
-		var tx2 = pl.GetBoneTransform( pedals );
-		var tx2Rot = tx2.WithRotation( tx2.Rotation.RotateAroundAxis( Vector3.Left, pedalDelta * 100f ) );
-
-		pl.SetBone( pedals, tx2Rot );
-
-		prevPedal = pl.PedalPosition;
+		Rotation = idealRotation;
 	}
 
 }

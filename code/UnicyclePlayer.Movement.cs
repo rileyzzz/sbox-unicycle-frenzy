@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using System.Numerics;
 
 internal partial class UnicyclePlayer
 {
@@ -7,9 +6,9 @@ internal partial class UnicyclePlayer
 	// maybe client authoritative movement would suit us better
 
 	[Net, Predicted]
-	public float PedalPosition { get; set; }
+	public float PedalPosition { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
 	[Net, Predicted]
-	public Angles Tilt { get; set; } // -1 = left pedal down, 1 = right pedal down, 0 = flat
+	public Angles Tilt { get; set; }
 	[Net, Predicted]
 	public float TimeToReachTarget { get; set; }
 	[Net, Predicted]

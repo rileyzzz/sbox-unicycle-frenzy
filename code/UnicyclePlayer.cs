@@ -18,7 +18,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		base.Respawn();
 
 		SetModel( "models/unicycle_dev.vmdl" );
-		ResetMovement();
 
 		Camera = new UnicycleCamera();
 		Controller = new UnicycleController();
@@ -43,7 +42,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		clothing.DressEntity( Terry );
 
-		ResetPedalsOnClient();
+		RespawnOnClient();
+		ResetMovement();
 		GotoLastCheckpoint();
 	}
 
@@ -110,9 +110,9 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	}
 
 	[ClientRpc]
-	private void ResetPedalsOnClient()
+	private void RespawnOnClient()
 	{
-		(Animator as UnicycleAnimator)?.ResetPedals();
+		ResetBones();
 	}
 
 }
