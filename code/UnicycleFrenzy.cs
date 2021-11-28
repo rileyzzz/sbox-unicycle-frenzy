@@ -21,10 +21,4 @@ partial class UnicycleFrenzy : Sandbox.Game
 		(cl.Pawn as Player).Respawn();
 	}
 
-	[ClientRpc]
-	public static void BroadcastSound( string sound, Vector3 position )
-	{
-		Sound.FromWorld( sound, position );
-	}
-
 }

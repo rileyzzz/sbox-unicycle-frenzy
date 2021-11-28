@@ -3,14 +3,14 @@
 	data = 
 	{
 		ui = false
-		volume = 1.5
-		volumerandom = 0.0
+		volume = 1.0
+		volumerandom = 0.15
 		pitch = 1.0
-		pitchrandom = 0.0
-		distancemax = 500.0
+		pitchrandom = 0.15
+		distancemax = 900.0
 		sounds = 
 		[
-			"sounds/rolling_road.vsnd",
+			"sounds/unicycle/unicycle.land.default.1.vsnd",
 		]
 		selectionmode = "3"
 	}

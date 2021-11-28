@@ -4,13 +4,13 @@
 	{
 		ui = false
 		volume = 1.0
-		volumerandom = 0.3
+		volumerandom = 0.0
 		pitch = 1.0
 		pitchrandom = 0.15
-		distancemax = 1500.0
+		distancemax = 900.0
 		sounds = 
 		[
-			"sounds/crash_1.vsnd",
+			"sounds/unicycle/unicycle.rolling.default.1.vsnd",
 		]
 		selectionmode = "3"
 	}

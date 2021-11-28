@@ -79,6 +79,7 @@ internal partial class UnicycleController : BasePlayerController
 		DoFriction();
 		DoSlope();
 		DoTilt();
+		DoRollingSound();
 
 		// lerp pedals into place, adding velocity and lean
 		if ( pl.TimeSincePedalStart < pl.TimeToReachTarget + Time.Delta )
@@ -99,8 +100,15 @@ internal partial class UnicycleController : BasePlayerController
 		Move();
 		CheckGround();
 
-		if ( pl.IsServer && ShouldFall() )
-			pl.Fall();
+		if ( ShouldFall() )
+		{
+			if ( pl.IsServer )
+			{
+				pl.Fall();
+			}
+
+			AddEvent( "fall" );
+		}
 
 		PrevGrounded = beforeGrounded;
 		PrevVelocity = beforeVelocity;
@@ -198,14 +206,15 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
+		if ( GroundEntity == null )
+		{
+			AddEvent( "land" );
+			pl.Tilt = Rotation.Angles().WithYaw( 0 );
+		}
+
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
 		GroundSurface = tr.Surface.Name;
-
-		if ( !PrevGrounded )
-		{
-			pl.Tilt = Rotation.Angles().WithYaw( 0 );
-		}
 	}
 
 	private void Gravity()
@@ -318,6 +327,8 @@ internal partial class UnicycleController : BasePlayerController
 
 		Velocity += up * JumpStrength;
 		GroundEntity = null;
+
+		AddEvent( "jump" );
 	}
 
 	private void CheckPedal()
@@ -352,6 +363,8 @@ internal partial class UnicycleController : BasePlayerController
 		pl.TimeToReachTarget = timeToReach;
 		pl.PedalStartPosition = pl.PedalPosition;
 		pl.PedalTargetPosition = target;
+
+		AddEvent( "pedal" );
 
 		if ( !tryBoost ) return;
 		if ( GroundEntity == null ) return;

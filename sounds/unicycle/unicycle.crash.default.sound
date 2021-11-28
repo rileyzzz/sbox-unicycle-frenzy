@@ -7,10 +7,10 @@
 		volumerandom = 0.15
 		pitch = 1.0
 		pitchrandom = 0.15
-		distancemax = 2000.0
+		distancemax = 1500.0
 		sounds = 
 		[
-			"sounds/land_solid_1.vsnd",
+			"sounds/unicycle/unicycle.crash.default.1.vsnd",
 		]
 		selectionmode = "3"
 	}

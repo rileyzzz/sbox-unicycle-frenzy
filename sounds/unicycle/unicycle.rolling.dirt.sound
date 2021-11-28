@@ -6,11 +6,11 @@
 		volume = 1.0
 		volumerandom = 0.0
 		pitch = 1.0
-		pitchrandom = 0.0
-		distancemax = 500.0
+		pitchrandom = 0.15
+		distancemax = 900.0
 		sounds = 
 		[
-			"sounds/rolling_dirt.vsnd",
+			"sounds/unicycle/unicycle.rolling.dirt.1.vsnd",
 		]
 		selectionmode = "3"
 	}
