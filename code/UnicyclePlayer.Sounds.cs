@@ -26,6 +26,16 @@ internal partial class UnicyclePlayer
 
 		currentVolume = currentVolume.LerpTo( targetVolume, 8f * Time.Delta );
 		wheelSound.Value.SetVolume( currentVolume );
+
+		if ( Controller is UnicycleController ctrl )
+		{
+			if ( ctrl.GroundEntity != null && !ctrl.PrevGrounded )
+			{
+				var snd = Sound.FromWorld( "land_solid_1", Position );
+				var vol = Math.Clamp( Math.Abs( ctrl.PrevVelocity.z ) / 600f, .15f, 1f );
+				snd.SetVolume( vol );
+			}
+		}
 	}
 
 	private float GetWheelVolume()

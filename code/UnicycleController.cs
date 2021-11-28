@@ -31,14 +31,14 @@ internal partial class UnicycleController : BasePlayerController
 	public float SlopeTipStrength => 2.5f;
 
 	public string GroundSurface { get; private set; }
-
-	private bool prevGrounded;
-	private Vector3 prevVelocity;
-	private UnicycleUnstuck unstuck;
+	public bool PrevGrounded { get; private set; }
+	public Vector3 PrevVelocity { get; private set; }
 
 	private UnicyclePlayer pl => Pawn as UnicyclePlayer;
 	public Vector3 Mins => new( -8, -8, 0 );
 	public Vector3 Maxs => new( 8, 8, 48 );
+
+	private UnicycleUnstuck unstuck;
 
 	public UnicycleController()
 	{
@@ -102,29 +102,29 @@ internal partial class UnicycleController : BasePlayerController
 		if ( pl.IsServer && ShouldFall() )
 			pl.Fall();
 
-		prevGrounded = beforeGrounded;
-		prevVelocity = beforeVelocity;
+		PrevGrounded = beforeGrounded;
+		PrevVelocity = beforeVelocity;
 	}
 
 	private bool ShouldFall()
 	{
 		if ( NoFall ) return false;
 
-		if ( GroundEntity != null && !prevGrounded )
+		if ( GroundEntity != null && !PrevGrounded )
 		{
-			if ( prevVelocity.z < -1000 )
+			if ( PrevVelocity.z < -1000 )
 				return true;
 		}
 
-		if ( prevVelocity.Length > StopSpeed )
+		if ( PrevVelocity.Length > StopSpeed )
 		{
 			var wallTrStart = Position;
-			var wallTrEnd = wallTrStart + prevVelocity * Time.Delta;
+			var wallTrEnd = wallTrStart + PrevVelocity * Time.Delta;
 			var tr = TraceBBox( wallTrStart, wallTrEnd, Mins + Vector3.Up * 16, Maxs );
 
 			if ( tr.Hit && Vector3.GetAngle( tr.Normal, Vector3.Up ) > 85f )
 			{
-				var d = Vector3.Dot( tr.Normal, prevVelocity );
+				var d = Vector3.Dot( tr.Normal, PrevVelocity );
 				if ( d < -.3f )
 					return true;
 			}
@@ -202,7 +202,7 @@ internal partial class UnicycleController : BasePlayerController
 		GroundNormal = tr.Normal;
 		GroundSurface = tr.Surface.Name;
 
-		if ( !prevGrounded )
+		if ( !PrevGrounded )
 		{
 			pl.Tilt = Rotation.Angles().WithYaw( 0 );
 		}
@@ -267,7 +267,7 @@ internal partial class UnicycleController : BasePlayerController
 		// might be a smarter solution here to have it both ways
 		if ( GroundEntity != null && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5 )
 		{
-			var speedChange = prevVelocity.WithZ( 0 ).Length - Velocity.WithZ( 0 ).Length;
+			var speedChange = PrevVelocity.WithZ( 0 ).Length - Velocity.WithZ( 0 ).Length;
 			tilt += new Angles( speedChange * 3f * Time.Delta, 0, 0 );
 		}
 
