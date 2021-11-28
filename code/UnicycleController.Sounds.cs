@@ -24,6 +24,9 @@ internal partial class UnicycleController
 				Sound.FromWorld( "unicycle.crash.default", Position );
 				rollingSound?.Stop();
 				break;
+			case "pedal":
+				Sound.FromWorld( "unicycle.pedal", Position );
+				break;
 		}
 	}
 
