@@ -17,7 +17,8 @@ internal class UnicycleAnimator : StandardPlayerAnimator
 		var radius = tx.Position.z - Position.z;
 		var distance = Velocity.Length;
 		var angle = distance * (180f / (float)Math.PI) / radius;
-		var txRot = tx.WithRotation( tx.Rotation.RotateAroundAxis( Vector3.Left, angle * Time.Delta ) );
+		var dir = Math.Sign( Vector3.Dot( Velocity.Normal, Rotation.Forward ) );
+		var txRot = tx.WithRotation( tx.Rotation.RotateAroundAxis( Vector3.Left, angle * dir * Time.Delta ) );
 		pl.SetBone( "Wheel", txRot );
 
 		// pedals
