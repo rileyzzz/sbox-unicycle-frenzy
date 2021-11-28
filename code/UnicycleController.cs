@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Sandbox;
 using Sandbox.ScreenShake;
@@ -20,13 +21,13 @@ internal partial class UnicycleController : BasePlayerController
 	public float JumpStrength => 300f;
 	public float PerfectPedalBoost => 50f;
 	public float MaxLean => 35f;
-	public float LeanSpeed => 160f;
+	public float LeanSpeed => 80f;
 	public float GroundTurnSpeed => 2f;
-	public float AirTurnSpeed => 1.5f;
+	public float AirTurnSpeed => 2f;
 	public float SlopeSpeed => 800f;
 	public float BrakeStrength => 3f;
 	public bool UseMomentum => false;
-	public float StopSpeed => 35f;
+	public float StopSpeed => 25f;
 	public float SlopeTipStrength => 2.5f;
 
 	public string GroundSurface { get; private set; }
@@ -91,7 +92,7 @@ internal partial class UnicycleController : BasePlayerController
 			MovePedals( delta );
 		}
 
-		DoTurn();
+		DoRotation();
 		Gravity();
 
 		// go
@@ -188,10 +189,11 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		if ( Vector3.Dot( Velocity.Normal, tr.Normal ) > .1f )
+		// might help with hitting edges/getting a shit normal
+		//FudgeNormal( ref tr );
+
+		if ( Vector3.GetAngle( Vector3.Up, tr.Normal ) < 5f && Velocity.z > 140f )
 		{
-			DebugOverlay.Text( tr.EndPos, "FIX ME", 10f );
-			DebugOverlay.Line( tr.EndPos, tr.EndPos + tr.Normal * 100f, Color.Red, 10f );
 			GroundEntity = null;
 			return;
 		}
@@ -199,8 +201,6 @@ internal partial class UnicycleController : BasePlayerController
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
 		GroundSurface = tr.Surface.Name;
-
-		Position = tr.EndPos + Vector3.Up * 1f;
 
 		if ( !prevGrounded )
 		{
@@ -247,70 +247,65 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		// lean from input
-		var addlean = new Angles( Input.Forward, 0, -Input.Left ) * LeanSpeed * Time.Delta;
-		var newAngles = Rotation.Angles() + addlean;
-		Rotation = Rotation.From( newAngles );
-
 		// recover tilt from momentum and input
 		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
 		var tilt = pl.Tilt;
 		tilt = Angles.Lerp( tilt, Angles.Zero, recover * Time.Delta );
 
 		// uneven ground will make us tip if we're not attentive
-		var dir = Vector3.Cross( GroundNormal, Rotation.Right ).Normal;
-		var slopeAng = Rotation.LookAt( dir, Vector3.Up ).Angles().WithYaw( 0 );
-		tilt += slopeAng * SlopeTipStrength * Time.Delta;
+		//var groundAng = FromToRotation( Vector3.Up, GroundNormal );
+		//groundAng *= Rotation.LookAt( Rotation.Forward );
+		//tilt += groundAng.Angles().WithYaw(0) * SlopeTipStrength * Time.Delta;
+
+		// tilt from input
+		var input = new Vector3( Input.Forward, 0, -Input.Left );
+		tilt += new Angles( input.x, 0, input.z ) * LeanSpeed * Time.Delta;
 
 		// accel and decel will make us pitch
-		if ( GroundEntity != null )
+		// we're only doing this on flat ground to avoid fucking up
+		// the player's GroundNormal rotation while hitting slopes fast
+		// might be a smarter solution here to have it both ways
+		if ( GroundEntity != null && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5 )
 		{
 			var speedChange = prevVelocity.WithZ( 0 ).Length - Velocity.WithZ( 0 ).Length;
 			tilt += new Angles( speedChange * 3f * Time.Delta, 0, 0 );
 		}
 
-
-		if ( Math.Sign( addlean.pitch ) != Math.Sign( tilt.pitch ) ) tilt.pitch += addlean.pitch * .5f;
-		if ( Math.Sign( addlean.roll ) != Math.Sign( tilt.roll ) ) tilt.roll += addlean.roll * .5f;
-
 		pl.Tilt = tilt;
 	}
 
-	private void DoTurn()
+	private void DoRotation()
 	{
-		var spd = Velocity.WithZ( 0 ).Length;
-		var grounded = GroundEntity != null;
-
-		if ( grounded )
+		if ( pl.TargetForward == default )
 		{
-			if ( spd > 20 )
-			{
-				var targetFwd = Rotation.LookAt( Input.Rotation.Forward.WithZ( 0 ), Vector3.Up );
-				pl.TargetForward = Rotation.Slerp( pl.TargetForward, targetFwd, GroundTurnSpeed * Time.Delta );
-			}
-			else
-			{
-				pl.TargetForward = Rotation;
-			}
-
-			var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
-			targetRot *= pl.TargetForward;
-			targetRot *= Rotation.From( pl.Tilt );
-			Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
-
-			var yawRot = Rotation.FromYaw( Rotation.Yaw() );
-			Velocity = ClipVelocity( Velocity, yawRot.Right );
-
-			// zero velocity if on flat ground and moving slow
-			if ( Velocity.Length < StopSpeed && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5f )
-			{
-				Velocity = 0;
-			}
+			pl.TargetForward = Input.Rotation;
 		}
 
-		if ( !grounded && spd < 50 )
+		var spd = Velocity.WithZ( 0 ).Length;
+		var grounded = GroundEntity != null;
+		var inputFwd = Input.Rotation.Forward.WithZ( 0 );
+
+		var canTurn = (!grounded && spd < StopSpeed) || (grounded && spd > StopSpeed);
+		canTurn = canTurn && !inputFwd.IsNearlyEqual( pl.TargetForward.Forward.WithZ( 0 ) );
+
+		if ( canTurn )
 		{
-			//
+			var inputRot = Rotation.LookAt( inputFwd );
+			var turnSpeed = grounded ? GroundTurnSpeed : AirTurnSpeed;
+			pl.TargetForward = Rotation.Slerp( pl.TargetForward, inputRot, turnSpeed * Time.Delta );
+
+			Velocity = ClipVelocity( Velocity, pl.TargetForward.Right );
+		}
+
+		var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
+		targetRot *= pl.TargetForward;
+		targetRot *= Rotation.From( pl.Tilt );
+		Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
+
+		// zero velocity if on flat ground and moving slow
+		if ( grounded && Velocity.Length < StopSpeed && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5f )
+		{
+			Velocity = 0;
 		}
 	}
 
@@ -403,6 +398,38 @@ internal partial class UnicycleController : BasePlayerController
 			"dirt" => 2.0f,
 			_ => 1.0f,
 		};
+	}
+
+	private Vector3[] fudges = new Vector3[]
+	{
+		Vector3.Zero,
+		Vector3.Zero,
+		Vector3.Left,
+		Vector3.Right,
+		Vector3.Forward,
+		Vector3.Backward,
+	};
+
+	private void FudgeNormal( ref TraceResult tr, float maxDistance = 10f )
+	{
+		fudges[0] = Velocity.Normal;
+		fudges[1] = -Velocity.Normal;
+
+		foreach ( var fudge in fudges )
+		{
+			var startPos = tr.EndPos + fudge * .01f;
+			var endPos = tr.EndPos - tr.Normal * maxDistance;
+			var newTr = Trace.Ray( startPos, endPos )
+				.Ignore( Pawn )
+				.Run();
+
+			if ( !newTr.Hit ) continue;
+			if ( newTr.Normal.IsNearlyEqual( tr.Normal ) ) continue;
+
+			tr.Normal = newTr.Normal;
+
+			break;
+		}
 	}
 
 	Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )

@@ -4,34 +4,31 @@ using System;
 internal partial class UnicyclePlayer
 {
 
-	private Sound? rollingSound;
+	private Sound? wheelSound;
 	private float targetVolume;
 	private float currentVolume;
 	private string currentSoundName;
 
-	private void SimulateSound()
+	[Event.Tick.Client]
+	private void TickWheelSound()
 	{
-		if ( IsServer ) return;
+		var newSoundName = GetWheelSoundName();
+		targetVolume = GetWheelVolume();
 
-		using var _ = Prediction.Off();
-
-		var newSoundName = GetSoundName();
-		targetVolume = GetTargetVolume();
-
-		if ( !rollingSound.HasValue || rollingSound.Value.Finished || currentSoundName != newSoundName )
+		if ( !wheelSound.HasValue || wheelSound.Value.Finished || currentSoundName != newSoundName )
 		{
-			rollingSound?.Stop();
-			rollingSound = Sound.FromEntity( newSoundName, this );
-			rollingSound.Value.SetVolume( targetVolume );
+			wheelSound?.Stop();
+			wheelSound = Sound.FromEntity( newSoundName, this );
+			wheelSound.Value.SetVolume( targetVolume );
 			currentVolume = targetVolume;
 			currentSoundName = newSoundName;
 		}
 
 		currentVolume = currentVolume.LerpTo( targetVolume, 8f * Time.Delta );
-		rollingSound.Value.SetVolume( currentVolume );
+		wheelSound.Value.SetVolume( currentVolume );
 	}
 
-	private float GetTargetVolume()
+	private float GetWheelVolume()
 	{
 		if ( GroundEntity == null || Health <= 0 )
 		{
@@ -44,7 +41,7 @@ internal partial class UnicyclePlayer
 		}
 	}
 
-	private string GetSoundName()
+	private string GetWheelSoundName()
 	{
 		if ( Controller is not UnicycleController ctrl )
 			return "rolling_dirt";

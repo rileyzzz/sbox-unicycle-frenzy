@@ -40,7 +40,7 @@ internal class UnicycleAnimator : StandardPlayerAnimator
 		if ( pl.GetActiveController() is UnicycleController ) return;
 
 		// rotate when dev camera
-		Rotation = idealRotation;
+		base.DoRotation( idealRotation );
 	}
 
 }
