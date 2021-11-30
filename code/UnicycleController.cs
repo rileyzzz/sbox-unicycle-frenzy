@@ -286,21 +286,15 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void DoRotation()
 	{
-		if ( pl.TargetForward == default )
-		{
-			pl.TargetForward = Input.Rotation;
-		}
-
 		var spd = Velocity.WithZ( 0 ).Length;
 		var grounded = GroundEntity != null;
 		var inputFwd = Input.Rotation.Forward.WithZ( 0 );
 
 		var canTurn = (!grounded && spd < StopSpeed) || (grounded && spd > StopSpeed);
-		canTurn = canTurn && !inputFwd.IsNearlyEqual( pl.TargetForward.Forward.WithZ( 0 ) );
 
 		if ( canTurn )
 		{
-			var inputRot = Rotation.LookAt( inputFwd );
+			var inputRot = FromToRotation( Vector3.Forward, inputFwd );
 			var turnSpeed = grounded ? GroundTurnSpeed : AirTurnSpeed;
 			pl.TargetForward = Rotation.Slerp( pl.TargetForward, inputRot, turnSpeed * Time.Delta );
 

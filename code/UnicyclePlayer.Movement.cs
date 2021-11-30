@@ -38,7 +38,7 @@ internal partial class UnicyclePlayer
 		PedalStartPosition = default;
 		PedalTargetPosition = default;
 		TimeSincePedalStart = default;
-		TargetForward = default;
+		TargetForward = Rotation;
 	}
 
 	public override void BuildInput( InputBuilder input )
