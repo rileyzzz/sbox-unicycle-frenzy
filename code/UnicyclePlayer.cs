@@ -6,7 +6,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 {
 
 	[Net]
-	public AnimEntity Terry { get; set; }
+	public UnicycleEntity Unicycle { get; set; }
 	[Net]
 	public List<Checkpoint> Checkpoints { get; set; } = new();
 
@@ -17,7 +17,10 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	{
 		base.Respawn();
 
-		SetModel( "models/unicycle_dev.vmdl" );
+		SetModel( "models/citizen/citizen.vmdl" );
+
+		Unicycle = new UnicycleEntity();
+		Unicycle.SetParent( this, null, Transform.Zero.WithScale( 1 ) );
 
 		Camera = new UnicycleCamera();
 		Controller = new UnicycleController();
@@ -25,11 +28,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		EnableAllCollisions = true;
 		EnableDrawing = true;
-
-		Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
-		Terry.SetParent( this, "Seat" );
-		Terry.SetAnimBool( "b_sit", true );
-		Terry.LocalPosition = Vector3.Down * 15;
 
 		var c = Controller as UnicycleController;
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, c.Mins, c.Maxs );
@@ -40,9 +38,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			clothing.LoadFromClient( Client );
 		}
 
-		clothing.DressEntity( Terry );
+		clothing.DressEntity( this );
 
-		RespawnOnClient();
 		ResetMovement();
 		GotoLastCheckpoint();
 	}
@@ -54,8 +51,11 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		EnableAllCollisions = false;
 		EnableDrawing = false;
 
-		Terry.EnableDrawing = false;
-		Terry.DeleteAsync( 10 );
+		if ( Unicycle.IsValid() )
+		{
+			Unicycle.EnableDrawing = false;
+			Unicycle.DeleteAsync( 10f );
+		}
 
 		Camera = new SpectateRagdollCamera();
 
@@ -103,12 +103,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		SetRotationOnClient( rotation );
 		ResetInterpolation();
 		ResetMovement();
-	}
-
-	[ClientRpc]
-	private void RespawnOnClient()
-	{
-		ResetBones();
 	}
 
 }

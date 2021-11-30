@@ -63,7 +63,9 @@ internal partial class UnicyclePlayer
 	private void RagdollOnClient()
 	{
 		RagdollModel( this );
-		RagdollModel( Terry );
+		//RagdollModel( Unicycle.FrameModel );
+		//RagdollModel( Unicycle.WheelModel );
+		//RagdollModel( Unicycle.SeatModel );
 	}
 
 }
