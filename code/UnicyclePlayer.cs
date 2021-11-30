@@ -6,6 +6,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 {
 
 	[Net]
+	public AnimEntity Terry { get; set; }
+	[Net]
 	public UnicycleEntity Unicycle { get; set; }
 	[Net]
 	public List<Checkpoint> Checkpoints { get; set; } = new();
@@ -17,17 +19,24 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	{
 		base.Respawn();
 
+		// todo: not sure I like this setup, might prefer it like CarEntity
+		// so the player is actually a normal terry instead of an invisible entity w/ controller
 		SetModel( "models/citizen/citizen.vmdl" );
+		EnableDrawing = false;
+		EnableAllCollisions = true;
 
 		Unicycle = new UnicycleEntity();
 		Unicycle.SetParent( this, null, Transform.Zero.WithScale( 1 ) );
 
+		Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
+		Terry.SetParent( Unicycle, null, Transform.Zero.WithScale( 1 ) );
+		Terry.SetAnimBool( "b_sit", true );
+		Terry.LocalPosition = Unicycle.GetAssLocalPosition();
+		Terry.LocalPosition -= Vector3.Up * 12; // remove this when proper ass attachment
+
 		Camera = new UnicycleCamera();
 		Controller = new UnicycleController();
 		Animator = new UnicycleAnimator();
-
-		EnableAllCollisions = true;
-		EnableDrawing = true;
 
 		var c = Controller as UnicycleController;
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, c.Mins, c.Maxs );
@@ -38,7 +47,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			clothing.LoadFromClient( Client );
 		}
 
-		clothing.DressEntity( this );
+		clothing.DressEntity( Terry );
 
 		ResetMovement();
 		GotoLastCheckpoint();
@@ -54,7 +63,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		if ( Unicycle.IsValid() )
 		{
 			Unicycle.EnableDrawing = false;
-			Unicycle.DeleteAsync( 10f );
+			Unicycle.Delete();
+		}
+
+		if ( Terry.IsValid() )
+		{
+			Terry.EnableDrawing = false;
+			Terry.Delete();
 		}
 
 		Camera = new SpectateRagdollCamera();

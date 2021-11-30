@@ -1,4 +1,6 @@
 ﻿using Sandbox;
+using System;
+using System.Numerics;
 
 internal partial class UnicycleEntity : Entity
 {
@@ -32,11 +34,6 @@ internal partial class UnicycleEntity : Entity
 		Assemble();
 	}
 
-	public override void Simulate( Client client )
-	{
-		
-	}
-
 	public void Assemble()
 	{
 		Host.AssertServer();
@@ -58,7 +55,7 @@ internal partial class UnicycleEntity : Entity
 		if ( hub.HasValue )
 		{
 			WheelModel.LocalPosition -= hub.Value.Position;
-			FrameModel.LocalPosition = Vector3.Up * hub.Value.Position.z;
+			FrameModel.LocalPosition = Vector3.Up * hub.Value.Position.z - 2;
 		}
 	}
 

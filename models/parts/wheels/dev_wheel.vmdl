@@ -60,6 +60,21 @@
 					},
 				]
 			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "PhysicsShapeCylinder"
+						parent_bone = ""
+						surface_prop = "default"
+						collision_prop = "default"
+						radius = 12.5
+						point0 = [ 0.0, -1.4, 12.0 ]
+						point1 = [ 0.0, 1.4, 12.0 ]
+					},
+				]
+			},
 		]
 		model_archetype = ""
 		primary_associated_entity = ""

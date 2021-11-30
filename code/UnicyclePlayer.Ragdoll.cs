@@ -62,10 +62,10 @@ internal partial class UnicyclePlayer
 	[ClientRpc]
 	private void RagdollOnClient()
 	{
-		RagdollModel( this );
-		//RagdollModel( Unicycle.FrameModel );
-		//RagdollModel( Unicycle.WheelModel );
-		//RagdollModel( Unicycle.SeatModel );
+		RagdollModel( Terry );
+		RagdollModel( Unicycle.FrameModel );
+		RagdollModel( Unicycle.WheelModel );
+		RagdollModel( Unicycle.SeatModel );
 	}
 
 }

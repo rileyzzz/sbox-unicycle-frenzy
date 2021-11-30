@@ -210,6 +210,7 @@ internal partial class UnicycleController : BasePlayerController
 		{
 			AddEvent( "land" );
 			pl.Tilt = Rotation.Angles().WithYaw( 0 );
+			Position = Position.WithZ( tr.EndPos.z );
 		}
 
 		GroundEntity = tr.Entity;
