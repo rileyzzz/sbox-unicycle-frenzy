@@ -45,7 +45,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						name = "unicycle_dev"
+						name = "Frame"
 						filename = "models/unicycle_dev.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
@@ -57,7 +57,53 @@
 						import_filter = 
 						{
 							exclude_by_default = false
-							exception_list = [  ]
+							exception_list = 
+							[
+								"Wheel",
+								"Right_Pedal",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Wheel"
+						filename = "models/unicycle_dev.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = 
+							[
+								"Right_Pedal",
+								"Frame",
+							]
+						}
+					},
+					{
+						_class = "RenderMeshFile"
+						name = "Pedals"
+						filename = "models/unicycle_dev.fbx"
+						import_translation = [ 0.0, 0.0, 0.0 ]
+						import_rotation = [ 0.0, 0.0, 0.0 ]
+						import_scale = 1.0
+						align_origin_x_type = "None"
+						align_origin_y_type = "None"
+						align_origin_z_type = "None"
+						parent_bone = ""
+						import_filter = 
+						{
+							exclude_by_default = false
+							exception_list = 
+							[
+								"Frame",
+								"Wheel",
+							]
 						}
 					},
 				]
@@ -67,6 +113,74 @@
 				children = 
 				[
 					{
+						_class = "Folder"
+						name = "Root"
+						children = 
+						[
+							{
+								_class = "PhysicsShapeBox"
+								parent_bone = "Root"
+								surface_prop = "plastic"
+								collision_prop = "default"
+								origin = [ 0.0, 6.481153, -37.049946 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								dimensions = [ 10.0, 16.62484, 4.911106 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "Root"
+								surface_prop = "metal"
+								collision_prop = "default"
+								radius = 4.208615
+								point0 = [ 0.092907, 7.323256, -30.307583 ]
+								point1 = [ 0.092907, 7.323256, -28.575573 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "Root"
+								surface_prop = "metal"
+								collision_prop = "default"
+								radius = 1.209281
+								point0 = [ 3.524197, 7.052279, -25.291306 ]
+								point1 = [ 3.524197, 7.052279, -12.650721 ]
+							},
+							{
+								_class = "PhysicsShapeCapsule"
+								parent_bone = "Root"
+								surface_prop = "metal"
+								collision_prop = "default"
+								radius = 1.209281
+								point0 = [ -3.402739, 7.289431, -25.092741 ]
+								point1 = [ -3.402739, 7.289431, -12.452156 ]
+							},
+						]
+					},
+					{
+						_class = "Folder"
+						name = "Pedals"
+						children = 
+						[
+							{
+								_class = "PhysicsShapeBox"
+								parent_bone = "Pedals"
+								surface_prop = "default"
+								collision_prop = "default"
+								origin = [ -0.105281, -2.394987, 2.7638 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								dimensions = [ 3.613734, 6.533539, 7.151351 ]
+							},
+							{
+								_class = "PhysicsShapeBox"
+								parent_bone = "Pedals"
+								surface_prop = "default"
+								collision_prop = "default"
+								origin = [ -0.105272, -18.16773, -3.02351 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								dimensions = [ 3.613734, 6.670063, 7.398805 ]
+							},
+						]
+					},
+					{
 						_class = "PhysicsShapeCylinder"
 						parent_bone = "Wheel"
 						surface_prop = "rubber"
@@ -74,60 +188,6 @@
 						radius = 12.478203
 						point0 = [ 0.0, 1.97881, 0.0 ]
 						point1 = [ 0.0, -1.87562, 0.0 ]
-					},
-					{
-						_class = "PhysicsShapeBox"
-						parent_bone = "Root"
-						surface_prop = "plastic"
-						collision_prop = "default"
-						origin = [ 0.0, 6.481153, -37.049946 ]
-						angles = [ 0.0, 0.0, 0.0 ]
-						dimensions = [ 10.0, 16.62484, 4.911106 ]
-					},
-					{
-						_class = "PhysicsShapeCapsule"
-						parent_bone = "Root"
-						surface_prop = "metal"
-						collision_prop = "default"
-						radius = 4.208615
-						point0 = [ 0.092907, 7.323256, -30.307583 ]
-						point1 = [ 0.092907, 7.323256, -28.575573 ]
-					},
-					{
-						_class = "PhysicsShapeCapsule"
-						parent_bone = "Root"
-						surface_prop = "metal"
-						collision_prop = "default"
-						radius = 1.209281
-						point0 = [ 3.524197, 7.052279, -25.291306 ]
-						point1 = [ 3.524197, 7.052279, -12.650721 ]
-					},
-					{
-						_class = "PhysicsShapeCapsule"
-						parent_bone = "Root"
-						surface_prop = "metal"
-						collision_prop = "default"
-						radius = 1.209281
-						point0 = [ -3.402739, 7.289431, -25.092741 ]
-						point1 = [ -3.402739, 7.289431, -12.452156 ]
-					},
-					{
-						_class = "PhysicsShapeBox"
-						parent_bone = "Pedals"
-						surface_prop = "default"
-						collision_prop = "default"
-						origin = [ -0.105281, -3.179623, 2.880862 ]
-						angles = [ -0.000008, -0.000045, -31.190134 ]
-						dimensions = [ 3.613734, 4.51153, 7.385475 ]
-					},
-					{
-						_class = "PhysicsShapeBox"
-						parent_bone = "Pedals"
-						surface_prop = "default"
-						collision_prop = "default"
-						origin = [ -0.105272, -17.08847, -3.731661 ]
-						angles = [ -0.000008, -0.000045, -31.190134 ]
-						dimensions = [ 3.613734, 4.51153, 8.815107 ]
 					},
 				]
 			},
@@ -143,6 +203,27 @@
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
+					},
+				]
+			},
+			{
+				_class = "BodyGroupList"
+				children = 
+				[
+					{
+						_class = "BodyGroup"
+						name = "Wheel"
+						children = 
+						[
+							{
+								_class = "BodyGroupChoice"
+								meshes = 
+								[
+									"Wheel",
+								]
+							},
+						]
+						hidden_in_tools = false
 					},
 				]
 			},
