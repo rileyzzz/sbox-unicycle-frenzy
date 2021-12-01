@@ -5,6 +5,24 @@ $blue: #2C3673;
 $radius: 12px;
 $padding: 15px;
 
+IconPanel {
+    font-family: MaterialIcons;
+    align-items: center;
+    margin-right: 10px;
+}
+
+button, navlink {
+    &:active {
+        sound-in: button.click;
+    }
+
+    &:hover {
+        &:not( .active ) {
+            sound-in: button.hover;
+        }
+    }
+}
+
 GameMenu {
     background-image: linear-gradient(rgba($bg, .5), rgba($blue .5));
     backdrop-filter: blur(5);
@@ -13,12 +31,6 @@ GameMenu {
     flex-grow: 1;
     transition: opacity .18s ease-out;
     opacity: 0;
-
-    IconPanel {
-        font-family: MaterialIcons;
-        align-items: center;
-        margin-right: 10px;
-    }
 
     &.open {
         opacity: 1;
