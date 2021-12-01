@@ -50,18 +50,24 @@ GameMenu {
             flex-grow: 1;
         }
 
-        .button-wrap {
+        navlink, button {
             color: #b1b1b1;
             flex-direction: column;
             font-size: 20px;
             font-family: Poppins;
             cursor: pointer;
             transition: color .15s linear;
+            width: 100%;
 
-            navlink, button {
-                width: 100%;
-                align-items: center;
-                padding: 10px 15px;
+            Label {
+                padding: 10px;
+                padding-left: 38px;
+            }
+
+            IconPanel {
+                position:absolute;
+                left: 7px;
+                top: 15px;
             }
 
             .underline {

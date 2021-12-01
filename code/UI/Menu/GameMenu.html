@@ -4,27 +4,27 @@
 <root>
 
     <div class="sidebar">
-        <div class="button-wrap">
-            <navlink icon="leaderboard" href="menu/leaderboards">Leadeboards</navlink>
+        <navlink icon="leaderboard" href="menu/leaderboards">
+            <label>Leadeboards</label>
             <div class="underline"></div>
-        </div>
-        <div class="button-wrap">
-            <navlink icon="star" href="menu/achievements">Achievements</navlink>
+        </navlink>
+        <navlink icon="star" href="menu/achievements">
+            <label>Achievements</label>
             <div class="underline"></div>
-        </div>
-        <div class="button-wrap">
-            <navlink icon="iron" href="menu/customize">Customize</navlink>
+        </navlink>
+        <navlink icon="iron" href="menu/customize">
+            <label>Customize</label>
             <div class="underline"></div>
-        </div>
-        <div class="button-wrap">
-            <navlink icon="settings" href="menu/settings">Settings</navlink>
+        </navlink>
+        <navlink icon="settings" href="menu/settings">
+            <label>Settings</label>
             <div class="underline"></div>
-        </div>
+        </navlink>
         <div class="spacer"></div>
-        <div class="button-wrap">
-            <button icon="close" onclick="Close()">Close</button>
+        <button icon="close" onclick="Close()">
+            <label>Close</label>
             <div class="underline"></div>
-        </div>
+        </button>
     </div>
 
     <div @ref="NavigatorCanvas" class="content"></div>
