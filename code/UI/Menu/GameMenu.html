@@ -1,0 +1,32 @@
+﻿
+<link rel="stylesheet" href="GameMenu.scss" />
+
+<root>
+
+    <div class="sidebar">
+        <div class="button-wrap">
+            <navlink icon="leaderboard" href="menu/leaderboards">Leadeboards</navlink>
+            <div class="underline"></div>
+        </div>
+        <div class="button-wrap">
+            <navlink icon="star" href="menu/achievements">Achievements</navlink>
+            <div class="underline"></div>
+        </div>
+        <div class="button-wrap">
+            <navlink icon="iron" href="menu/customize">Customize</navlink>
+            <div class="underline"></div>
+        </div>
+        <div class="button-wrap">
+            <navlink icon="settings" href="menu/settings">Settings</navlink>
+            <div class="underline"></div>
+        </div>
+        <div class="spacer"></div>
+        <div class="button-wrap">
+            <button icon="close" onclick="Close()">Close</button>
+            <div class="underline"></div>
+        </div>
+    </div>
+
+    <div @ref="NavigatorCanvas" class="content"></div>
+
+</root>

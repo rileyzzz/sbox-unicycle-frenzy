@@ -2,6 +2,10 @@
 UnicycleHud {
     color: white;
 
+    .hidden {
+        display: none;
+    }
+
     pedaltest {
         position: absolute;
         bottom: 32px;
