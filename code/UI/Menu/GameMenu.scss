@@ -1,9 +1,4 @@
-﻿$primary: #55CCD9;
-$secondary: #F2BC1B;
-$bg: #1f202a;
-$blue: #2C3673;
-$radius: 12px;
-$padding: 15px;
+﻿@import "../vars.scss";
 
 IconPanel {
     font-family: MaterialIcons;
