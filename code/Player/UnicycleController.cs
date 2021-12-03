@@ -30,6 +30,7 @@ internal partial class UnicycleController : BasePlayerController
 	public float BrakeStrength => 3f;
 	public bool UseMomentum => false;
 	public float StopSpeed => 5f;
+	public float MaxAirTurnSpeed => 35f;
 	public float SlopeTipStrength => 2.5f;
 
 	public string GroundSurface { get; private set; }
@@ -292,7 +293,7 @@ internal partial class UnicycleController : BasePlayerController
 		var grounded = GroundEntity != null;
 		var inputFwd = Input.Rotation.Forward.WithZ( 0 );
 
-		var canTurn = (!grounded && spd < StopSpeed) || (grounded && spd > StopSpeed);
+		var canTurn = (!grounded && spd < MaxAirTurnSpeed) || (grounded && spd > StopSpeed);
 
 		if ( canTurn )
 		{
