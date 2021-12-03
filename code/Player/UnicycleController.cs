@@ -27,7 +27,7 @@ internal partial class UnicycleController : BasePlayerController
 	public float SlopeSpeed => 800f;
 	public float BrakeStrength => 3f;
 	public bool UseMomentum => false;
-	public float StopSpeed => 25f;
+	public float StopSpeed => 5f;
 	public float SlopeTipStrength => 2.5f;
 
 	public string GroundSurface { get; private set; }
