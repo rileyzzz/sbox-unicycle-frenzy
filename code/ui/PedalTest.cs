@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System;
 
 [UseTemplate]
 internal class PedalTest : Panel
@@ -7,6 +8,7 @@ internal class PedalTest : Panel
 
 	public Panel LeftPedal { get; set; }
 	public Panel RightPedal { get; set; }
+	public Panel Jump { get; set; }
 	public Panel AbsLean { get; set; }
 	public Panel LocalLean { get; set; }
 
@@ -23,6 +25,10 @@ internal class PedalTest : Panel
 
 		LeftPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = leftTop * 100f };
 		RightPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = rightTop * 100f };
+
+		var jumpStrength = Math.Min( player.TimeSinceJumpDown / controller.MaxJumpStrengthTime, 1f );
+		if ( !Input.Down( InputButton.Jump ) ) jumpStrength = 0;
+		Jump.Style.Height = new Length() { Unit = LengthUnit.Percentage, Value = jumpStrength * 100f };
 
 		var absLean = player.Rotation.Angles();
 		var absRollAlpha = absLean.roll.LerpInverse( -maxLean, maxLean );
