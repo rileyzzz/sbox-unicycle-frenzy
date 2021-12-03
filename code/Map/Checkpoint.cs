@@ -18,6 +18,11 @@ internal partial class Checkpoint : Entity
 	[Net]
 	public Vector3 Maxs { get; set; } = new Vector3( 75, 75, 100 );
 
+	[Property]
+	public bool IsStart { get; set; }
+	[Property]
+	public bool IsEnd { get; set; }
+
 	public Checkpoint()
 	{
 		Transmit = TransmitType.Always;

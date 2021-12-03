@@ -27,6 +27,8 @@ metadata
 [
 	mins(vector) : "Checkpoint mins" : "-75 -75 0" : ""
 	maxs(vector) : "Checkpoint maxs" : "75 75 100" : ""
+	isstart(boolean) : "Is Start" : 0 : ""
+	isend(boolean) : "Is End" : 0 : ""
 ]
 
 //
