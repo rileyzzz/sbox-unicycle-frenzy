@@ -28,6 +28,7 @@ internal class PedalTest : Panel
 
 		var jumpStrength = Math.Min( player.TimeSinceJumpDown / controller.MaxJumpStrengthTime, 1f );
 		if ( !Input.Down( InputButton.Jump ) ) jumpStrength = 0;
+		jumpStrength = Easing.EaseOut( jumpStrength );
 		Jump.Style.Height = new Length() { Unit = LengthUnit.Percentage, Value = jumpStrength * 100f };
 
 		var absLean = player.Rotation.Angles();
