@@ -5,6 +5,11 @@ using Sandbox.UI;
 internal class GameMenu : NavigatorPanel
 {
 
+	public GameMenu()
+	{
+		Navigate( "menu/leaderboards" );
+	}
+
 	public void Close()
 	{
 		SetClass( "open", false );
