@@ -50,7 +50,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		clothing.DressEntity( Terry );
 
 		ResetMovement();
-		GotoLastCheckpoint();
+		GotoBestCheckpoint();
 	}
 
 	public override void OnKilled()
@@ -103,12 +103,16 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Checkpoints.Add( checkpoint );
 	}
 
-	public void GotoLastCheckpoint()
+	public void GotoBestCheckpoint()
 	{
 		Host.AssertServer();
 
 		var cp = Checkpoints.LastOrDefault();
-		if ( !cp.IsValid() ) return;
+		if ( !cp.IsValid() )
+		{
+			cp = Entity.All.FirstOrDefault( x => x is Checkpoint c && c.IsStart ) as Checkpoint;
+			if ( cp == null ) return;
+		}
 
 		cp.GetSpawnPoint( out Vector3 position, out Rotation rotation );
 		Position = position + Vector3.Up * 5;
