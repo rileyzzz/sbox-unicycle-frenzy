@@ -328,7 +328,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( !Input.Released( InputButton.Jump ) ) return;
 
-		var t = pl.TimeSinceJumpDown / MaxJumpStrengthTime;
+		var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
 		t = Easing.EaseOut( t );
 		var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
 		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
