@@ -54,7 +54,7 @@ internal partial class UnicycleController
 		if ( Velocity.WithZ( 0 ).Length < 25f ) return 0f;
 		if ( Pawn.Health <= 0 ) return 0f;
 
-		return .05f.LerpTo( 1f, Velocity.WithZ( 0 ).Length / 900f );
+		return .08f.LerpTo( 1f, Velocity.WithZ( 0 ).Length / 500f );
 	}
 
 	private string GetRollingSoundName()
