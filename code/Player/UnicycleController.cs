@@ -329,7 +329,7 @@ internal partial class UnicycleController : BasePlayerController
 		var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
 		t = Easing.EaseOut( t );
 		var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
-		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
+		var up = Rotation.From( Rotation.Angles() ).Up;
 
 		Velocity += up * jumpStrength;
 		GroundEntity = null;
