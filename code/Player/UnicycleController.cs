@@ -18,7 +18,9 @@ internal partial class UnicycleController : BasePlayerController
 	public float PedalResetTime => .75f;
 	public float MinPedalStrength => 10f;
 	public float MaxPedalStrength => 50f;
-	public float JumpStrength => 300f;
+	public float MinJumpStrength => 200f;
+	public float MaxJumpStrength => 375f;
+	public float MaxJumpStrengthTime => 1.75f;
 	public float PerfectPedalBoost => 50f;
 	public float MaxLean => 35f;
 	public float LeanSpeed => 80f;
@@ -316,11 +318,19 @@ internal partial class UnicycleController : BasePlayerController
 	private void CheckJump()
 	{
 		if ( GroundEntity == null ) return;
-		if ( !Input.Pressed( InputButton.Jump ) ) return;
 
+		if ( Input.Pressed( InputButton.Jump ) )
+		{
+			pl.TimeSinceJumpDown = 0;
+			return;
+		}
+
+		if ( !Input.Released( InputButton.Jump ) ) return;
+
+		var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, pl.TimeSinceJumpDown / MaxJumpStrengthTime );
 		var up = Rotation.From( Rotation.Angles().WithRoll( 0 ) ).Up;
 
-		Velocity += up * JumpStrength;
+		Velocity += up * jumpStrength;
 		GroundEntity = null;
 
 		AddEvent( "jump" );
