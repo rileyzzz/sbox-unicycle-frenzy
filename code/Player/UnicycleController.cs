@@ -357,6 +357,11 @@ internal partial class UnicycleController : BasePlayerController
 		if ( GroundEntity == null ) return;
 		if ( !Input.Down( InputButton.Duck ) ) return;
 
+		if ( !PrevGrounded && Velocity.WithZ(0).Length < 300 )
+		{
+			Velocity *= .35f;
+		}
+
 		Velocity = Velocity.LerpTo( Vector3.Zero, Time.Delta * BrakeStrength ).WithZ( Velocity.z );
 	}
 
