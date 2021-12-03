@@ -318,9 +318,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void CheckJump()
 	{
-		if ( GroundEntity == null ) return;
-
-		if ( Input.Pressed( InputButton.Jump ) )
+		if ( Input.Pressed( InputButton.Jump ) || GroundEntity == null )
 		{
 			pl.TimeSinceJumpDown = 0;
 			return;
