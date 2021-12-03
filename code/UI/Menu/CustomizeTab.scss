@@ -46,9 +46,9 @@ CustomizeTab {
             flex-direction: column;
 
             .render {
-                background-image: url(textures/unicyclepreview.png);
-                background-position: left bottom;
                 flex-grow: 1;
+                align-items: center;
+                justify-content: center;
             }
 
             .buttons {
@@ -60,8 +60,8 @@ CustomizeTab {
                 button {
                     padding: 15px;
                     font-size: 20px;
-                    background-color: $bg;
                     text-shadow: 1px 1px 1px black;
+                    background-color: rgba($primary .1);
                     border-radius: $radius;
                     transition: all .15s ease-out;
                     cursor: pointer;
