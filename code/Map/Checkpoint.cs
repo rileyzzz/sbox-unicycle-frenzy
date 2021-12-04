@@ -6,7 +6,7 @@ using Sandbox.Internal;
 [EditorModel( "models/editor/playerstart.vmdl", staticGreen: 100, FixedBounds = true )]
 [EntityTool( "Player Checkpoint", "Unicycle Frenzy", "Defines a checkpoint where the player will respawn after falling" )]
 [BoundsHelper( "mins", "maxs", false, true )]
-internal partial class Checkpoint : Entity
+internal partial class Checkpoint : ModelEntity
 {
 
 	[Property( "mins", Title = "Checkpoint mins" )]
@@ -18,14 +18,52 @@ internal partial class Checkpoint : Entity
 	[Net]
 	public Vector3 Maxs { get; set; } = new Vector3( 75, 75, 100 );
 
-	[Property]
+	[Net, Property]
 	public bool IsStart { get; set; }
-	[Property]
+	[Net, Property]
 	public bool IsEnd { get; set; }
 
-	public Checkpoint()
+	public override void Spawn()
 	{
+		base.Spawn();
+
+		SetupPhysicsFromAABB( PhysicsMotionType.Static, Mins, Maxs );
+
 		Transmit = TransmitType.Always;
+		CollisionGroup = CollisionGroup.Trigger;
+		EnableSolidCollisions = false;
+		EnableTouch = true;
+	}
+
+	public override void StartTouch( Entity other )
+	{
+		base.StartTouch( other );
+
+		if ( other is not UnicyclePlayer pl ) return;
+
+		if(pl.IsServer) pl.TrySetCheckpoint( this );
+
+		if ( this.IsEnd )
+		{
+			pl.CompleteCourse();
+		}
+
+		if ( this.IsStart )
+		{
+			pl.TimerState = TimerState.InStartZone;
+		}
+	}
+
+	public override void EndTouch( Entity other )
+	{
+		base.EndTouch( other );
+
+		if ( other is not UnicyclePlayer pl ) return;
+
+		if( this.IsStart )
+		{
+			pl.StartCourse();
+		}
 	}
 
 	[Event.Frame]
@@ -36,19 +74,6 @@ internal partial class Checkpoint : Entity
 			color = Color.Red;
 
 		DebugOverlay.Box( Position + Mins, Position + Maxs, color );
-	}
-
-	[Event.Tick.Server]
-	private void OnTick()
-	{
-		foreach ( var player in Player.All )
-		{
-			if ( player is not UnicyclePlayer pl ) continue;
-			var bounds = new BBox( Position + Mins, Position + Maxs );
-			if ( !bounds.Overlaps( pl.WorldSpaceBounds ) ) continue;
-
-			pl.TrySetCheckpoint( this );
-		}
 	}
 
 	public void GetSpawnPoint( out Vector3 position, out Rotation rotation )
