@@ -7,6 +7,42 @@ internal class UnicycleEnsemble
 
 	public List<UnicyclePart> Parts = new();
 
+	public void Equip( UnicyclePart part )
+	{
+		if ( part == null )
+		{
+			throw new Exception( "Equipping a null part" );
+		}
+
+		if ( Parts.Contains( part ) )
+		{
+			throw new Exception( "Equipping a part that is already equipped" );
+		}
+
+		var partInSlot = Parts.FirstOrDefault( x => x.Type == part.Type );
+		if ( partInSlot != null )
+		{
+			Unequip( partInSlot );
+		}
+
+		Parts.Add( part );
+	}
+
+	public void Unequip( UnicyclePart part )
+	{
+		if ( part == null )
+		{
+			throw new Exception( "Unequipping a null part" );
+		}
+
+		if ( !Parts.Contains( part ) )
+		{
+			throw new Exception( "Unequipping a part that isn't equipped" );
+		}
+
+		Parts.Remove( part );
+	}
+
 	public static UnicycleEnsemble Default
 	{
 		get
