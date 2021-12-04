@@ -44,7 +44,7 @@ internal class CustomizeRenderScene : Panel
 		base.OnMouseWheel( value );
 	}
 
-	public void BuildRenderScene()
+	public void Build()
 	{
 		renderScene?.Delete( true );
 

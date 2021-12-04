@@ -3,13 +3,7 @@
 
 <root>
 
-    <div class="part-types gamepanel">
-        <navlink>frames</navlink>
-        <navlink>wheels</navlink>
-        <navlink>seats</navlink>
-        <navlink>pedals</navlink>
-        <navlink>trails</navlink>
-    </div>
+    <div @ref="PartsTypeList" class="part-types gamepanel"></div>
 
     <div class="shitonrightside">
         <div class="preview gamepanel">
@@ -20,42 +14,7 @@
                 <button onclick="RebuildRenderScene()">refrehs</button>
             </div>
         </div>
-        <div class="parts gamepanel">
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-            <button class="part"></button>
-        </div>
+        <div @ref="PartsList" class="parts gamepanel"></div>
     </div>
 
 </root>
