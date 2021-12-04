@@ -4,7 +4,7 @@ using Sandbox.UI.Construct;
 using System.Linq;
 
 [UseTemplate]
-[NavigatorTarget("menu/customize")]
+[NavigatorTarget( "menu/customize" )]
 internal class CustomizeTab : Panel
 {
 
@@ -60,11 +60,13 @@ internal class CustomizeTab : Panel
 
 	private void BuildRenderScene()
 	{
-		renderScene?.Delete(true);
+		renderScene?.Delete( true );
 
 		using ( SceneWorld.SetCurrent( new SceneWorld() ) )
 		{
 			GenerateModel();
+
+			SceneObject.CreateModel( "models/room.vmdl", Transform.Zero.WithScale( 10 ).WithPosition( Vector3.Down * 10 ) );
 
 			var skycolor = Color.Orange;
 
@@ -73,17 +75,20 @@ internal class CustomizeTab : Panel
 			{
 				skycolor = sceneLight.SkyColor;
 			}
-			
+
 			Light.Point( Vector3.Up * 150.0f, 200.0f, Color.White * 5.0f );
-			Light.Point( Vector3.Up * 10.0f + Vector3.Forward * 100.0f, 200, Color.White * 15.0f );
-			Light.Point( Vector3.Up * 10.0f + Vector3.Backward * 100.0f, 200, Color.White * 15f );
-			Light.Point( Vector3.Up * 10.0f + Vector3.Left * 100.0f, 200, skycolor * 20.0f );
-			Light.Point( Vector3.Up * 10.0f + Vector3.Right * 100.0f, 200, Color.White * 15.0f );
+			Light.Point( Vector3.Up * 75.0f + Vector3.Forward * 100.0f, 200, Color.White * 15.0f );
+			Light.Point( Vector3.Up * 75.0f + Vector3.Backward * 100.0f, 200, Color.White * 15f );
+			Light.Point( Vector3.Up * 75.0f + Vector3.Left * 100.0f, 200, skycolor * 20.0f );
+			Light.Point( Vector3.Up * 75.0f + Vector3.Right * 100.0f, 200, Color.White * 15.0f );
 			Light.Point( Vector3.Up * 100.0f + Vector3.Up, 200, Color.White * 15.0f );
 
 			renderScene = RenderPanel.Add.ScenePanel( SceneWorld.Current, renderScenePos, Rotation.From( renderSceneAngles ), 75 );
-			renderScene.Style.Width = Length.Percent(100);
-			renderScene.Style.Height = Length.Percent(100);
+			renderScene.Style.Width = Length.Percent( 100 );
+			renderScene.Style.Height = Length.Percent( 100 );
+			renderScene.CameraPosition = new Vector3( -53, 100, 42 );
+			renderScene.CameraRotation = Rotation.From( 10, -62, 0 );
+			renderSceneAngles = renderScene.CameraRotation.Angles();
 		}
 	}
 
@@ -92,7 +97,7 @@ internal class CustomizeTab : Panel
 		var frame = SceneObject.CreateModel( "models/parts/frames/dev_frame", Transform.Zero );
 		var wheel = SceneObject.CreateModel( "models/parts/wheels/dev_wheel", Transform.Zero );
 		var seat = SceneObject.CreateModel( "models/parts/seats/dev_seat", Transform.Zero );
-		
+
 		var hub = wheel.Model.GetAttachment( "Hub" );
 
 		frame.Position = Vector3.Up * hub.Value.Position.z;
