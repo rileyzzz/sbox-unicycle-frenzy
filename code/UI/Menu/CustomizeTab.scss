@@ -5,10 +5,7 @@ CustomizeTab {
 
     .part-types {
         flex-direction: column;
-        background-color: $bg;
-        border-radius: $radius;
         align-items: center;
-        padding: $padding;
         margin-right: $padding;
         height: 100%;
 
@@ -40,9 +37,6 @@ CustomizeTab {
 
         .preview {
             margin-bottom: $padding;
-            padding: $padding;
-            background-color: $bg;
-            border-radius: $radius;
             height: 60%;
             flex-direction: column;
 
@@ -76,9 +70,6 @@ CustomizeTab {
         }
 
         .parts {
-            padding: $padding;
-            background-color: $bg;
-            border-radius: $radius;
             flex-grow: 1;
             flex-wrap: wrap;
 

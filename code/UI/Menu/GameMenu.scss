@@ -1,23 +1,5 @@
 ﻿@import "../vars.scss";
 
-IconPanel {
-    font-family: MaterialIcons;
-    align-items: center;
-    margin-right: 10px;
-}
-
-button, navlink {
-    &:active {
-        sound-in: button.click;
-    }
-
-    &:hover {
-        &:not( .active ) {
-            sound-in: button.hover;
-        }
-    }
-}
-
 GameMenu {
     background-image: linear-gradient(rgba($bg, .5), rgba($blue .5));
     backdrop-filter: blur(5);
@@ -36,10 +18,7 @@ GameMenu {
         width: 20%;
         height: 50%;
         margin-right: 32px;
-        background-color: rgba($bg .95);
-        border-radius: $radius;
         flex-direction: column;
-        padding: $padding;
 
         .spacer {
             flex-grow: 1;
@@ -84,8 +63,5 @@ GameMenu {
 
     .content {
         flex-grow: 1;
-        background-color: rgba($bg .95);
-        border-radius: $radius;
-        padding: $padding;
     }
 }

@@ -3,7 +3,7 @@ using Sandbox.UI;
 using System;
 
 [UseTemplate]
-internal class PedalTest : Panel
+internal class DevHud : Panel
 {
 
 	public Panel LeftPedal { get; set; }
