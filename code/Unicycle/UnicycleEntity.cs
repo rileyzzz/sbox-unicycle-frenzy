@@ -13,7 +13,7 @@ internal partial class UnicycleEntity : Entity
 	[Net]
 	public Entity WheelPivot { get; set; }
 
-	public Vector3 GetAssLocalPosition()
+	public Vector3 GetAssPosition()
 	{
 		var assAttachment = SeatModel.GetAttachment( "Ass", true );
 		if ( !assAttachment.HasValue )
@@ -21,7 +21,7 @@ internal partial class UnicycleEntity : Entity
 			return Vector3.Zero;
 		}
 
-		return assAttachment.Value.Position - Position;
+		return assAttachment.Value.Position;
 	}
 
 	private void AssembleParts()
@@ -78,8 +78,8 @@ internal partial class UnicycleEntity : Entity
 		parthash = hash;
 		AssembleParts();
 
-		pl.Terry.LocalPosition = GetAssLocalPosition();
-		pl.Terry.LocalPosition -= Vector3.Up * 12; // remove this when proper ass attachment
+		pl.Terry.Position = GetAssPosition();
+		pl.Terry.Position -= Vector3.Up * 12; // remove this when proper ass attachment
 	}
 
 	[Event.Tick.Server]
