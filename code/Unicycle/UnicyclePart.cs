@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-internal class UnicyclePart
+public partial class UnicyclePart
 {
-	public string Name;
-	public string Model;
-	public PartType Type;
-	public bool IsDefault;
+
+	public string Name { get; set; }
+	public string Model { get; set; }
+	public PartType Type { get; set; }
+	public bool IsDefault { get; set; }
+
+	public override int GetHashCode()
+	{
+		return HashCode.Combine( Name, Model, Type, IsDefault );
+	}
 
 	// there should be 1 default for each part type
 	public static List<UnicyclePart> All = new()
@@ -18,10 +25,10 @@ internal class UnicyclePart
 		new() { Type = PartType.Frame, Name = "Dev Frame", Model = "models/parts/frames/dev_frame", IsDefault = true },
 
 		//
-		new() { Type = PartType.Seat, Name = "Dev Seat", Model = "models/parts/frames/dev_seat", IsDefault = true },
+		new() { Type = PartType.Seat, Name = "Dev Seat", Model = "models/parts/seats/dev_seat", IsDefault = true },
 
 		//
-		new() { Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/frames/dev_pedal", IsDefault = true },
+		new() { Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/pedals/dev_pedal", IsDefault = true },
 	};
 
 	public static void Add( UnicyclePart part )
@@ -33,7 +40,7 @@ internal class UnicyclePart
 
 }
 
-internal enum PartType
+public enum PartType
 {
 	Frame,
 	Wheel,

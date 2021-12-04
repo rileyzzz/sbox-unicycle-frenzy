@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System;
 using System.Linq;
@@ -34,7 +35,9 @@ internal class CustomizeTab : Panel
 
 	public void BuildRenderScene()
 	{
-		RenderScene?.Build();
+		var ensemble = Local.Client.Components.Get<ClientConfig>().Ensemble;
+
+		RenderScene?.Build( ensemble );
 	}
 
 	public void LoadParts( PartType type )
@@ -46,6 +49,11 @@ internal class CustomizeTab : Panel
 		{
 			var icon = new UnicyclePartIcon( part );
 			icon.Parent = PartsList;
+			icon.AddEventListener( "onclick", () =>
+			 {
+				 Local.Client.Components.Get<ClientConfig>().Ensemble.Equip( part );
+				 BuildRenderScene();
+			 } );
 		}
 	}
 

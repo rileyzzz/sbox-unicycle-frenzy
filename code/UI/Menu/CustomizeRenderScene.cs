@@ -25,6 +25,8 @@ internal class CustomizeRenderScene : Panel
 	{
 		base.Tick();
 
+		if ( renderScene == null ) return;
+
 		if ( HasMouseCapture )
 		{
 			renderSceneAngles.pitch += Mouse.Delta.y;
@@ -44,13 +46,13 @@ internal class CustomizeRenderScene : Panel
 		base.OnMouseWheel( value );
 	}
 
-	public void Build()
+	public void Build( UnicycleEnsemble ensemble )
 	{
 		renderScene?.Delete( true );
 
 		using ( SceneWorld.SetCurrent( new SceneWorld() ) )
 		{
-			GenerateModel();
+			GenerateModel( ensemble );
 
 			SceneObject.CreateModel( "models/room.vmdl", Transform.Zero.WithScale( 10 ).WithPosition( Vector3.Down * 10 ) );
 
@@ -78,26 +80,33 @@ internal class CustomizeRenderScene : Panel
 		}
 	}
 
-	private SceneObject GenerateModel()
+	private SceneObject GenerateModel( UnicycleEnsemble ensemble )
 	{
-		var frame = SceneObject.CreateModel( "models/parts/frames/dev_frame", Transform.Zero );
-		var wheel = SceneObject.CreateModel( "models/parts/wheels/dev_wheel", Transform.Zero );
-		var seat = SceneObject.CreateModel( "models/parts/seats/dev_seat", Transform.Zero );
+		var def = UnicycleEnsemble.Default;
 
-		var hub = wheel.Model.GetAttachment( "Hub" );
+		var frame = ensemble.Frame ?? def.Frame;
+		var wheel = ensemble.Wheel ?? def.Wheel;
+		var seat = ensemble.Seat ?? def.Seat;
+		var pedal = ensemble.Pedal ?? def.Pedal;
 
-		frame.Position = Vector3.Up * hub.Value.Position.z;
+		var frameObj = SceneObject.CreateModel( frame.Model, Transform.Zero );
+		var wheelObj = SceneObject.CreateModel( wheel.Model, Transform.Zero );
+		var seatObj = SceneObject.CreateModel( seat.Model, Transform.Zero );
 
-		var seatAttachment = frame.Model.GetAttachment( "Seat" );
+		var hub = wheelObj.Model.GetAttachment( "Hub" );
 
-		seat.Position = seatAttachment.Value.Position + frame.Position;
+		frameObj.Position = Vector3.Up * hub.Value.Position.z;
+
+		var seatAttachment = frameObj.Model.GetAttachment( "Seat" );
+
+		seatObj.Position = seatAttachment.Value.Position + frameObj.Position;
 
 		// todo: pedals
 
-		frame.AddChild( "wheel", wheel );
-		frame.AddChild( "seat", seat );
+		frameObj.AddChild( "wheel", wheelObj );
+		frameObj.AddChild( "seat", seatObj );
 
-		return frame;
+		return frameObj;
 	}
 
 }
