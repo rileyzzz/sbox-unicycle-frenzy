@@ -52,12 +52,19 @@ internal class CustomizeTab : Panel
 		renderScene.CameraRotation = Rotation.Lerp( renderScene.CameraRotation, Rotation.From( renderSceneAngles ), 15f * Time.Delta );
 	}
 
+	public void RebuildRenderScene()
+	{
+		BuildRenderScene();
+	}
+
 	private void BuildRenderScene()
 	{
+		renderScene?.Delete(true);
+
 		using ( SceneWorld.SetCurrent( new SceneWorld() ) )
 		{
-			SceneObject.CreateModel( "models/unicycle_dev.vmdl", Transform.Zero );
-
+			GenerateModel();
+			
 			Light.Point( Vector3.Up * 150.0f, 200.0f, Color.White * 5.0f );
 			Light.Point( Vector3.Up * 10.0f + Vector3.Forward * 100.0f, 200, Color.White * 15.0f );
 			Light.Point( Vector3.Up * 10.0f + Vector3.Backward * 100.0f, 200, Color.White * 15f );
@@ -67,6 +74,28 @@ internal class CustomizeTab : Panel
 			renderScene.Style.Width = 512;
 			renderScene.Style.Height = 512;
 		}
+	}
+
+	private SceneObject GenerateModel()
+	{
+		var frame = SceneObject.CreateModel( "models/parts/frames/dev_frame", Transform.Zero );
+		var wheel = SceneObject.CreateModel( "models/parts/wheels/dev_wheel", Transform.Zero );
+		var seat = SceneObject.CreateModel( "models/parts/seats/dev_seat", Transform.Zero );
+		
+		var hub = wheel.Model.GetAttachment( "Hub" );
+
+		frame.Position = Vector3.Up * hub.Value.Position.z;
+
+		var seatAttachment = frame.Model.GetAttachment( "Seat" );
+
+		seat.Position = seatAttachment.Value.Position + frame.Position;
+
+		// todo: pedals
+
+		frame.AddChild( "wheel", wheel );
+		frame.AddChild( "seat", seat );
+
+		return frame;
 	}
 
 }
