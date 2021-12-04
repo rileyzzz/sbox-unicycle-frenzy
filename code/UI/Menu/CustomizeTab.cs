@@ -12,7 +12,21 @@ internal class CustomizeTab : Panel
 	public Panel PartsTypeList { get; set; }
 	public Panel PartsList { get; set; }
 
-	public CustomizeTab()
+	public override void OnHotloaded()
+	{
+		base.OnHotloaded();
+
+		BuildAll();
+	}
+
+	protected override void PostTemplateApplied()
+	{
+		base.PostTemplateApplied();
+
+		BuildAll();
+	}
+
+	public void BuildAll()
 	{
 		BuildRenderScene();
 		BuildPartTypeButtons();
