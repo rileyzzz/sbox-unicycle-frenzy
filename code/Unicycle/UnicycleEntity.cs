@@ -4,10 +4,6 @@ using System;
 internal partial class UnicycleEntity : Entity
 {
 
-	public string FramePath = "models/parts/frames/dev_frame";
-	public string SeatPath = "models/parts/seats/dev_seat";
-	public string WheelPath = "models/parts/wheels/dev_wheel";
-
 	[Net]
 	public ModelEntity FrameModel { get; set; }
 	[Net]
@@ -28,33 +24,36 @@ internal partial class UnicycleEntity : Entity
 		return assAttachment.Value.Position - Position;
 	}
 
-	public override void Spawn()
-	{
-		base.Spawn();
-
-		Assemble();
-	}
-
-	public void Assemble()
+	private void AssembleParts()
 	{
 		Host.AssertServer();
+
+		if ( Parent is not UnicyclePlayer pl ) return;
 
 		FrameModel?.Delete();
 		SeatModel?.Delete();
 		WheelModel?.Delete();
 		WheelPivot?.Delete();
 
-		FrameModel = new ModelEntity( FramePath );
-		FrameModel.SetParent( this, null, Transform.Zero.WithScale( 1 ) );
+		var def = UnicycleEnsemble.Default;
+		var cfg = pl.Client.Components.Get<ClientConfig>();
+		var ensemble = cfg.Ensemble;
 
-		SeatModel = new ModelEntity( SeatPath );
-		SeatModel.SetParent( FrameModel, "Seat", Transform.Zero.WithScale( 1 ) );
+		var frame = ensemble.Frame ?? def.Frame;
+		var seat = ensemble.Seat ?? def.Seat;
+		var wheel = ensemble.Wheel ?? def.Wheel;
+
+		FrameModel = new ModelEntity( frame.Model );
+		FrameModel.SetParent( this, null, Transform.Zero );
+
+		SeatModel = new ModelEntity( seat.Model );
+		SeatModel.SetParent( FrameModel, "Seat", Transform.Zero );
 
 		WheelPivot = new Entity();
-		WheelPivot.SetParent( FrameModel, "Wheel", Transform.Zero.WithScale( 1 ) );
+		WheelPivot.SetParent( FrameModel, "Wheel", Transform.Zero );
 
-		WheelModel = new ModelEntity( WheelPath );
-		WheelModel.SetParent( WheelPivot, null, Transform.Zero.WithScale( 1 ) );
+		WheelModel = new ModelEntity( wheel.Model );
+		WheelModel.SetParent( WheelPivot, null, Transform.Zero );
 		var hub = WheelModel.GetAttachment( "Hub", false );
 
 		if ( hub.HasValue )
@@ -62,6 +61,25 @@ internal partial class UnicycleEntity : Entity
 			WheelModel.LocalPosition -= hub.Value.Position;
 			FrameModel.LocalPosition = Vector3.Up * hub.Value.Position.z - 2;
 		}
+	}
+
+	private int parthash;
+
+	[Event.Tick.Server]
+	private void CheckEnsemble()
+	{
+		if ( Parent is not UnicyclePlayer pl ) return;
+
+		var cfg = pl.Client.Components.Get<ClientConfig>();
+		var hash = cfg.Ensemble.GetPartsHash();
+
+		if ( hash == parthash ) return;
+
+		parthash = hash;
+		AssembleParts();
+
+		pl.Terry.LocalPosition = GetAssLocalPosition();
+		pl.Terry.LocalPosition -= Vector3.Up * 12; // remove this when proper ass attachment
 	}
 
 	[Event.Tick.Server]

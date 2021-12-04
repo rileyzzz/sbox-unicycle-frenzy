@@ -63,6 +63,16 @@ public partial class UnicycleEnsemble : BaseNetworkable
 		}
 	}
 
+	public int GetPartsHash()
+	{
+		int hash = 0;
+		foreach(var part in Parts )
+		{
+			hash = HashCode.Combine( hash, part.GetHashCode() );
+		}
+		return hash;
+	}
+
 	[ServerCmd]
 	public static void EquipPartOnServer( int hash )
 	{
