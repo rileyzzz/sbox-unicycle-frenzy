@@ -5,21 +5,23 @@ internal class UnicyclePart
 	public string Name;
 	public string Model;
 	public PartType Type;
+	public bool IsDefault;
 
+	// there should be 1 default for each part type
 	public static List<UnicyclePart> All = new()
 	{
 		//
-		new() { Type = PartType.Wheel, Name = "Dev Wheel", Model = "models/parts/wheels/dev_wheel" },
+		new() { Type = PartType.Wheel, Name = "Dev Wheel", Model = "models/parts/wheels/dev_wheel", IsDefault = true },
 		new() { Type = PartType.Wheel, Name = "Mini Dev Wheel", Model = "models/parts/wheels/dev_wheel_mini" },
 
 		//
-		new() { Type = PartType.Frame, Name = "Dev Frame", Model = "models/parts/frames/dev_frame" },
+		new() { Type = PartType.Frame, Name = "Dev Frame", Model = "models/parts/frames/dev_frame", IsDefault = true },
 
 		//
-		new() { Type = PartType.Seat, Name = "Dev Seat", Model = "models/parts/frames/dev_seat" },
+		new() { Type = PartType.Seat, Name = "Dev Seat", Model = "models/parts/frames/dev_seat", IsDefault = true },
 
 		//
-		new() { Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/frames/dev_pedal" },
+		new() { Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/frames/dev_pedal", IsDefault = true },
 	};
 
 	public static void Add( UnicyclePart part )
