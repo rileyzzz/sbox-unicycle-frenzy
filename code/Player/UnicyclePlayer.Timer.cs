@@ -25,7 +25,7 @@ internal partial class UnicyclePlayer
 
 	public string FormattedTime()
 	{
-		return TimeSpan.FromSeconds( TimeSinceStart ).ToString( @"mm\:ss\:fff" );
+		return TimeSpan.FromSeconds( TimeSinceStart ).ToString( @"mm\:ss" );
 	}
 
 }

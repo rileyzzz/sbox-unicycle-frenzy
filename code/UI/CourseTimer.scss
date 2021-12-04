@@ -1,0 +1,23 @@
+﻿
+@import "Vars.scss";
+
+CourseTimer {
+    width: 100%;
+
+    .timer {
+        position: absolute;
+        padding: 10px 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        backdrop-filter: blur(5px);
+        top: 40px;
+        font-size: 32px;
+        text-transform: uppercase;
+        background-color: rgba($bg .5);
+        border-radius: $radius;
+        font-weight: 800;
+        font-family: Poppins;
+        min-width: 150px;
+        text-align: center;
+    }
+}
