@@ -82,12 +82,10 @@ internal class CustomizeRenderScene : Panel
 
 	private SceneObject GenerateModel( UnicycleEnsemble ensemble )
 	{
-		var def = UnicycleEnsemble.Default;
-
-		var frame = ensemble.Frame ?? def.Frame;
-		var wheel = ensemble.Wheel ?? def.Wheel;
-		var seat = ensemble.Seat ?? def.Seat;
-		var pedal = ensemble.Pedal ?? def.Pedal;
+		var frame = ensemble.GetPart( PartType.Frame );
+		var wheel = ensemble.GetPart( PartType.Wheel );
+		var seat = ensemble.GetPart( PartType.Seat );
+		var pedal = ensemble.GetPart( PartType.Pedal );
 
 		var frameObj = SceneObject.CreateModel( frame.Model, Transform.Zero );
 		var wheelObj = SceneObject.CreateModel( wheel.Model, Transform.Zero );

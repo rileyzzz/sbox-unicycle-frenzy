@@ -35,7 +35,7 @@ internal class CustomizeTab : Panel
 
 	public void BuildRenderScene()
 	{
-		var ensemble = Local.Client.Components.Get<ClientConfig>().Ensemble;
+		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
 
 		RenderScene?.Build( ensemble );
 	}
@@ -49,12 +49,17 @@ internal class CustomizeTab : Panel
 		{
 			var icon = new UnicyclePartIcon( part );
 			icon.Parent = PartsList;
-			icon.AddEventListener( "onclick", () =>
-			 {
-				 Local.Client.Components.Get<ClientConfig>().Ensemble.Equip( part );
-				 BuildRenderScene();
-			 } );
+			icon.AddEventListener( "onclick", () => EquipPart( part ) );
 		}
+	}
+
+	private void EquipPart( UnicyclePart part )
+	{
+		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
+
+		ensemble.Equip( part );
+
+		BuildRenderScene();
 	}
 
 	private Button activeBtn;

@@ -1,22 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using Sandbox;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Sandbox;
+using System.Text.Json.Serialization;
 
-public partial class UnicycleEnsemble : BaseNetworkable
+internal partial class UnicycleEnsemble : EntityComponent
 {
+
+	//[ConVar.ClientData( "unicycle", Saved = true )]
+	public static string UnicycleJson
+	{
+		get => Cookie.Get( "unicycle", string.Empty );
+		set => Cookie.Set( "unicycle", value );
+	}
 
 	public List<UnicyclePart> Parts = new();
 
-	public UnicyclePart Wheel => Parts.FirstOrDefault( x => x.Type == PartType.Wheel );
-	public UnicyclePart Seat => Parts.FirstOrDefault( x => x.Type == PartType.Seat );
-	public UnicyclePart Frame => Parts.FirstOrDefault( x => x.Type == PartType.Frame );
-	public UnicyclePart Pedal => Parts.FirstOrDefault( x => x.Type == PartType.Pedal );
-	public UnicyclePart Trail => Parts.FirstOrDefault( x => x.Type == PartType.Trail );
+	protected override void OnActivate()
+	{
+		base.OnActivate();
+
+		if ( Entity.IsClient )
+		{
+			Deserialize( UnicycleJson );
+		}
+	}
+
+	public UnicyclePart GetPart( PartType type )
+	{
+		return Parts.FirstOrDefault( x => x.Type == type ) ?? DefaultParts.FirstOrDefault( x => x.Type == type );
+	}
+
+	public void Load( Client cl )
+	{
+		Deserialize( cl.GetClientData( "unicycle", string.Empty ) );
+	}
 
 	public void Equip( int id ) => Equip( UnicyclePart.All.FirstOrDefault( x => x.Id == id ) );
-	public void Unequip( int id ) => Unequip( UnicyclePart.All.FirstOrDefault( x => x.Id == id ) );
-
 	public void Equip( UnicyclePart part )
 	{
 		if ( part == null )
@@ -26,7 +46,8 @@ public partial class UnicycleEnsemble : BaseNetworkable
 
 		if ( Parts.Contains( part ) )
 		{
-			throw new Exception( "Equipping a part that is already equipped" );
+			//throw new Exception( "Equipping a part that is already equipped" );
+			return;
 		}
 
 		var partInSlot = Parts.FirstOrDefault( x => x.Type == part.Type );
@@ -39,10 +60,12 @@ public partial class UnicycleEnsemble : BaseNetworkable
 
 		if ( Host.IsClient )
 		{
+			UnicycleJson = Serialize();
 			EquipPartOnServer( part.Id );
 		}
 	}
 
+	public void Unequip( int id ) => Unequip( UnicyclePart.All.FirstOrDefault( x => x.Id == id ) );
 	public void Unequip( UnicyclePart part )
 	{
 		if ( part == null )
@@ -52,25 +75,62 @@ public partial class UnicycleEnsemble : BaseNetworkable
 
 		if ( !Parts.Contains( part ) )
 		{
-			throw new Exception( "Unequipping a part that isn't equipped" );
+			//throw new Exception( "Unequipping a part that isn't equipped" );
+			return;
 		}
 
 		Parts.Remove( part );
 
 		if ( Host.IsClient )
 		{
+			UnicycleJson = Serialize();
 			UnequipPartOnServer( part.Id );
+		}
+	}
+
+	public string Serialize()
+	{
+		return System.Text.Json.JsonSerializer.Serialize( Parts.Select( x => new Entry { Id = x.Id } ) );
+	}
+
+	public void Deserialize( string json )
+	{
+		Parts.Clear();
+
+		if ( string.IsNullOrWhiteSpace( json ) )
+			return;
+
+		try
+		{
+			var entries = System.Text.Json.JsonSerializer.Deserialize<Entry[]>( json );
+
+			foreach ( var entry in entries )
+			{
+				var item = UnicyclePart.All.FirstOrDefault( x => x.Id == entry.Id );
+				if ( item == null ) continue;
+				Equip( item );
+			}
+		}
+		catch ( System.Exception e )
+		{
+			Log.Warning( e, "Error deserailizing clothing" );
 		}
 	}
 
 	public int GetPartsHash()
 	{
 		int hash = 0;
-		foreach(var part in Parts )
+		foreach ( var part in Parts )
 		{
 			hash = HashCode.Combine( hash, part.Id );
 		}
 		return hash;
+	}
+
+	public struct Entry
+	{
+		[JsonPropertyName( "id" )]
+		public int Id { get; set; }
 	}
 
 	[ServerCmd]
@@ -79,10 +139,10 @@ public partial class UnicycleEnsemble : BaseNetworkable
 		var caller = ConsoleSystem.Caller;
 		if ( caller == null ) return;
 
-		var cfg = caller.Components.Get<ClientConfig>();
+		var cfg = caller.Components.Get<UnicycleEnsemble>();
 		if ( cfg == null ) return;
 
-		cfg.Ensemble.Equip( id );
+		cfg.Equip( id );
 	}
 
 	[ServerCmd]
@@ -91,29 +151,34 @@ public partial class UnicycleEnsemble : BaseNetworkable
 		var caller = ConsoleSystem.Caller;
 		if ( caller == null ) return;
 
-		var cfg = caller.Components.Get<ClientConfig>();
+		var cfg = caller.Components.Get<UnicycleEnsemble>();
 		if ( cfg == null ) return;
 
-		cfg.Ensemble.Unequip( id );
+		cfg.Unequip( id );
 	}
 
-	public static UnicycleEnsemble Default
+	private static List<UnicyclePart> defaultParts;
+	public static IReadOnlyList<UnicyclePart> DefaultParts
 	{
 		get
 		{
-			var result = new UnicycleEnsemble();
-			foreach ( PartType partType in Enum.GetValues( typeof( PartType ) ) )
+			if ( defaultParts == null )
 			{
-				var part = UnicyclePart.All.FirstOrDefault( x => x.IsDefault && x.Type == partType );
-				if ( part == null )
+				defaultParts = new List<UnicyclePart>();
+				foreach ( PartType partType in Enum.GetValues( typeof( PartType ) ) )
 				{
-					Log.Warning( "Missing default part type: " + partType );
-					continue;
+					var part = UnicyclePart.All.FirstOrDefault( x => x.IsDefault && x.Type == partType );
+					if ( part == null )
+					{
+						Log.Warning( "Missing default part type: " + partType );
+						continue;
+					}
+					defaultParts.Add( part );
 				}
-				result.Parts.Add( part );
 			}
-			return result;
+			return defaultParts;
 		}
 	}
 
 }
+

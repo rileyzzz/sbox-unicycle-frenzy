@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public partial class UnicyclePart
+public class UnicyclePart
 {
 
 	public int Id { get; set; }
@@ -28,21 +28,6 @@ public partial class UnicyclePart
 		//
 		new() { Id = 5, Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/pedals/dev_pedal", IsDefault = true },
 	};
-
-	public static void Add( UnicyclePart part )
-	{
-		if ( part == null )
-		{
-			throw new Exception( "Adding null part" );
-		}
-
-		if ( All.Any( x => x.Id == part.Id ) )
-		{
-			throw new Exception( "Adding part with duplicate id: " + part.Id );
-		}
-
-		All.Add( part );
-	}
 
 }
 

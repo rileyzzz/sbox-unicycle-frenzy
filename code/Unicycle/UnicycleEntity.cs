@@ -35,13 +35,11 @@ internal partial class UnicycleEntity : Entity
 		WheelModel?.Delete();
 		WheelPivot?.Delete();
 
-		var def = UnicycleEnsemble.Default;
-		var cfg = pl.Client.Components.Get<ClientConfig>();
-		var ensemble = cfg.Ensemble;
+		var cfg = pl.Client.Components.Get<UnicycleEnsemble>();
 
-		var frame = ensemble.Frame ?? def.Frame;
-		var seat = ensemble.Seat ?? def.Seat;
-		var wheel = ensemble.Wheel ?? def.Wheel;
+		var frame = cfg.GetPart( PartType.Frame );
+		var seat = cfg.GetPart( PartType.Seat );
+		var wheel = cfg.GetPart( PartType.Wheel );
 
 		FrameModel = new ModelEntity( frame.Model );
 		FrameModel.SetParent( this, null, Transform.Zero );
@@ -63,15 +61,15 @@ internal partial class UnicycleEntity : Entity
 		}
 	}
 
-	private int parthash;
+	private int parthash = -1;
 
 	[Event.Tick.Server]
 	private void CheckEnsemble()
 	{
 		if ( Parent is not UnicyclePlayer pl ) return;
 
-		var cfg = pl.Client.Components.Get<ClientConfig>();
-		var hash = cfg.Ensemble.GetPartsHash();
+		var cfg = pl.Client.Components.Get<UnicycleEnsemble>();
+		var hash = cfg.GetPartsHash();
 
 		if ( hash == parthash ) return;
 
