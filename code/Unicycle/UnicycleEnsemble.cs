@@ -14,8 +14,8 @@ public partial class UnicycleEnsemble : BaseNetworkable
 	public UnicyclePart Pedal => Parts.FirstOrDefault( x => x.Type == PartType.Pedal );
 	public UnicyclePart Trail => Parts.FirstOrDefault( x => x.Type == PartType.Trail );
 
-	public void Equip( int hash ) => Equip( UnicyclePart.All.FirstOrDefault( x => x.GetHashCode() == hash ) );
-	public void Unequip( int hash ) => Unequip( UnicyclePart.All.FirstOrDefault( x => x.GetHashCode() == hash ) );
+	public void Equip( int id ) => Equip( UnicyclePart.All.FirstOrDefault( x => x.Id == id ) );
+	public void Unequip( int id ) => Unequip( UnicyclePart.All.FirstOrDefault( x => x.Id == id ) );
 
 	public void Equip( UnicyclePart part )
 	{
@@ -39,7 +39,7 @@ public partial class UnicycleEnsemble : BaseNetworkable
 
 		if ( Host.IsClient )
 		{
-			EquipPartOnServer( part.GetHashCode() );
+			EquipPartOnServer( part.Id );
 		}
 	}
 
@@ -59,7 +59,7 @@ public partial class UnicycleEnsemble : BaseNetworkable
 
 		if ( Host.IsClient )
 		{
-			UnequipPartOnServer( part.GetHashCode() );
+			UnequipPartOnServer( part.Id );
 		}
 	}
 
@@ -68,13 +68,13 @@ public partial class UnicycleEnsemble : BaseNetworkable
 		int hash = 0;
 		foreach(var part in Parts )
 		{
-			hash = HashCode.Combine( hash, part.GetHashCode() );
+			hash = HashCode.Combine( hash, part.Id );
 		}
 		return hash;
 	}
 
 	[ServerCmd]
-	public static void EquipPartOnServer( int hash )
+	public static void EquipPartOnServer( int id )
 	{
 		var caller = ConsoleSystem.Caller;
 		if ( caller == null ) return;
@@ -82,11 +82,11 @@ public partial class UnicycleEnsemble : BaseNetworkable
 		var cfg = caller.Components.Get<ClientConfig>();
 		if ( cfg == null ) return;
 
-		cfg.Ensemble.Equip( hash );
+		cfg.Ensemble.Equip( id );
 	}
 
 	[ServerCmd]
-	public static void UnequipPartOnServer( int hash )
+	public static void UnequipPartOnServer( int id )
 	{
 		var caller = ConsoleSystem.Caller;
 		if ( caller == null ) return;
@@ -94,7 +94,7 @@ public partial class UnicycleEnsemble : BaseNetworkable
 		var cfg = caller.Components.Get<ClientConfig>();
 		if ( cfg == null ) return;
 
-		cfg.Ensemble.Unequip( hash );
+		cfg.Ensemble.Unequip( id );
 	}
 
 	public static UnicycleEnsemble Default
