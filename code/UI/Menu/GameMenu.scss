@@ -8,6 +8,7 @@ GameMenu {
     flex-grow: 1;
     transition: opacity .18s ease-out;
     opacity: 0;
+    z-index: 3;
 
     &.open {
         opacity: 1;
