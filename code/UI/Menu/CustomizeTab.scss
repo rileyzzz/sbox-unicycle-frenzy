@@ -93,10 +93,15 @@ CustomizeTab {
                 cursor: pointer;
                 justify-content: center;
                 align-items: center;
+                border: 2px solid transparent;
 
-                &:hover, &.active {
+                &:hover:not(.equipped), &.active {
                     border-color: rgba($primary 1);
                     background-color: rgba($primary .5);
+                }
+
+                &.equipped {
+                    border-color: $secondary;
                 }
             }
         }

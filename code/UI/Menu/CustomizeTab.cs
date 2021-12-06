@@ -49,17 +49,7 @@ internal class CustomizeTab : Panel
 		{
 			var icon = new UnicyclePartIcon( part );
 			icon.Parent = PartsList;
-			icon.AddEventListener( "onclick", () => EquipPart( part ) );
 		}
-	}
-
-	private void EquipPart( UnicyclePart part )
-	{
-		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
-
-		ensemble.Equip( part );
-
-		BuildRenderScene();
 	}
 
 	private Button activeBtn;
