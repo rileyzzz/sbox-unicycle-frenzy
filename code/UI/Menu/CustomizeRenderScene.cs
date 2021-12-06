@@ -46,9 +46,13 @@ internal class CustomizeRenderScene : Panel
 		base.OnMouseWheel( value );
 	}
 
-	public void Build( UnicycleEnsemble ensemble )
+	public void Build()
 	{
 		renderScene?.Delete( true );
+
+		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
+
+		// todo: parts override for previewing?
 
 		using ( SceneWorld.SetCurrent( new SceneWorld() ) )
 		{

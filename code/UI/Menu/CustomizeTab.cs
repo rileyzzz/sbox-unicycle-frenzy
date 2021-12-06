@@ -17,27 +17,21 @@ internal class CustomizeTab : Panel
 	{
 		base.OnHotloaded();
 
-		BuildAll();
+		BuildRenderScene();
+		BuildPartTypeButtons();
 	}
 
 	protected override void PostTemplateApplied()
 	{
 		base.PostTemplateApplied();
 
-		BuildAll();
-	}
-
-	public void BuildAll()
-	{
 		BuildRenderScene();
 		BuildPartTypeButtons();
 	}
 
 	public void BuildRenderScene()
 	{
-		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
-
-		RenderScene?.Build( ensemble );
+		RenderScene?.Build();
 	}
 
 	public void LoadParts( PartType type )
