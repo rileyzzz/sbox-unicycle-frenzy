@@ -46,14 +46,7 @@ public partial class UfChatbox : Panel
 	{
 		base.OnHotloaded();
 
-		ScrollToBottom();
-	}
-
-	protected override void PostTemplateApplied()
-	{
-		base.PostTemplateApplied();
-
-		ScrollToBottom();
+		EntryCanvas.TryScrollToBottom();
 	}
 
 	public override void Tick()
@@ -76,13 +69,6 @@ public partial class UfChatbox : Panel
 		if ( string.IsNullOrWhiteSpace( Input.Text ) ) return;
 
 		SendChat( Input.Text );
-	}
-
-	private async void ScrollToBottom()
-	{
-		await Task.Delay( 1 );
-
-		EntryCanvas.TryScrollToBottom();
 	}
 
 	[ServerCmd]
