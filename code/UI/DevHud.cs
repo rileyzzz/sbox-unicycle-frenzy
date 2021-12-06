@@ -6,6 +6,9 @@ using System;
 internal class DevHud : Panel
 {
 
+	[ConVar.Replicated( "uf_devhud" )]
+	public static bool ShowDevHud { get; set; } = false;
+
 	public Panel LeftPedal { get; set; }
 	public Panel RightPedal { get; set; }
 	public Panel Jump { get; set; }
@@ -15,6 +18,14 @@ internal class DevHud : Panel
 	public override void Tick()
 	{
 		base.Tick();
+
+		if( !ShowDevHud )
+		{
+			Style.Display = DisplayMode.None;
+			return;
+		}
+
+		Style.Display = DisplayMode.Flex;
 
 		if ( Local.Pawn is not UnicyclePlayer player ) return;
 		if ( player.Controller is not UnicycleController controller ) return;
