@@ -31,7 +31,7 @@ UfChatbox {
     .entries {
         flex-grow: 1;
         flex-direction: column;
-        align-items: flex-end;
+        justify-content: flex-end;
         overflow: scroll;
     }
 
