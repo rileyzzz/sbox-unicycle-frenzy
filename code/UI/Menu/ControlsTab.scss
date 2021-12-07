@@ -1,0 +1,56 @@
+﻿
+@import "../Vars.scss";
+
+ControlsTab {
+
+    .diagram {
+        margin: 0 auto;
+        width: 1280px;
+        height: 720px;
+        background-image: url(ui/control-diagram.png);
+        background-position: center;
+        background-size: cover;
+
+        .control {
+            position: absolute;
+            flex-direction: column;
+            font-size: 20px;
+            font-family: Poppins;
+
+            .control-name {
+                margin-bottom: 10px;
+            }
+
+            .control-bind {
+                font-weight: 600;
+            }
+        }
+
+        .brake {
+            right: 30%;
+            top: 21.9%;
+            text-align: right;
+        }
+
+        .right-pedal {
+            right: 27.5%;
+            top: 55.9%;
+            text-align: right;
+        }
+
+        .left-pedal {
+            left: 23%;
+            top: 62.3%;
+        }
+
+        .jump {
+            left: 29.8%;
+            top: 80.8%;
+        }
+
+        .lean {
+            left:21%;
+            top:19.25%;
+        }
+    }
+}

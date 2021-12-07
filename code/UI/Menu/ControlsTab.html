@@ -1,0 +1,35 @@
+﻿
+<link rel="stylesheet" href="ControlsTab.scss" />
+
+<root class="gamepanel">
+
+    <div class="diagram">
+
+        <div class="control brake">
+            <label class="control-name">Brake</label>
+            <label class="control-bind" @text="BrakeBind"></label>
+        </div>
+
+        <div class="control right-pedal">
+            <label class="control-name">Right Pedal</label>
+            <label class="control-bind" @text="RightPedalBind">Mouse2</label>
+        </div>
+
+        <div class="control left-pedal">
+            <label class="control-name">Left Pedal</label>
+            <label class="control-bind" @text="LeftPedalBind"></label>
+        </div>
+
+        <div class="control jump">
+            <label class="control-name">Jump</label>
+            <label class="control-bind" @text="JumpBind">Space</label>
+        </div>
+
+        <div class="control lean">
+            <label class="control-name">Lean</label>
+            <label class="control-bind" @text="LeanBind">WASD</label>
+        </div>
+
+    </div>
+
+</root>
