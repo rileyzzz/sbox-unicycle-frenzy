@@ -69,6 +69,7 @@ UfChatboxEntry {
     width: 100%;
     transition: opacity .15s linear;
     text-shadow: 1px 1px 1px black;
+    sound-in: button.hover;
 
     &.faded {
         opacity: 0;
