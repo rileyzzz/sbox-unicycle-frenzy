@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Numerics;
 using Sandbox;
 using Sandbox.ScreenShake;
@@ -42,6 +41,8 @@ internal partial class UnicycleController : BasePlayerController
 	public Vector3 Maxs => new( 8, 8, 48 );
 
 	private UnicycleUnstuck unstuck;
+	private Angles jumpTilt;
+	private Angles prevJumpTilt;
 
 	public UnicycleController()
 	{
@@ -63,6 +64,7 @@ internal partial class UnicycleController : BasePlayerController
 			DebugOverlay.Text( Position + Vector3.Down * 9, "GroundNormal: " + GroundNormal );
 			DebugOverlay.Text( Position + Vector3.Down * 12, "Surface: " + GroundSurface );
 			DebugOverlay.Text( Position + Vector3.Down * 15, "Water Level: " + Pawn.WaterLevel.Fraction );
+			DebugOverlay.Text( Position + Vector3.Down * 18, "Tilt: " + pl.Tilt );
 
 			DebugOverlay.Line( Position, Position + Velocity, Color.Yellow );
 		}
@@ -200,9 +202,6 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		// might help with hitting edges/getting a shit normal
-		//FudgeNormal( ref tr );
-
 		if ( Vector3.GetAngle( Vector3.Up, tr.Normal ) < 5f && Velocity.z > 140f )
 		{
 			GroundEntity = null;
@@ -214,6 +213,21 @@ internal partial class UnicycleController : BasePlayerController
 			AddEvent( "land" );
 			pl.Tilt = Rotation.Angles().WithYaw( 0 );
 			Position = Position.WithZ( tr.EndPos.z );
+
+			if( jumpTilt != Angles.Zero )
+			{
+				if( prevJumpTilt.Length > 25 )
+				{
+					jumpTilt = prevJumpTilt * .5f;
+					pl.Tilt = prevJumpTilt * -1f;
+				}
+				else
+				{
+					jumpTilt = Angles.Zero;
+					pl.Tilt = Angles.Zero;
+				}
+			}
+
 		}
 
 		GroundEntity = tr.Entity;
@@ -280,8 +294,21 @@ internal partial class UnicycleController : BasePlayerController
 		// might be a smarter solution here to have it both ways
 		if ( GroundEntity != null && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5 )
 		{
-			var speedChange = PrevVelocity.WithZ( 0 ).Length - Velocity.WithZ( 0 ).Length;
-			tilt += new Angles( speedChange * 3f * Time.Delta, 0, 0 );
+			var prevFwdSpeed = SpeedInDirection( PrevVelocity, Rotation.Forward );
+			var fwdSpeed = SpeedInDirection( Velocity, Rotation.Forward );
+			var speedChange = prevFwdSpeed - fwdSpeed;
+			var heading = Math.Sign( Vector3.Dot( Velocity, Rotation.Forward ) );
+			tilt += new Angles( speedChange * 3f * heading * Time.Delta, 0, 0 );
+		}
+
+		tilt += jumpTilt.Normal * 3.25f * Time.Delta;
+
+		if( GroundEntity != null )
+		{
+			var before = jumpTilt;
+			jumpTilt = Angles.Lerp( jumpTilt, Angles.Zero, 3.25f * Time.Delta );
+			var delta = before - jumpTilt;
+			tilt += delta;
 		}
 
 		pl.Tilt = tilt;
@@ -331,6 +358,8 @@ internal partial class UnicycleController : BasePlayerController
 		var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
 		var up = Rotation.From( Rotation.Angles() ).Up;
 
+		jumpTilt = pl.Tilt * -1;
+		prevJumpTilt = jumpTilt;
 		Velocity += up * jumpStrength;
 		GroundEntity = null;
 
@@ -424,46 +453,19 @@ internal partial class UnicycleController : BasePlayerController
 		};
 	}
 
-	private Vector3[] fudges = new Vector3[]
+	static float SpeedInDirection( Vector3 velocity, Vector3 direction )
 	{
-		Vector3.Zero,
-		Vector3.Zero,
-		Vector3.Left,
-		Vector3.Right,
-		Vector3.Forward,
-		Vector3.Backward,
-	};
-
-	private void FudgeNormal( ref TraceResult tr, float maxDistance = 10f )
-	{
-		fudges[0] = Velocity.Normal;
-		fudges[1] = -Velocity.Normal;
-
-		foreach ( var fudge in fudges )
-		{
-			var startPos = tr.EndPos + fudge * .01f;
-			var endPos = tr.EndPos - tr.Normal * maxDistance;
-			var newTr = Trace.Ray( startPos, endPos )
-				.Ignore( Pawn )
-				.Run();
-
-			if ( !newTr.Hit ) continue;
-			if ( newTr.Normal.IsNearlyEqual( tr.Normal ) ) continue;
-
-			tr.Normal = newTr.Normal;
-
-			break;
-		}
+		return (velocity.Dot( direction ) * direction.Normal).Length;
 	}
 
-	Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
+	static Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
 	{
 		Vector3 axis = Vector3.Cross( aFrom, aTo );
 		float angle = Vector3.GetAngle( aFrom, aTo );
 		return AngleAxis( angle, axis.Normal );
 	}
 
-	Rotation AngleAxis( float aAngle, Vector3 aAxis )
+	static Rotation AngleAxis( float aAngle, Vector3 aAxis )
 	{
 		aAxis = aAxis.Normal;
 		float rad = aAngle * MathX.DegreeToRadian( .5f );
@@ -471,7 +473,7 @@ internal partial class UnicycleController : BasePlayerController
 		return new Quaternion( aAxis.x, aAxis.y, aAxis.z, MathF.Cos( rad ) );
 	}
 
-	Vector3 ClipVelocity( Vector3 vel, Vector3 norm, float overbounce = 1.0f )
+	static Vector3 ClipVelocity( Vector3 vel, Vector3 norm, float overbounce = 1.0f )
 	{
 		var backoff = Vector3.Dot( vel, norm ) * overbounce;
 		var o = vel - (norm * backoff);
