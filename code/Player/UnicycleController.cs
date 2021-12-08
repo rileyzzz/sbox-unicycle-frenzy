@@ -311,6 +311,7 @@ internal partial class UnicycleController : BasePlayerController
 			tilt += new Angles( speedChange * 3f * heading * Time.Delta, 0, 0 );
 		}
 
+		// this handles how we tilt and recover tilt after jumping
 		tilt += jumpTilt.Normal * 3f * Time.Delta;
 
 		if ( GroundEntity != null )
