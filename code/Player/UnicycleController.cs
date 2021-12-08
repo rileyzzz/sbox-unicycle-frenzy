@@ -21,8 +21,10 @@ internal partial class UnicycleController : BasePlayerController
 	public float MaxJumpStrength => 375f;
 	public float MaxJumpStrengthTime => 1f;
 	public float PerfectPedalBoost => 50f;
-	public float MaxLean => 35f;
+	public float MaxLean => 40f;
+	public float LeanSafeZone => 8f;
 	public float LeanSpeed => 80f;
+	public float IdleTiltStrength => 2.75f;
 	public float GroundTurnSpeed => 2f;
 	public float AirTurnSpeed => 2f;
 	public float SlopeSpeed => 800f;
@@ -273,18 +275,30 @@ internal partial class UnicycleController : BasePlayerController
 		}
 
 		// recover tilt from momentum and input
-		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 125f, 1f );
+		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 100f, 2.25f );
 		var tilt = pl.Tilt;
 		tilt = Angles.Lerp( tilt, Angles.Zero, recover * Time.Delta );
-
-		// uneven ground will make us tip if we're not attentive
-		//var groundAng = FromToRotation( Vector3.Up, GroundNormal );
-		//groundAng *= Rotation.LookAt( Rotation.Forward );
-		//tilt += groundAng.Angles().WithYaw(0) * SlopeTipStrength * Time.Delta;
 
 		// tilt from input
 		var input = new Vector3( Input.Forward, 0, -Input.Left );
 		tilt += new Angles( input.x, 0, input.z ) * LeanSpeed * Time.Delta;
+
+		// continue to tip if not in the safe zone, but not when
+		// jump tilt is doing its thing or when trying to manually tilt
+		var len = tilt.Length;
+		if( len > LeanSafeZone )
+		{
+			if ( GroundEntity != null && jumpTilt.Length.AlmostEqual( 0f, .05f ) && input.Length.AlmostEqual( 0 ) )
+			{
+				var t = len / MaxLean;
+				var str = .25f.LerpTo( IdleTiltStrength, t );
+				tilt += tilt * str * Time.Delta;
+			}
+		}
+		else
+		{
+			//
+		}
 
 		// accel and decel will make us pitch
 		// we're only doing this on flat ground to avoid fucking up
@@ -299,15 +313,18 @@ internal partial class UnicycleController : BasePlayerController
 			tilt += new Angles( speedChange * 3f * heading * Time.Delta, 0, 0 );
 		}
 
-		tilt += jumpTilt.Normal * 3.25f * Time.Delta;
+		tilt += jumpTilt.Normal * 3f * Time.Delta;
 
 		if ( GroundEntity != null )
 		{
 			var before = jumpTilt;
-			jumpTilt = Angles.Lerp( jumpTilt, Angles.Zero, 3.25f * Time.Delta );
+			jumpTilt = Angles.Lerp( jumpTilt, Angles.Zero, 3f * Time.Delta );
 			var delta = before - jumpTilt;
 			tilt += delta;
 		}
+
+		tilt.roll = Math.Clamp( tilt.roll, -MaxLean - 5, MaxLean + 5 );
+		tilt.pitch = Math.Clamp( tilt.pitch, -MaxLean - 5, MaxLean + 5 );
 
 		pl.Tilt = tilt;
 	}
