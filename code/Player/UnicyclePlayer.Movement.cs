@@ -3,6 +3,7 @@
 internal partial class UnicyclePlayer
 {
 
+	// prediction is fucked rn, might have to rethink some of this
 	// maybe client authoritative movement would suit us better
 
 	[Net, Predicted]
