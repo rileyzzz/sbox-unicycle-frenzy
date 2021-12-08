@@ -14,6 +14,7 @@ internal class DevHud : Panel
 	public Panel Jump { get; set; }
 	public Panel AbsLean { get; set; }
 	public Panel LocalLean { get; set; }
+	public Panel SafeZone { get; set; }
 
 	public override void Tick()
 	{
@@ -55,6 +56,11 @@ internal class DevHud : Panel
 
 		LocalLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = localRollAlpha * 100f };
 		LocalLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = localPitchAlpha * 100f };
+
+		var safezoneSize = (controller.LeanSafeZone / controller.MaxLean);
+		var boxw = SafeZone.Parent.ComputedStyle.Width.Value.GetPixels( 1.0f );
+		SafeZone.Style.Width = Length.Percent( boxw * safezoneSize );
+		SafeZone.Style.Height = Length.Percent( boxw * safezoneSize );
 	}
 
 }

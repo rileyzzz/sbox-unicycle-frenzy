@@ -45,6 +45,7 @@
             transform: translate(-50% -50%);
             top: 50%;
             left: 50%;
+            z-index: 1;
 
             &.abs {
                 width: 24px;
@@ -56,7 +57,20 @@
                 width: 14px;
                 height: 14px;
                 background-color: yellow;
+                z-index: 2;
             }
+        }
+
+        .safezone {
+            position: absolute;
+            left: 50%; 
+            top: 50%;
+            transform: translate(-50% -50%);
+            border: 2px solid rgba(white .05);
+            width: 25%;
+            height: 25%;
+            border-radius: 50%;
+            z-index: 0;
         }
     }
 
