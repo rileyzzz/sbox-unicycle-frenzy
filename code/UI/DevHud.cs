@@ -12,6 +12,7 @@ internal class DevHud : Panel
 	public Panel LeftPedal { get; set; }
 	public Panel RightPedal { get; set; }
 	public Panel Jump { get; set; }
+	public Panel LeanContainer { get; set; }
 	public Panel AbsLean { get; set; }
 	public Panel LocalLean { get; set; }
 	public Panel SafeZone { get; set; }
@@ -57,10 +58,10 @@ internal class DevHud : Panel
 		LocalLean.Style.Left = Length.Percent( localRollAlpha * 100f );
 		LocalLean.Style.Top = Length.Percent( localPitchAlpha * 100f );
 
-		var safezoneSize = (controller.LeanSafeZone / controller.MaxLean);
-		var boxw = SafeZone.Parent.ComputedStyle.Width.Value.GetPixels( 1.0f );
-		SafeZone.Style.Width = Length.Percent( boxw * safezoneSize );
-		SafeZone.Style.Height = Length.Percent( boxw * safezoneSize );
+		var safezoneSize = controller.LeanSafeZone / controller.MaxLean;
+		var boxw = LeanContainer.Box.Rect.width * safezoneSize;
+		SafeZone.Style.Width = Length.Pixels( boxw );
+		SafeZone.Style.Height = Length.Pixels( boxw );
 	}
 
 }

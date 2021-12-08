@@ -21,16 +21,16 @@ internal partial class UnicycleController : BasePlayerController
 	public float MaxJumpStrength => 375f;
 	public float MaxJumpStrengthTime => 1f;
 	public float PerfectPedalBoost => 50f;
-	public float MaxLean => 40f;
+	public float MaxLean => 45f;
 	public float LeanSafeZone => 8f;
 	public float LeanSpeed => 80f;
-	public float IdleTiltStrength => 2.75f;
+	public float IdleTiltStrength => 2f;
 	public float GroundTurnSpeed => 2f;
 	public float AirTurnSpeed => 2f;
 	public float SlopeSpeed => 800f;
 	public float BrakeStrength => 3f;
 	public bool UseMomentum => false;
-	public float StopSpeed => 5f;
+	public float StopSpeed => 10f;
 	public float MaxAirTurnSpeed => 35f;
 	public float SlopeTipStrength => 2.5f;
 
