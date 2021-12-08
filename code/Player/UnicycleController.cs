@@ -359,7 +359,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		newRnd = newRnd.WithYaw( 0 ).Normal;
 
-		return newRnd * LeanSafeZone * .75f;
+		return newRnd * LeanSafeZone * .5f;
 	}
 
 	private void DoRotation()
