@@ -196,14 +196,12 @@ internal partial class UnicycleController : BasePlayerController
 	{
 		var tr = TraceBBox( Position, Position + Vector3.Down * 4f, Mins, Maxs, 3f );
 
-		if ( !tr.Hit )
+		if ( !tr.Hit || Vector3.GetAngle( Vector3.Up, tr.Normal ) < 5f && Velocity.z > 140f )
 		{
-			GroundEntity = null;
-			return;
-		}
-
-		if ( Vector3.GetAngle( Vector3.Up, tr.Normal ) < 5f && Velocity.z > 140f )
-		{
+			if ( GroundEntity != null )
+			{
+				pl.TimeSinceNotGrounded = 0;
+			}
 			GroundEntity = null;
 			return;
 		}
@@ -214,9 +212,9 @@ internal partial class UnicycleController : BasePlayerController
 			pl.Tilt = Rotation.Angles().WithYaw( 0 );
 			Position = Position.WithZ( tr.EndPos.z );
 
-			if( jumpTilt != Angles.Zero )
+			if ( jumpTilt != Angles.Zero )
 			{
-				if( prevJumpTilt.Length > 25 )
+				if ( prevJumpTilt.Length > 25 )
 				{
 					jumpTilt = prevJumpTilt * .5f;
 					pl.Tilt = prevJumpTilt * -1f;
@@ -303,7 +301,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		tilt += jumpTilt.Normal * 3.25f * Time.Delta;
 
-		if( GroundEntity != null )
+		if ( GroundEntity != null )
 		{
 			var before = jumpTilt;
 			jumpTilt = Angles.Lerp( jumpTilt, Angles.Zero, 3.25f * Time.Delta );
@@ -345,25 +343,45 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void CheckJump()
 	{
-		if ( Input.Pressed( InputButton.Jump ) || GroundEntity == null )
+		if ( Input.Released( InputButton.Jump ) && GroundEntity != null )
+		{
+			var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
+			t = Easing.EaseOut( t );
+			var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
+			var up = Rotation.From( Rotation.Angles() ).Up;
+
+			jumpTilt = pl.Tilt * -1;
+			prevJumpTilt = jumpTilt;
+			Velocity += up * jumpStrength;
+			GroundEntity = null;
+			pl.TimeSinceJumpDown = 0;
+
+			AddEvent( "jump" );
+			return;
+		}
+
+		if ( !CanIncrementJump() || !Input.Down( InputButton.Jump ) )
 		{
 			pl.TimeSinceJumpDown = 0;
 			return;
 		}
 
-		if ( !Input.Released( InputButton.Jump ) ) return;
+		if ( Input.Down( InputButton.Jump ) )
+		{
+			pl.TimeSinceJumpDown += Time.Delta;
+		}
+	}
 
-		var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
-		t = Easing.EaseOut( t );
-		var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
-		var up = Rotation.From( Rotation.Angles() ).Up;
+	private bool CanIncrementJump()
+	{
+		if ( GroundEntity != null ) return true;
+		if ( pl.TimeSinceNotGrounded < .75f ) return true;
 
-		jumpTilt = pl.Tilt * -1;
-		prevJumpTilt = jumpTilt;
-		Velocity += up * jumpStrength;
-		GroundEntity = null;
+		var tr = TraceBBox( Position, Position + Vector3.Down * 75, 5f );
 
-		AddEvent( "jump" );
+		if ( !tr.Hit ) return false;
+
+		return true;
 	}
 
 	private void CheckPedal()
@@ -386,7 +404,7 @@ internal partial class UnicycleController : BasePlayerController
 		if ( GroundEntity == null ) return;
 		if ( !Input.Down( InputButton.Duck ) ) return;
 
-		if ( !PrevGrounded && Velocity.WithZ(0).Length < 300 )
+		if ( !PrevGrounded && Velocity.WithZ( 0 ).Length < 300 )
 		{
 			Velocity *= .35f;
 		}

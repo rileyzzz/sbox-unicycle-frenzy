@@ -18,9 +18,11 @@ internal partial class UnicyclePlayer
 	[Net, Predicted]
 	public TimeSince TimeSincePedalStart { get; set; }
 	[Net, Predicted]
-	public TimeSince TimeSinceJumpDown { get; set; }
-	[Net, Predicted]
 	public Rotation TargetForward { get; set; }
+	[Net, Predicted]
+	public float TimeSinceJumpDown { get; set; }
+	[Net, Predicted]
+	public TimeSince TimeSinceNotGrounded { get; set; }
 
 	private bool overrideRot;
 	private Rotation rotOverride;
