@@ -45,8 +45,6 @@ internal partial class UnicycleController : BasePlayerController
 	private UnicycleUnstuck unstuck;
 	private Angles jumpTilt;
 	private Angles prevJumpTilt;
-	private Angles randomTiltFrom;
-	private TimeSince timeSinceRandomTilt;
 
 	public UnicycleController()
 	{
@@ -88,7 +86,6 @@ internal partial class UnicycleController : BasePlayerController
 		DoFriction();
 		DoSlope();
 		DoTilt();
-		DoIdleTilt();
 		DoRollingSound();
 
 		// lerp pedals into place, adding velocity and lean
@@ -323,32 +320,19 @@ internal partial class UnicycleController : BasePlayerController
 			tilt += delta;
 		}
 
+		if ( IsIdle() )
+		{
+			// Jake: I'm using t in a silly way here
+			//		 I don't want it to lerp from A to B by T because
+			//		 we can't really snap the tilt like that without
+			//		 conflicting with the player's input, so lerp w/
+			//		 delta and use t for easing
+			var rndTilt = GetRandomTilt( out float t );
+			tilt = Angles.Lerp( tilt, rndTilt, 1.75f * Time.Delta * t );
+		}
+
 		tilt.roll = Math.Clamp( tilt.roll, -MaxLean - 5, MaxLean + 5 );
 		tilt.pitch = Math.Clamp( tilt.pitch, -MaxLean - 5, MaxLean + 5 );
-
-		pl.Tilt = tilt;
-	}
-
-	private void DoIdleTilt()
-	{
-		if ( !IsIdle() ) return;
-
-		var tilt = pl.Tilt;
-
-		// randomly tilt if we're chilling in the safe zone
-		if ( tilt.Length < LeanSafeZone )
-		{
-			const float randomTiltTime = 1.5f;
-			if ( Time.Now % randomTiltTime == 0 )
-			{
-				pl.RandomTilt = GetRandomTilt();
-				randomTiltFrom = tilt;
-				timeSinceRandomTilt = 0;
-			}
-			var t = Easing.EaseIn( timeSinceRandomTilt / randomTiltTime );
-			if ( t > 1 ) t = 0;
-			tilt = Angles.Lerp( randomTiltFrom, pl.RandomTilt, t );
-		}
 
 		pl.Tilt = tilt;
 	}
@@ -357,26 +341,33 @@ internal partial class UnicycleController : BasePlayerController
 	{
 		var input = new Vector3( Input.Forward, 0, -Input.Left );
 
-		return (jumpTilt.Length.AlmostEqual( 0f )
-			&& input.Length.AlmostEqual( 0 )
-			&& pl.TimeSincePedalStart > PedalTime
-			&& !Input.Down( InputButton.Duck ) );
+		if ( !input.Length.AlmostEqual( 0f ) ) return false;
+		if ( !jumpTilt.Length.AlmostEqual( 0f ) ) return false;
+		if ( pl.TimeSincePedalStart < PedalTime ) return false;
+		if ( pl.Tilt.Length >= LeanSafeZone ) return false;
+		if ( Input.Down( InputButton.Duck ) ) return false;
+
+		return true;
 	}
 
-	private Angles GetRandomTilt()
+	private Angles GetRandomTilt( out float t )
 	{
-		Rand.SetSeed( Time.Tick );
-		var newRnd = Angles.Random;
+		// this should give a deterministic random tilt to avoid
+		// having to net sync additional stuff
 
-		while ( Math.Sign( newRnd.pitch ) == Math.Sign( pl.RandomTilt.pitch ) 
-			&& Math.Sign( newRnd.roll ) == Math.Sign( pl.RandomTilt.roll ) )
-		{
-			newRnd = Angles.Random;
-		}
+		var seed = Time.Tick / 50f;
+		t = seed - (int)seed;
 
-		newRnd = newRnd.WithYaw( 0 ).Normal;
+		Rand.SetSeed( (int)seed );
+		var newRnd = Angles.Random.WithYaw( 0 ).Normal;
 
-		return newRnd * LeanSafeZone * .5f;
+		// can do something like this to avoid repetitive randoms
+		//Rand.SetSeed( (int)seed - 1 );
+		//var prevRnd = Angles.Random.WithYaw( 0 ).Normal;
+		//if ( Math.Sign( newRnd.pitch ) == Math.Sign( prevRnd.pitch ) ) newRnd.pitch *= -1;
+		//if ( Math.Sign( newRnd.roll ) == Math.Sign( prevRnd.roll ) ) newRnd.roll *= -1;
+
+		return newRnd * LeanSafeZone * .75f;
 	}
 
 	private void DoRotation()

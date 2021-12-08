@@ -23,8 +23,6 @@ internal partial class UnicyclePlayer
 	public float TimeSinceJumpDown { get; set; }
 	[Net, Predicted]
 	public TimeSince TimeSinceNotGrounded { get; set; }
-	[Net, Predicted]
-	public Angles RandomTilt { get; set; }
 
 	private bool overrideRot;
 	private Rotation rotOverride;
@@ -45,7 +43,6 @@ internal partial class UnicyclePlayer
 		PedalTargetPosition = default;
 		TimeSincePedalStart = default;
 		TargetForward = Rotation;
-		RandomTilt = Angles.Zero;
 	}
 
 	public override void BuildInput( InputBuilder input )
