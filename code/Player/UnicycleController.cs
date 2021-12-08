@@ -328,7 +328,8 @@ internal partial class UnicycleController : BasePlayerController
 		// randomly tilt if we're chilling in the safe zone
 		if ( tilt.Length < LeanSafeZone 
 			&& input.Length.AlmostEqual( 0 )
-			&& pl.TimeSincePedalStart > PedalTime )
+			&& pl.TimeSincePedalStart > PedalTime
+			&& !Input.Down( InputButton.Duck ) )
 		{
 			const float randomTiltTime = 1.5f;
 			if ( Time.Now % randomTiltTime == 0 )
