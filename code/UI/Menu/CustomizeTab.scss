@@ -20,11 +20,16 @@ CustomizeTab {
             border-radius: 10px;
             margin-bottom: 8px;
             cursor: pointer;
-            transition: all .15s ease-in;
+            transition: background-color .15s linear;
+            background-color: transparent;
 
             &:hover, &.active {
                 border-color: rgba($primary 1);
                 background-color: rgba($primary .1);
+            }
+
+            &:active {
+                border-color: white;
             }
         }
     }
@@ -88,7 +93,7 @@ CustomizeTab {
                 text-shadow: 1px 1px 1px black;
                 background-color: rgba($primary .1);
                 border-radius: $radius;
-                transition: all .15s ease-out;
+                transition: background-color .15s ease-out;
                 margin-right: 4px;
                 cursor: pointer;
                 justify-content: center;
