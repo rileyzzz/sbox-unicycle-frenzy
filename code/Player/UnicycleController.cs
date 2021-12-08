@@ -45,6 +45,8 @@ internal partial class UnicycleController : BasePlayerController
 	private UnicycleUnstuck unstuck;
 	private Angles jumpTilt;
 	private Angles prevJumpTilt;
+	private Angles randomTiltFrom;
+	private TimeSince timeSinceRandomTilt;
 
 	public UnicycleController()
 	{
@@ -295,10 +297,6 @@ internal partial class UnicycleController : BasePlayerController
 				tilt += tilt * str * Time.Delta;
 			}
 		}
-		else
-		{
-			//
-		}
 
 		// accel and decel will make us pitch
 		// we're only doing this on flat ground to avoid fucking up
@@ -326,7 +324,42 @@ internal partial class UnicycleController : BasePlayerController
 		tilt.roll = Math.Clamp( tilt.roll, -MaxLean - 5, MaxLean + 5 );
 		tilt.pitch = Math.Clamp( tilt.pitch, -MaxLean - 5, MaxLean + 5 );
 
+		// randomly tilt if we're chilling in the safe zone
+		if ( tilt.Length < LeanSafeZone && input.Length.AlmostEqual( 0 ) )
+		{
+			const float randomTiltTime = 1.5f;
+			if ( Time.Now % randomTiltTime == 0 )
+			{
+				pl.RandomTilt = GetRandomTilt();
+				randomTiltFrom = tilt;
+				timeSinceRandomTilt = 0;
+			}
+			var t = Easing.EaseIn( timeSinceRandomTilt / randomTiltTime );
+			if ( t > 1 ) t = 0;
+			tilt = Angles.Lerp( randomTiltFrom, pl.RandomTilt, t );
+		}
+		else
+		{
+			randomTiltFrom = tilt;
+		}
+
 		pl.Tilt = tilt;
+	}
+
+	private Angles GetRandomTilt()
+	{
+		Rand.SetSeed( Time.Tick );
+		var newRnd = Angles.Random;
+
+		while ( Math.Sign( newRnd.pitch ) == Math.Sign( pl.RandomTilt.pitch ) 
+			&& Math.Sign( newRnd.roll ) == Math.Sign( pl.RandomTilt.roll ) )
+		{
+			newRnd = Angles.Random;
+		}
+
+		newRnd = newRnd.WithYaw( 0 ).Normal;
+
+		return newRnd * LeanSafeZone * .75f;
 	}
 
 	private void DoRotation()
