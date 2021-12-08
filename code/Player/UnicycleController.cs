@@ -88,6 +88,7 @@ internal partial class UnicycleController : BasePlayerController
 		DoFriction();
 		DoSlope();
 		DoTilt();
+		DoIdleTilt();
 		DoRollingSound();
 
 		// lerp pedals into place, adding velocity and lean
@@ -218,7 +219,7 @@ internal partial class UnicycleController : BasePlayerController
 
 			if ( jumpTilt != Angles.Zero )
 			{
-				if ( prevJumpTilt.Length > 25 )
+				if ( prevJumpTilt.Length > 35 )
 				{
 					jumpTilt = prevJumpTilt * .5f;
 					pl.Tilt = prevJumpTilt * -1f;
@@ -325,12 +326,17 @@ internal partial class UnicycleController : BasePlayerController
 		tilt.roll = Math.Clamp( tilt.roll, -MaxLean - 5, MaxLean + 5 );
 		tilt.pitch = Math.Clamp( tilt.pitch, -MaxLean - 5, MaxLean + 5 );
 
+		pl.Tilt = tilt;
+	}
+
+	private void DoIdleTilt()
+	{
+		if ( !IsIdle() ) return;
+
+		var tilt = pl.Tilt;
+
 		// randomly tilt if we're chilling in the safe zone
-		if ( tilt.Length < LeanSafeZone 
-			&& jumpTilt.Length.AlmostEqual( 0f )
-			&& input.Length.AlmostEqual( 0 )
-			&& pl.TimeSincePedalStart > PedalTime
-			&& !Input.Down( InputButton.Duck ) )
+		if ( tilt.Length < LeanSafeZone )
 		{
 			const float randomTiltTime = 1.5f;
 			if ( Time.Now % randomTiltTime == 0 )
@@ -343,12 +349,18 @@ internal partial class UnicycleController : BasePlayerController
 			if ( t > 1 ) t = 0;
 			tilt = Angles.Lerp( randomTiltFrom, pl.RandomTilt, t );
 		}
-		else
-		{
-			randomTiltFrom = tilt;
-		}
 
 		pl.Tilt = tilt;
+	}
+
+	private bool IsIdle()
+	{
+		var input = new Vector3( Input.Forward, 0, -Input.Left );
+
+		return (jumpTilt.Length.AlmostEqual( 0f )
+			&& input.Length.AlmostEqual( 0 )
+			&& pl.TimeSincePedalStart > PedalTime
+			&& !Input.Down( InputButton.Duck ) );
 	}
 
 	private Angles GetRandomTilt()
