@@ -35,27 +35,27 @@ internal class DevHud : Panel
 		var rightTop = player.PedalPosition.LerpInverse( -1f, 1f );
 		var maxLean = controller.MaxLean;
 
-		LeftPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = leftTop * 100f };
-		RightPedal.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = rightTop * 100f };
+		LeftPedal.Style.Top = Length.Percent( leftTop * 100f );
+		RightPedal.Style.Top = Length.Percent( rightTop * 100f );
 
 		var jumpStrength = Math.Min( player.TimeSinceJumpDown / controller.MaxJumpStrengthTime, 1f );
 		if ( !Input.Down( InputButton.Jump ) ) jumpStrength = 0;
 		jumpStrength = Easing.EaseOut( jumpStrength );
-		Jump.Style.Height = new Length() { Unit = LengthUnit.Percentage, Value = jumpStrength * 100f };
+		Jump.Style.Height = Length.Percent( jumpStrength * 100f );
 
 		var absLean = player.Rotation.Angles();
 		var absRollAlpha = absLean.roll.LerpInverse( -maxLean, maxLean );
 		var absPitchAlpha = absLean.pitch.LerpInverse( maxLean, -maxLean );
 
-		AbsLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = absRollAlpha * 100f };
-		AbsLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = absPitchAlpha * 100f };
+		AbsLean.Style.Left = Length.Percent( absRollAlpha * 100f );
+		AbsLean.Style.Top = Length.Percent( absPitchAlpha * 100f );
 
 		var localLean = player.Tilt;
 		var localRollAlpha = localLean.roll.LerpInverse( -maxLean, maxLean );
 		var localPitchAlpha = localLean.pitch.LerpInverse( maxLean, -maxLean );
 
-		LocalLean.Style.Left = new Length() { Unit = LengthUnit.Percentage, Value = localRollAlpha * 100f };
-		LocalLean.Style.Top = new Length() { Unit = LengthUnit.Percentage, Value = localPitchAlpha * 100f };
+		LocalLean.Style.Left = Length.Percent( localRollAlpha * 100f );
+		LocalLean.Style.Top = Length.Percent( localPitchAlpha * 100f );
 
 		var safezoneSize = (controller.LeanSafeZone / controller.MaxLean);
 		var boxw = SafeZone.Parent.ComputedStyle.Width.Value.GetPixels( 1.0f );
