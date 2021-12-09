@@ -297,10 +297,7 @@ internal partial class UnicycleController : BasePlayerController
 		}
 
 		// accel and decel will make us pitch
-		// we're only doing this on flat ground to avoid fucking up
-		// the player's GroundNormal rotation while hitting slopes fast
-		// might be a smarter solution here to have it both ways
-		if ( GroundEntity != null && Vector3.GetAngle( Vector3.Up, GroundNormal ) < 5 )
+		if ( GroundEntity != null )
 		{
 			var prevFwdSpeed = SpeedInDirection( PrevVelocity, Rotation.Forward );
 			var fwdSpeed = SpeedInDirection( Velocity, Rotation.Forward );
