@@ -31,6 +31,9 @@ internal partial class UnicycleController : BasePlayerController
 	public float BrakeStrength => 3f;
 	public float StopSpeed => 10f;
 	public float MaxAirTurnSpeed => 35f;
+	// fuck it
+	public float HowFastYouPitchWhenForwardVelocityChanges => 3f;
+	public float HowFastYouRollWhenRightVelocityChanges => 1.5f;
 
 	public string GroundSurface { get; private set; }
 	public bool PrevGrounded { get; private set; }
@@ -294,14 +297,15 @@ internal partial class UnicycleController : BasePlayerController
 			}
 		}
 
-		// accel and decel will make us pitch
+		// tilt from changes in velocity
 		if ( GroundEntity != null )
 		{
-			var prevFwdSpeed = SpeedInDirection( PrevVelocity, Rotation.Forward );
-			var fwdSpeed = SpeedInDirection( Velocity, Rotation.Forward );
-			var speedChange = prevFwdSpeed - fwdSpeed;
-			var heading = Math.Sign( Vector3.Dot( Velocity, Rotation.Forward ) );
-			tilt += new Angles( speedChange * 3f * heading * Time.Delta, 0, 0 );
+			var velDiff = pl.Transform.NormalToLocal( Velocity - PrevVelocity );
+
+			// cancel out a bit of the pitch if we're turning sharp
+			if ( Math.Abs( velDiff.y ) > Math.Abs( velDiff.x ) ) velDiff.x *= .25f;
+
+			tilt += new Angles( -velDiff.x * HowFastYouPitchWhenForwardVelocityChanges, 0, velDiff.y * HowFastYouRollWhenRightVelocityChanges ) * Time.Delta;
 		}
 
 		// this handles how we tilt and recover tilt after jumping
@@ -524,11 +528,6 @@ internal partial class UnicycleController : BasePlayerController
 			"dirt" => 2.0f,
 			_ => 1.0f,
 		};
-	}
-
-	static float SpeedInDirection( Vector3 velocity, Vector3 direction )
-	{
-		return (velocity.Dot( direction ) * direction.Normal).Length;
 	}
 
 	static Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
