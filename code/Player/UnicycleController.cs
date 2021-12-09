@@ -214,7 +214,7 @@ internal partial class UnicycleController : BasePlayerController
 			pl.Tilt = Rotation.Angles().WithYaw( 0 );
 			Position = Position.WithZ( tr.EndPos.z );
 
-			if ( jumpTilt != Angles.Zero )
+			if ( !jumpTilt.Length.AlmostEqual( 0, .1f ) )
 			{
 				if ( prevJumpTilt.Length > 35 )
 				{
