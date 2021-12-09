@@ -1,6 +1,13 @@
 ﻿
-<root>
+<link rel="stylesheet" href="LeaderboardsTab.scss" />
 
-    <label>Leaderboards</label>
+<root class="gamepanel">
+
+    <div class="header">
+        <label class="rank">#</label>
+        <label class="name">Player</label>
+        <label class="time">Time</label>
+    </div>
+    <div @ref="Canvas" class="entries"></div>
 
 </root>
