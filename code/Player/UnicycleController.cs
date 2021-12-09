@@ -24,7 +24,7 @@ internal partial class UnicycleController : BasePlayerController
 	public float MaxLean => 45f;
 	public float LeanSafeZone => 8f;
 	public float LeanSpeed => 80f;
-	public float IdleTiltStrength => 1.5f;
+	public float TipSpeed => 1.5f;
 	public float GroundTurnSpeed => 2f;
 	public float AirTurnSpeed => 2f;
 	public float SlopeSpeed => 800f;
@@ -291,7 +291,7 @@ internal partial class UnicycleController : BasePlayerController
 			if ( GroundEntity != null && jumpTilt.Length.AlmostEqual( 0f, .05f ) && input.Length.AlmostEqual( 0 ) )
 			{
 				var t = len / MaxLean;
-				var str = .25f.LerpTo( IdleTiltStrength, t );
+				var str = .25f.LerpTo( TipSpeed, t );
 				tilt += tilt * str * Time.Delta;
 			}
 		}
