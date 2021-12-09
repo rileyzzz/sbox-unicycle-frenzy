@@ -338,11 +338,12 @@ internal partial class UnicycleController : BasePlayerController
 	{
 		var input = new Vector3( Input.Forward, 0, -Input.Left );
 
+		if ( GroundEntity == null ) return false;
 		if ( !input.Length.AlmostEqual( 0f ) ) return false;
 		if ( !jumpTilt.Length.AlmostEqual( 0f ) ) return false;
 		if ( pl.TimeSincePedalStart < PedalTime ) return false;
 		if ( pl.Tilt.Length >= LeanSafeZone ) return false;
-		if ( Input.Down( InputButton.Duck ) ) return false;
+		if ( Input.Down( InputButton.Duck ) && Velocity.Length > StopSpeed ) return false;
 
 		return true;
 	}
