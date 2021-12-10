@@ -37,7 +37,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	public string GroundSurface { get; private set; }
 	public bool PrevGrounded { get; private set; }
-	public Vector3 PrevVelocity { get; private set; }
+	public Vector3 PrevVelocity { get; set; }
 
 	private UnicyclePlayer pl => Pawn as UnicyclePlayer;
 	public Vector3 Mins => new( -8, -8, 0 );
@@ -81,6 +81,7 @@ internal partial class UnicycleController : BasePlayerController
 		var beforeGrounded = GroundEntity != null;
 		var beforeVelocity = Velocity;
 
+		CheckGround();
 		CheckPedal();
 		CheckBrake();
 		CheckJump();
@@ -95,10 +96,7 @@ internal partial class UnicycleController : BasePlayerController
 			var a = pl.TimeSincePedalStart / pl.TimeToReachTarget;
 			a = Easing.EaseOut( a );
 
-			var newPosition = pl.PedalStartPosition.LerpTo( pl.PedalTargetPosition, a );
-			var delta = newPosition - pl.PedalPosition;
-
-			MovePedals( delta );
+			MovePedals( pl.PedalStartPosition.LerpTo( pl.PedalTargetPosition, a ) );
 		}
 
 		DoRotation();
@@ -106,7 +104,6 @@ internal partial class UnicycleController : BasePlayerController
 
 		// go
 		Move();
-		CheckGround();
 
 		if ( ShouldFall() )
 		{
@@ -117,6 +114,8 @@ internal partial class UnicycleController : BasePlayerController
 
 			AddEvent( "fall" );
 		}
+
+		pl.TimeSincePedalStart += Time.Delta;
 
 		PrevGrounded = beforeGrounded;
 		PrevVelocity = beforeVelocity;
@@ -275,7 +274,7 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		// recover tilt from momentum and input
+		// recover tilt from momentum
 		var recover = Math.Min( Velocity.WithZ( 0 ).Length / 100f, 2.25f );
 		var tilt = pl.Tilt;
 		tilt = Angles.Lerp( tilt, Angles.Zero, recover * Time.Delta );
@@ -507,9 +506,10 @@ internal partial class UnicycleController : BasePlayerController
 		Velocity += Rotation.Forward.WithZ( 0 ) * PerfectPedalBoost;
 	}
 
-	private void MovePedals( float delta )
+	private void MovePedals( float newPosition )
 	{
-		pl.PedalPosition += delta;
+		var delta = newPosition - pl.PedalPosition;
+		pl.PedalPosition = newPosition;
 
 		// don't add velocity when pedals are returning to idle or in air..
 		if ( pl.PedalTargetPosition == 0 ) return;

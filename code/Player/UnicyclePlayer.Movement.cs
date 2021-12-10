@@ -17,7 +17,7 @@ internal partial class UnicyclePlayer
 	[Net, Predicted]
 	public float PedalTargetPosition { get; set; }
 	[Net, Predicted]
-	public TimeSince TimeSincePedalStart { get; set; }
+	public float TimeSincePedalStart { get; set; }
 	[Net, Predicted]
 	public Rotation TargetForward { get; set; }
 	[Net, Predicted]
