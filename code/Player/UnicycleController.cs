@@ -36,16 +36,12 @@ internal partial class UnicycleController : BasePlayerController
 	public float HowFastYouRollWhenRightVelocityChanges => 1.5f;
 
 	public string GroundSurface { get; private set; }
-	public bool PrevGrounded { get; private set; }
-	public Vector3 PrevVelocity { get; set; }
 
 	private UnicyclePlayer pl => Pawn as UnicyclePlayer;
 	public Vector3 Mins => new( -8, -8, 0 );
 	public Vector3 Maxs => new( 8, 8, 48 );
 
 	private UnicycleUnstuck unstuck;
-	private Angles jumpTilt;
-	private Angles prevJumpTilt;
 
 	public UnicycleController()
 	{
@@ -116,30 +112,29 @@ internal partial class UnicycleController : BasePlayerController
 		}
 
 		pl.TimeSincePedalStart += Time.Delta;
-
-		PrevGrounded = beforeGrounded;
-		PrevVelocity = beforeVelocity;
+		pl.PrevGrounded = beforeGrounded;
+		pl.PrevVelocity = beforeVelocity;
 	}
 
 	private bool ShouldFall()
 	{
 		if ( NoFall ) return false;
 
-		if ( GroundEntity != null && !PrevGrounded )
+		if ( GroundEntity != null && !pl.PrevGrounded )
 		{
-			if ( PrevVelocity.z < -1000 )
+			if ( pl.PrevVelocity.z < -1000 )
 				return true;
 		}
 
-		if ( PrevVelocity.Length > StopSpeed )
+		if ( pl.PrevVelocity.Length > StopSpeed )
 		{
 			var wallTrStart = Position;
-			var wallTrEnd = wallTrStart + PrevVelocity * Time.Delta;
+			var wallTrEnd = wallTrStart + pl.PrevVelocity * Time.Delta;
 			var tr = TraceBBox( wallTrStart, wallTrEnd, Mins + Vector3.Up * 16, Maxs );
 
 			if ( tr.Hit && Vector3.GetAngle( tr.Normal, Vector3.Up ) > 85f )
 			{
-				var d = Vector3.Dot( tr.Normal, PrevVelocity );
+				var d = Vector3.Dot( tr.Normal, pl.PrevVelocity );
 				if ( d < -.3f )
 					return true;
 			}
@@ -214,16 +209,16 @@ internal partial class UnicycleController : BasePlayerController
 			pl.Tilt = Rotation.Angles().WithYaw( 0 );
 			Position = Position.WithZ( tr.EndPos.z );
 
-			if ( !jumpTilt.Length.AlmostEqual( 0, .1f ) )
+			if ( !pl.JumpTilt.Length.AlmostEqual( 0, .1f ) )
 			{
-				if ( prevJumpTilt.Length > 35 )
+				if ( pl.PrevJumpTilt.Length > 35 )
 				{
-					jumpTilt = prevJumpTilt * .5f;
-					pl.Tilt = prevJumpTilt * -1f;
+					pl.JumpTilt = pl.PrevJumpTilt * .5f;
+					pl.Tilt = pl.PrevJumpTilt * -1f;
 				}
 				else
 				{
-					jumpTilt = Angles.Zero;
+					pl.JumpTilt = Angles.Zero;
 					pl.Tilt = Angles.Zero;
 				}
 			}
@@ -288,7 +283,7 @@ internal partial class UnicycleController : BasePlayerController
 		var len = tilt.Length;
 		if( len > LeanSafeZone )
 		{
-			if ( GroundEntity != null && jumpTilt.Length.AlmostEqual( 0f, .05f ) && input.Length.AlmostEqual( 0 ) )
+			if ( GroundEntity != null && pl.JumpTilt.Length.AlmostEqual( 0f, .05f ) && input.Length.AlmostEqual( 0 ) )
 			{
 				var t = len / MaxLean;
 				var str = .25f.LerpTo( TipSpeed, t );
@@ -299,7 +294,7 @@ internal partial class UnicycleController : BasePlayerController
 		// tilt from changes in velocity
 		if ( GroundEntity != null )
 		{
-			var velDiff = pl.Transform.NormalToLocal( Velocity - PrevVelocity );
+			var velDiff = pl.Transform.NormalToLocal( Velocity - pl.PrevVelocity );
 
 			// cancel out a bit of the pitch if we're turning sharp
 			if ( Math.Abs( velDiff.y ) > Math.Abs( velDiff.x ) ) velDiff.x *= .25f;
@@ -318,13 +313,13 @@ internal partial class UnicycleController : BasePlayerController
 		}
 
 		// this handles how we tilt and recover tilt after jumping
-		tilt += jumpTilt.Normal * 3f * Time.Delta;
+		tilt += pl.JumpTilt.Normal * 3f * Time.Delta;
 
 		if ( GroundEntity != null )
 		{
-			var before = jumpTilt;
-			jumpTilt = Angles.Lerp( jumpTilt, Angles.Zero, 3f * Time.Delta );
-			var delta = before - jumpTilt;
+			var before = pl.JumpTilt;
+			pl.JumpTilt = Angles.Lerp( pl.JumpTilt, Angles.Zero, 3f * Time.Delta );
+			var delta = before - pl.JumpTilt;
 			tilt += delta;
 		}
 
@@ -351,7 +346,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( GroundEntity == null ) return false;
 		if ( !input.Length.AlmostEqual( 0f ) ) return false;
-		if ( !jumpTilt.Length.AlmostEqual( 0f ) ) return false;
+		if ( !pl.JumpTilt.Length.AlmostEqual( 0f ) ) return false;
 		if ( pl.TimeSincePedalStart < PedalTime ) return false;
 		if ( pl.Tilt.Length >= LeanSafeZone ) return false;
 		if ( Input.Down( InputButton.Duck ) && Velocity.Length > StopSpeed ) return false;
@@ -418,8 +413,8 @@ internal partial class UnicycleController : BasePlayerController
 			var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
 			var up = Rotation.From( Rotation.Angles() ).Up;
 
-			jumpTilt = pl.Tilt * -1;
-			prevJumpTilt = jumpTilt;
+			pl.JumpTilt = pl.Tilt * -1;
+			pl.PrevJumpTilt = pl.JumpTilt;
 			Velocity += up * jumpStrength;
 			GroundEntity = null;
 			pl.TimeSinceJumpDown = 0;
@@ -472,7 +467,7 @@ internal partial class UnicycleController : BasePlayerController
 		if ( GroundEntity == null ) return;
 		if ( !Input.Down( InputButton.Duck ) ) return;
 
-		if ( !PrevGrounded && Velocity.WithZ( 0 ).Length < 300 )
+		if ( !pl.PrevGrounded && Velocity.WithZ( 0 ).Length < 300 )
 		{
 			Velocity *= .35f;
 		}

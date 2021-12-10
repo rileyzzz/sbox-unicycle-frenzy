@@ -17,7 +17,7 @@ internal partial class UnicycleController
 		{
 			case "land":
 				var snd = Sound.FromWorld( "unicycle.land.default", Position );
-				var vol = Math.Clamp( Math.Abs( PrevVelocity.z ) / 600f, .15f, 1f );
+				var vol = Math.Clamp( Math.Abs( pl.PrevVelocity.z ) / 600f, .15f, 1f );
 				snd.SetVolume( vol );
 				break;
 			case "fall":
