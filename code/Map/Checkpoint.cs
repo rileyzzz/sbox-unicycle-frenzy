@@ -46,6 +46,7 @@ internal partial class Checkpoint : ModelEntity
 		if ( this.IsEnd )
 		{
 			pl.CompleteCourse();
+			pl.ClearCheckpoints();
 		}
 
 		if ( this.IsStart )
