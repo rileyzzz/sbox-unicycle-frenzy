@@ -308,6 +308,16 @@ internal partial class UnicycleController : BasePlayerController
 			tilt += new Angles( -velDiff.x * HowFastYouPitchWhenForwardVelocityChanges, 0, velDiff.y * HowFastYouRollWhenRightVelocityChanges ) * Time.Delta;
 		}
 
+		// tilt while on uneven ground
+		if( GroundEntity != null && Vector3.GetAngle(GroundNormal, Vector3.Up) > 2f )
+		{
+			var groundRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
+			groundRot *= pl.TargetForward;
+			var groundTilt = groundRot.Angles().WithYaw( 0 );
+
+			tilt += groundTilt * TipSpeed * Time.Delta;
+		}
+
 		// this handles how we tilt and recover tilt after jumping
 		tilt += jumpTilt.Normal * 3f * Time.Delta;
 
