@@ -84,7 +84,6 @@ internal partial class UnicycleController : BasePlayerController
 		DoFriction();
 		DoSlope();
 		DoTilt();
-		DoRollingSound();
 
 		// lerp pedals into place, adding velocity and lean
 		if ( pl.TimeSincePedalStart < pl.TimeToReachTarget + Time.Delta )
