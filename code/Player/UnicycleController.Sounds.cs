@@ -35,7 +35,7 @@ internal partial class UnicycleController
 		var newRollingSoundName = GetRollingSoundName();
 		rollingSoundTargetVol = GetRollingVolume();
 
-		if ( !rollingSound.HasValue || rollingSound.Value.Finished || rollingSoundName != newRollingSoundName )
+		if ( !rollingSound.HasValue || rollingSoundName != newRollingSoundName )
 		{
 			rollingSound?.Stop();
 			rollingSound = Sound.FromEntity( newRollingSoundName, Pawn );
