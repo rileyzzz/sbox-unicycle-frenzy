@@ -29,17 +29,8 @@
 				[
 					{
 						_class = "Attachment"
-						name = "Ass"
-						parent_bone = ""
-						relative_origin = [ 0.0, 0.0, 4.052914 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
-						weight = 1.0
-						ignore_rotation = false
-					},
-					{
-						_class = "Attachment"
-						name = "ToFrame"
-						parent_bone = ""
+						name = "ass"
+						parent_bone = "ass"
 						relative_origin = [ 0.0, 0.0, 0.0 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
@@ -60,7 +51,7 @@
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
-						parent_bone = ""
+						parent_bone = "seat"
 						import_filter = 
 						{
 							exclude_by_default = false
@@ -81,6 +72,29 @@
 						origin = [ -0.098227, -0.00772, 2.557459 ]
 						angles = [ 0.0, 0.0, 0.0 ]
 						dimensions = [ 18.500393, 8.154947, 4.88508 ]
+					},
+				]
+			},
+			{
+				_class = "Skeleton"
+				children = 
+				[
+					{
+						_class = "Bone"
+						name = "seat"
+						children = 
+						[
+							{
+								_class = "Bone"
+								name = "ass"
+								origin = [ 0.0, 0.0, 4.0 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								do_not_discard = true
+							},
+						]
+						origin = [ 0.0, 0.0, 0.0 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						do_not_discard = true
 					},
 				]
 			},

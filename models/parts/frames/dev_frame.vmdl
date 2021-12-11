@@ -60,7 +60,7 @@
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
-						parent_bone = ""
+						parent_bone = "frame"
 						import_filter = 
 						{
 							exclude_by_default = false
@@ -75,39 +75,84 @@
 				[
 					{
 						_class = "Attachment"
-						name = "Seat"
+						name = "seat"
 						parent_bone = ""
-						relative_origin = [ 0.0, 0.0, 24.155956 ]
+						relative_origin = [ 0.0, 0.0, 24.0 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
 					{
 						_class = "Attachment"
-						name = "Wheel"
+						name = "pedal_L"
 						parent_bone = ""
-						relative_origin = [ 0.0, 0.0, 1.545966 ]
+						relative_origin = [ 0.0, 5.0, 1.5 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
 					{
 						_class = "Attachment"
-						name = "Pedal_L"
+						name = "pedal_R"
 						parent_bone = ""
-						relative_origin = [ 0.0, -4.439442, 0.0 ]
+						relative_origin = [ 0.0, -5.0, 1.5 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
 					},
+				]
+			},
+			{
+				_class = "Skeleton"
+				children = 
+				[
 					{
-						_class = "Attachment"
-						name = "Pedal_R"
-						parent_bone = ""
-						relative_origin = [ 0.0, 4.441046, 0.0 ]
-						relative_angles = [ 0.0, 0.0, 0.0 ]
-						weight = 1.0
-						ignore_rotation = false
+						_class = "Bone"
+						name = "frame"
+						children = 
+						[
+							{
+								_class = "Bone"
+								name = "hub"
+								origin = [ 0.0, 0.0, 1.5 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								do_not_discard = true
+							},
+							{
+								_class = "Bone"
+								name = "seat"
+								origin = [ 0.0, 0.0, 24.0 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								do_not_discard = true
+							},
+							{
+								_class = "Bone"
+								name = "pedal"
+								children = 
+								[
+									{
+										_class = "Bone"
+										name = "pedal_L"
+										origin = [ 0.0, 5.0, 0.0 ]
+										angles = [ 0.0, 0.0, 0.0 ]
+										do_not_discard = true
+									},
+									{
+										_class = "Bone"
+										name = "pedal_R"
+										origin = [ 0.0, -5.0, 0.0 ]
+										angles = [ 180.0, 180.0, 0.0 ]
+										do_not_discard = true
+									},
+								]
+								origin = [ 0.0, 0.0, 1.5 ]
+								angles = [ 0.0, 0.0, 0.0 ]
+								do_not_discard = true
+							},
+						]
+						origin = [ 0.0, 0.0, 0.0 ]
+						angles = [ 0.0, 0.0, 0.0 ]
+						do_not_discard = true
 					},
 				]
 			},

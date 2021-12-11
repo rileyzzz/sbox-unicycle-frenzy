@@ -56,7 +56,7 @@ internal class CustomizeRenderScene : Panel
 
 		using ( SceneWorld.SetCurrent( new SceneWorld() ) )
 		{
-			GenerateModel( ensemble );
+			BuildUnicycleObject( ensemble );
 
 			SceneObject.CreateModel( "models/room.vmdl", Transform.Zero.WithScale( 10 ).WithPosition( Vector3.Down * 10 ) );
 
@@ -84,7 +84,7 @@ internal class CustomizeRenderScene : Panel
 		}
 	}
 
-	private SceneObject GenerateModel( UnicycleEnsemble ensemble )
+	private SceneObject BuildUnicycleObject( UnicycleEnsemble ensemble )
 	{
 		var frame = ensemble.GetPart( PartType.Frame );
 		var wheel = ensemble.GetPart( PartType.Wheel );
@@ -94,19 +94,24 @@ internal class CustomizeRenderScene : Panel
 		var frameObj = SceneObject.CreateModel( frame.Model, Transform.Zero );
 		var wheelObj = SceneObject.CreateModel( wheel.Model, Transform.Zero );
 		var seatObj = SceneObject.CreateModel( seat.Model, Transform.Zero );
+		var pedalObjL = SceneObject.CreateModel( pedal.Model, Transform.Zero );
+		var pedalObjR = SceneObject.CreateModel( pedal.Model, Transform.Zero );
 
-		var hub = wheelObj.Model.GetAttachment( "Hub" );
+		var hub = wheelObj.Model.GetAttachment( "hub" );
 
 		frameObj.Position = Vector3.Up * hub.Value.Position.z;
 
-		var seatAttachment = frameObj.Model.GetAttachment( "Seat" );
+		var seatAttachment = frameObj.Model.GetAttachment( "seat" );
 
 		seatObj.Position = seatAttachment.Value.Position + frameObj.Position;
 
-		// todo: pedals
+		// need: get bone transforms from sceneobject
+		// todo: pedal positions
 
 		frameObj.AddChild( "wheel", wheelObj );
 		frameObj.AddChild( "seat", seatObj );
+		frameObj.AddChild( "pedalL", pedalObjL );
+		frameObj.AddChild( "pedalR", pedalObjR );
 
 		return frameObj;
 	}
