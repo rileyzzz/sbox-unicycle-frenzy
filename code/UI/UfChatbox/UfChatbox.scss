@@ -3,20 +3,19 @@
 
 UfChatbox {
     position: absolute;
-    bottom: 200px;
-    left: 220px;
+    bottom: 120px;
+    left: 125px;
     width: 520px;
-    height: 400px;
+    height: 570px;
     border-radius: $radius;
     padding: $padding;
     flex-direction: column;
+    justify-content: flex-end;
     z-index: 2;
-    font-size: 16px;
+    font-size: 20px;
 
     &.open {
         pointer-events: all;
-        background-color: rgba( $bg .5 );
-        backdrop-filter: blur(5px);
 
         .input {
             opacity: 1;
@@ -29,9 +28,7 @@ UfChatbox {
     }
 
     .entries {
-        flex-grow: 1;
         flex-direction: column;
-        justify-content: flex-end;
         overflow: scroll;
     }
 
@@ -39,7 +36,6 @@ UfChatbox {
         opacity: 0;
         min-height: 50px;
         max-height: 50px;
-        padding-top: 10px;
 
         .placeholder {
             color: rgba(white .5);
@@ -47,50 +43,38 @@ UfChatbox {
         }
 
         textentry {
-            height: 100%;
             flex-grow: 1;
             padding: 8px;
-            background-color: rgba($primary .1);
+            background-color: rgba($bg .5);
             border-radius: $smallradius;
             align-items: center;
-
-            &:hover {
-                background-color: rgba($primary .5);
-            }
         }
     }
 }
 
 UfChatboxEntry {
-    padding: 4px 10px;
     border-radius: $smallradius;
     flex-shrink: 0;
     flex-grow: 0;
     width: 100%;
     transition: opacity .15s linear;
     text-shadow: 1px 1px 1px black;
-    sound-in: button.hover;
+    font-family: Poppins;
+    margin-bottom: 4px;
+    padding: 5px 0px;
 
     &.faded {
         opacity: 0;
     }
 
     .name {
-        font-size: 16px;
-        font-family: Poppins;
-        font-weight: 600;
-        letter-spacing: -1px;
+        font-weight: 800;
         margin-right: 10px;
-        color: $secondary;
-        flex-shrink: 0;
+        color: $primary;
     }
 
     .message {
         align-items: center;
-        margin-top: 1px; // ?
-    }
-
-    &:hover {
-        background-color: rgba($bg .2);
+        flex-grow: 1;
     }
 }
