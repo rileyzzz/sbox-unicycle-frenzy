@@ -15,7 +15,7 @@
 						[
 							{
 								from = "mat.vmat"
-								to = "materials/dev/dev_08_orange.vmat"
+								to = "materials/dev/dev_08_dark.vmat"
 							},
 						]
 						use_global_default = false

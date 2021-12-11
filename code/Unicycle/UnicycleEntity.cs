@@ -55,7 +55,7 @@ internal partial class UnicycleEntity : Entity
 		FrameModel.LocalPosition = Vector3.Up * GetWheelRadius();
 
 		PedalsPivot = new Entity();
-		PedalsPivot.SetParent( FrameModel, "pedals" );
+		PedalsPivot.SetParent( FrameModel, "pedals", Transform.Zero );
 
 		LeftPedalModel = new ModelEntity( pedal.Model );
 		LeftPedalModel.SetParent( PedalsPivot, null, Transform.Zero );
@@ -69,6 +69,8 @@ internal partial class UnicycleEntity : Entity
 		var pedalOffset = LeftPedalModel.GetBoneTransform( "hub" ).Position.z - FrameModel.GetBoneTransform( "pedal" ).Position.z;
 		LeftPedalModel.LocalPosition += Vector3.Down * pedalOffset;
 		RightPedalModel.LocalPosition += Vector3.Up * pedalOffset;
+
+		PedalsPivot.LocalRotation = PedalsPivot.LocalRotation.RotateAroundAxis( Vector3.Right, 90 );
 	}
 
 	private int parthash = -1;
@@ -119,6 +121,19 @@ internal partial class UnicycleEntity : Entity
 
 	//	FrameModel.SetBoneTransform( "hub", tx, false );
 	//}
+
+	[Event.Tick.Server]
+	private void SpinPedals()
+	{
+		if ( Parent is not UnicyclePlayer pl ) return;
+
+		var pedalAlpha = pl.PedalPosition.LerpInverse( -1f, 1f );
+		var targetPitch = 0f.LerpTo( 180, pedalAlpha );
+		var targetRot = Rotation.From( targetPitch, 0, 0 );
+
+		var ang = targetRot.Angle() - PedalsPivot.LocalRotation.Angle();
+		PedalsPivot.LocalRotation = PedalsPivot.LocalRotation.RotateAroundAxis( Vector3.Left, Math.Abs( ang ) );
+	}
 
 }
 
