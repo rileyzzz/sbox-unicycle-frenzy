@@ -27,6 +27,9 @@ public class UnicyclePart
 
 		//
 		new() { Id = 5, Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/pedals/dev_pedal", IsDefault = true },
+
+		//
+		new() { Id = 6, Type = PartType.Trail, Name = "Minigolf Trail", Model = "particles/trails/ball_trail.vpcf", IsDefault = true }
 	};
 
 }

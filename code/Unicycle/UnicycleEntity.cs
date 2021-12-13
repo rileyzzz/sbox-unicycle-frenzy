@@ -21,6 +21,8 @@ internal partial class UnicycleEntity : Entity
 	[Net]
 	public float WheelRadius { get; set; }
 
+	private Particles trail;
+
 	public Vector3 GetAssPosition()
 	{
 		var assAttachment = SeatModel.GetAttachment( "Ass" );
@@ -46,6 +48,7 @@ internal partial class UnicycleEntity : Entity
 		var seat = cfg.GetPart( PartType.Seat );
 		var wheel = cfg.GetPart( PartType.Wheel );
 		var pedal = cfg.GetPart( PartType.Pedal );
+		var trail = cfg.GetPart( PartType.Trail );
 
 		FrameModel = new ModelEntity( frame.Model );
 		FrameModel.SetParent( this, null, Transform.Zero );
@@ -84,6 +87,12 @@ internal partial class UnicycleEntity : Entity
 		RightPedalModel.LocalRotation *= Rotation.From( 180, 180, 0 );
 
 		PedalsPivot.LocalRotation = PedalsPivot.LocalRotation.RotateAroundAxis( Vector3.Right, 90 );
+
+		if( trail != null )
+		{
+			var particle = Particles.Create( trail.Model, this );
+			particle.SetPosition( 1, Vector3.One ); // Color
+		}
 	}
 
 	private int parthash = -1;
