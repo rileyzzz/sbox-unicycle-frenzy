@@ -46,25 +46,17 @@
 				]
 			},
 			{
-				_class = "Skeleton"
+				_class = "AttachmentList"
 				children = 
 				[
 					{
-						_class = "Bone"
-						name = "pedal"
-						children = 
-						[
-							{
-								_class = "Bone"
-								name = "hub"
-								origin = [ 0.0, 0.0, 6.5 ]
-								angles = [ 0.0, 0.0, 0.0 ]
-								do_not_discard = true
-							},
-						]
-						origin = [ 0.0, 0.0, 0.0 ]
-						angles = [ 0.0, 0.0, 0.0 ]
-						do_not_discard = true
+						_class = "Attachment"
+						name = "hub"
+						parent_bone = ""
+						relative_origin = [ 0.0, 0.0, 6.25 ]
+						relative_angles = [ 0.0, 0.0, 0.0 ]
+						weight = 1.0
+						ignore_rotation = false
 					},
 				]
 			},

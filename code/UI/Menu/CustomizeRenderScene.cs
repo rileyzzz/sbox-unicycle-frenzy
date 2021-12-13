@@ -97,16 +97,25 @@ internal class CustomizeRenderScene : Panel
 		var pedalObjL = SceneObject.CreateModel( pedal.Model, Transform.Zero );
 		var pedalObjR = SceneObject.CreateModel( pedal.Model, Transform.Zero );
 
-		var hub = wheelObj.Model.GetAttachment( "hub" );
+		var frameHub = frameObj.Model.GetAttachment( "hub" ) ?? Transform.Zero;
+		var wheelHub = wheelObj.Model.GetAttachment( "hub" ) ?? Transform.Zero;
+		var wheelRadius = wheelHub.Position.z;
 
-		frameObj.Position = Vector3.Up * hub.Value.Position.z;
+		frameObj.Position = Vector3.Up * (wheelRadius - frameHub.Position.z);
 
 		var seatAttachment = frameObj.Model.GetAttachment( "seat" );
 
 		seatObj.Position = seatAttachment.Value.Position + frameObj.Position;
 
-		// need: get bone transforms from sceneobject
-		// todo: pedal positions
+		var pedalHub = pedalObjL.Model.GetAttachment( "hub" ) ?? Transform.Zero;
+
+		pedalObjL.Position = (frameObj.Model.GetAttachment( "pedal_L" ) ?? Transform.Zero).Position;
+		pedalObjL.Position += frameObj.Position - pedalHub.Position;
+
+		pedalObjR.Position = (frameObj.Model.GetAttachment( "pedal_R" ) ?? Transform.Zero).Position;
+		pedalObjR.Position += frameObj.Position + pedalHub.Position;
+		pedalObjR.Rotation *= Rotation.From( 180, 180, 0 );
+		
 
 		frameObj.AddChild( "wheel", wheelObj );
 		frameObj.AddChild( "seat", seatObj );

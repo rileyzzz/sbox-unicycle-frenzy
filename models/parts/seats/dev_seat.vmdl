@@ -30,8 +30,8 @@
 					{
 						_class = "Attachment"
 						name = "ass"
-						parent_bone = "ass"
-						relative_origin = [ 0.0, 0.0, 0.0 ]
+						parent_bone = ""
+						relative_origin = [ 0.0, 0.0, 4.0 ]
 						relative_angles = [ 0.0, 0.0, 0.0 ]
 						weight = 1.0
 						ignore_rotation = false
@@ -72,29 +72,6 @@
 						origin = [ -0.098227, -0.00772, 2.557459 ]
 						angles = [ 0.0, 0.0, 0.0 ]
 						dimensions = [ 18.500393, 8.154947, 4.88508 ]
-					},
-				]
-			},
-			{
-				_class = "Skeleton"
-				children = 
-				[
-					{
-						_class = "Bone"
-						name = "seat"
-						children = 
-						[
-							{
-								_class = "Bone"
-								name = "ass"
-								origin = [ 0.0, 0.0, 4.0 ]
-								angles = [ 0.0, 0.0, 0.0 ]
-								do_not_discard = true
-							},
-						]
-						origin = [ 0.0, 0.0, 0.0 ]
-						angles = [ 0.0, 0.0, 0.0 ]
-						do_not_discard = true
 					},
 				]
 			},
