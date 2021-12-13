@@ -67,7 +67,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		if ( Terry.IsValid() )
 		{
 			Terry.EnableDrawing = false;
-			Terry.Delete();
+			Terry.DeleteAsync( 10f );
 		}
 
 		Camera = new SpectateRagdollCamera();

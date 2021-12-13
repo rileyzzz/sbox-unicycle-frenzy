@@ -4,7 +4,7 @@ using Sandbox.ScreenShake;
 internal partial class UnicyclePlayer
 {
 
-	private void RagdollModel( ModelEntity modelEnt )
+	private void RagdollModel( ModelEntity modelEnt, bool isCorpse )
 	{
 		var ent = new ModelEntity();
 		ent.Position = Position;
@@ -51,7 +51,7 @@ internal partial class UnicyclePlayer
 			clothing.CopyMaterialGroup( e );
 		}
 
-		if ( this is Player pl )
+		if ( isCorpse && this is Player pl )
 		{
 			pl.Corpse = ent;
 		}
@@ -62,10 +62,10 @@ internal partial class UnicyclePlayer
 	[ClientRpc]
 	private void RagdollOnClient()
 	{
-		RagdollModel( Terry );
-		RagdollModel( Unicycle.FrameModel );
-		RagdollModel( Unicycle.WheelModel );
-		RagdollModel( Unicycle.SeatModel );
+		RagdollModel( Terry, true );
+		RagdollModel( Unicycle.FrameModel, false );
+		RagdollModel( Unicycle.WheelModel, false );
+		RagdollModel( Unicycle.SeatModel, false );
 	}
 
 }
