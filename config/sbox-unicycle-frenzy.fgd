@@ -40,7 +40,7 @@ metadata
 @SolidClass base(BaseProperties_sbox_unicycle_frenzy) tags( Trigger ) 
 metadata
 {
-	auto_apply_material = "materials/tools/toolstrigger.vmat"
+	auto_apply_material = "materials/editor/uf_trigger_fall.vmat"
 }
 = uf_trigger_fall : "Makes the player fall"
 [
@@ -93,7 +93,7 @@ metadata
 @SolidClass base(BaseProperties_sbox_unicycle_frenzy) tags( Trigger ) 
 metadata
 {
-	auto_apply_material = "materials/tools/toolstrigger.vmat"
+	auto_apply_material = "materials/editor/uf_trigger_reset_progress.vmat"
 }
 = uf_trigger_reset_progress : "Resets the player's progress by clearing checkpoints"
 [

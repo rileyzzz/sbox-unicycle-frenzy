@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 
 [Library( "uf_trigger_reset_progress", Description = "Resets the player's progress by clearing checkpoints" )]
+[Hammer.AutoApplyMaterial("materials/editor/uf_trigger_reset_progress.vmat")]
 internal partial class ResetProgressTrigger : BaseTrigger
 {
 
