@@ -414,6 +414,7 @@ internal partial class UnicycleController : BasePlayerController
 
 			pl.JumpTilt = pl.Tilt * -1;
 			pl.PrevJumpTilt = pl.JumpTilt;
+			Velocity = Velocity.WithZ( 0 );
 			Velocity += up * jumpStrength;
 			GroundEntity = null;
 			pl.TimeSinceJumpDown = 0;
