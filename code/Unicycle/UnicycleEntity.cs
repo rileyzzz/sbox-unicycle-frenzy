@@ -21,7 +21,7 @@ internal partial class UnicycleEntity : Entity
 	[Net]
 	public float WheelRadius { get; set; }
 
-	private Particles trail;
+	private Particles trailParticle;
 
 	public Vector3 GetAssPosition()
 	{
@@ -41,6 +41,9 @@ internal partial class UnicycleEntity : Entity
 		if ( Parent is not UnicyclePlayer pl ) return;
 
 		FrameModel?.Delete();
+		FrameModel = null;
+		trailParticle?.Destroy();
+		trailParticle = null;
 
 		var cfg = pl.Client.Components.Get<UnicycleEnsemble>();
 
@@ -90,8 +93,7 @@ internal partial class UnicycleEntity : Entity
 
 		if( trail != null )
 		{
-			var particle = Particles.Create( trail.Model, this );
-			particle.SetPosition( 1, Vector3.One ); // Color
+			trailParticle = Particles.Create( trail.Model, this );
 		}
 	}
 
