@@ -29,7 +29,28 @@ public class UnicyclePart
 		new() { Id = 5, Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/pedals/dev_pedal", IsDefault = true },
 
 		//
-		new() { Id = 6, Type = PartType.Trail, Name = "Minigolf Trail", Model = "particles/trails/ball_trail.vpcf", IsDefault = true }
+		new() { Id = 6, Type = PartType.Trail, Name = "Default", Model = "particles/trails/default_trail.vpcf", IsDefault = true },
+		
+		//
+		new() { Id = 7, Type = PartType.Trail, Name = "Rainbow", Model = "particles/trails/rainbow_trail.vpcf", IsDefault = false },
+		
+		//
+		new() { Id = 8, Type = PartType.Trail, Name = "Fire", Model = "particles/trails/fire_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 9, Type = PartType.Trail, Name = "Electric", Model = "particles/trails/electric_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 10, Type = PartType.Trail, Name = "Dot", Model = "particles/trails/dot_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 11, Type = PartType.Trail, Name = "Pixel", Model = "particles/trails/pixel_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 12, Type = PartType.Trail, Name = "Pixel Fire", Model = "particles/trails/fire_pixel_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 13, Type = PartType.Trail, Name = "Water", Model = "particles/trails/water_trail.vpcf", IsDefault = false }
 	};
 
 }
