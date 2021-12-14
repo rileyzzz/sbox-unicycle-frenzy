@@ -58,9 +58,10 @@ public partial class UfChatbox : Panel
 		Input.Placeholder = string.IsNullOrEmpty( Input.Text ) ? "say something nice" : string.Empty;
 	}
 
-	public void AddEntry( string name, string message )
+	public void AddEntry( string name, string message, string c = default )
 	{
 		var entry = new UfChatboxEntry( name, message );
+		if ( !string.IsNullOrEmpty( c ) ) entry.AddClass( c );
 		EntryCanvas.AddChild( entry );
 	}
 
@@ -83,6 +84,12 @@ public partial class UfChatbox : Panel
 	public static void AddChat( string name, string message )
 	{
 		Current?.AddEntry( name, message );
+	}
+
+	[ClientCmd( "uf_chat_add_info", CanBeCalledFromServer = true )]
+	public static void AddInfo( string message, string name = "Server" )
+	{
+		Current?.AddEntry( name, message, "info" );
 	}
 
 }

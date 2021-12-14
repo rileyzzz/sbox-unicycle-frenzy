@@ -1,4 +1,4 @@
-using Sandbox;
+﻿using Sandbox;
 
 partial class UnicycleFrenzy : Sandbox.Game
 {
@@ -31,6 +31,13 @@ partial class UnicycleFrenzy : Sandbox.Game
 		(cl.Pawn as Player).Respawn();
 	}
 
+	public override void OnKilled( Client client, Entity pawn )
+	{
+		base.OnKilled( client, pawn );
+
+		UfChatbox.AddInfo( To.Everyone, GetRandomFallMessage( client.Name ), "Obs" );
+	}
+
 	public override void Simulate( Client cl )
 	{
 		base.Simulate( cl );
@@ -49,5 +56,26 @@ partial class UnicycleFrenzy : Sandbox.Game
 	{
 
 	}
+
+	private int lastFallMessage;
+	private string GetRandomFallMessage( string playerName )
+	{
+		var idx = Rand.Int( 0, fallMessages.Length - 1 );
+		while ( idx == lastFallMessage )
+			idx = Rand.Int( 0, fallMessages.Length - 1 );
+
+		lastFallMessage = idx;
+		return string.Format( fallMessages[idx], playerName );
+	}
+
+	private string[] fallMessages =
+	{
+		"{0} ate 💩",
+		"{0} fell ass over tea-kettle",
+		"Wow, did you see {0} bail that landing?",
+		"{0} just went arse over tit",
+		"{0} adopted a tree this morning!",
+		"{0} needs some practice 😂",
+	};
 
 }
