@@ -56,7 +56,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 	{
 		base.OnKilled( client, pawn );
 
-		UfChatbox.AddInfo( To.Everyone, GetRandomFallMessage( client.Name ), "Obs" );
+		UfChatbox.AddInfo( To.Everyone, GetRandomFallMessage( client.Name ), "Spectator" );
 	}
 
 	public override void Simulate( Client cl )

@@ -21,10 +21,11 @@ internal partial class UnicycleController : BasePlayerController
 	public float MaxJumpStrength => 375f;
 	public float MaxJumpStrengthTime => 1f;
 	public float PerfectPedalBoost => 50f;
-	public float MaxLean => 45f;
+	public float MaxLean => 42f;
 	public float LeanSafeZone => 8f;
 	public float LeanSpeed => 80f;
 	public float TipSpeed => 1.5f;
+	public float SlopeTipSpeed => 2.5f;
 	public float GroundTurnSpeed => 2f;
 	public float AirTurnSpeed => 2f;
 	public float SlopeSpeed => 800f;
@@ -144,7 +145,7 @@ internal partial class UnicycleController : BasePlayerController
 		if ( aroll > maxLean || apitch > maxLean )
 			return true;
 
-		if ( aroll + apitch > maxLean * 1.55f )
+		if ( aroll + apitch > maxLean * 1.50f )
 			return true;
 
 		return false;
@@ -305,7 +306,7 @@ internal partial class UnicycleController : BasePlayerController
 			groundRot *= pl.TargetForward;
 			var groundTilt = groundRot.Angles().WithYaw( 0 );
 
-			tilt += groundTilt * TipSpeed * Time.Delta;
+			tilt += groundTilt * SlopeTipSpeed * Time.Delta;
 		}
 
 		// this handles how we tilt and recover tilt after jumping
