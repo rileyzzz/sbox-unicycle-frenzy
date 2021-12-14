@@ -1,18 +1,29 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System;
 
 [UseTemplate]
 internal class CourseTimer : Panel
 {
 
-	public string TimerTime => GetTimerTime();
+	public string CourseTime 
+	{ 
+		get
+		{
+			if ( Local.Pawn is not UnicyclePlayer pl || pl.TimerState != TimerState.Live )
+				return FormattedTime( 0 );
 
-	private string GetTimerTime()
+			return FormattedTime( pl.TimeSinceStart );
+		} 
+	}
+
+	public string GameTime => FormattedTime( UnicycleFrenzy.Game.GameTime );
+
+	public string MenuHotkey => Input.GetKeyWithBinding( "+iv_score" ) ?? "UNSET";
+
+	public string FormattedTime( float seconds )
 	{
-		if ( Local.Pawn is not UnicyclePlayer pl || pl.TimerState != TimerState.Live ) 
-			return "Not Live";
-
-		return pl.FormattedTime();
+		return TimeSpan.FromSeconds( seconds ).ToString( @"mm\:ss" );
 	}
 
 }

@@ -3,6 +3,17 @@
 
 <root>
 
-    <label class="timer" @text="TimerTime"></label>
+    <div class="game-time">
+        <div class="timeleft">
+            <label>Time left: </label>
+            <label @text="GameTime"></label>
+        </div>
+        <div>
+            <label>Open menu with </label> 
+            <label @text="MenuHotkey"></label>
+        </div>
+    </div>
+
+    <label class="course-time" @text="CourseTime"></label>
 
 </root>

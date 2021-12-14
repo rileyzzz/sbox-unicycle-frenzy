@@ -23,11 +23,6 @@ internal partial class UnicyclePlayer
 		TimerState = TimerState.Finished;
 	}
 
-	public string FormattedTime()
-	{
-		return TimeSpan.FromSeconds( TimeSinceStart ).ToString( @"mm\:ss" );
-	}
-
 }
 
 public enum TimerState
