@@ -24,18 +24,18 @@ internal class LeaderboardsTab : Panel
 
 	private void BuildEntries()
 	{
-		Canvas.DeleteChildren();
+		//Canvas.DeleteChildren();
 
-		var time = 5.32f;
-		for ( int i = 1; i < 102; i++ )
-		{
-			var entry = new LeaderboardsTabEntry( i, RandomString( 24 ), time );
+		//var time = 5.32f;
+		//for ( int i = 1; i < 102; i++ )
+		//{
+		//	var entry = new LeaderboardsTabEntry( i, RandomString( 24 ), time );
 
-			if ( i == 10 ) entry.AddClass( "me" );
+		//	if ( i == 10 ) entry.AddClass( "me" );
 
-			Canvas.AddChild( entry );
-			time += random.NextSingle() * 20;
-		}
+		//	Canvas.AddChild( entry );
+		//	time += random.NextSingle() * 20;
+		//}
 	}
 
 	private static System.Random random = new();

@@ -7,7 +7,7 @@ internal class GameMenu : NavigatorPanel
 
 	public GameMenu()
 	{
-		Navigate( "menu/leaderboards" );
+		Navigate( "menu/controls" );
 	}
 
 	public void Close()
