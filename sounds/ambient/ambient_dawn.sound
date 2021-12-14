@@ -6,7 +6,7 @@
 		[
 			"sounds/ambient/ambient_dawn.vsnd",
 		]
-		ui = false
+		ui = true
 		volume = 0.25
 		volumerandom = 0.0
 		pitch = 1.0
