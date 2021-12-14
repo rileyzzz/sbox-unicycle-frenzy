@@ -32,13 +32,21 @@ internal partial class UnicyclePlayer
 	public Vector3 PrevVelocity { get; set; }
 	[Net, Predicted]
 	public bool PrevGrounded { get; set; }
+	[Net, Predicted]
+	public bool Fallen { get; set; }
 
 	private bool overrideRot;
 	private Rotation rotOverride;
 
 	public void Fall()
 	{
-		Host.AssertServer();
+		if ( Fallen )
+		{
+			Log.Error( "falling when already fallen" );
+			return;
+		}
+
+		Fallen = true;
 
 		Game.Current.DoPlayerSuicide( Client );
 	}
@@ -58,6 +66,7 @@ internal partial class UnicyclePlayer
 		PrevGrounded = default;
 		TimeSinceNotGrounded = default;
 		TimeSinceJumpDown = default;
+		Fallen = false;
 	}
 
 	public override void BuildInput( InputBuilder input )

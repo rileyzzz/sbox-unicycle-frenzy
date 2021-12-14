@@ -71,7 +71,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	public override void Simulate()
 	{
-		if ( pl == null ) return;
+		if ( pl == null || pl.Fallen ) return;
 		if ( unstuck.TestAndFix() ) return;
 
 		var beforeGrounded = GroundEntity != null;
@@ -102,10 +102,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( ShouldFall() )
 		{
-			if ( pl.IsServer )
-			{
-				pl.Fall();
-			}
+			pl.Fall();
 
 			AddEvent( "fall" );
 		}
