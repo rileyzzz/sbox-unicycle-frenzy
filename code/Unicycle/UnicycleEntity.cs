@@ -135,5 +135,15 @@ internal partial class UnicycleEntity : Entity
 		WheelPivot.LocalRotation = WheelPivot.LocalRotation.RotateAroundAxis( Vector3.Left, angularSpeed * dir * Time.Delta );
 	}
 
+	[Event.Tick.Server]
+	private void SetTrailControlPoint()
+	{
+		if ( Parent is not UnicyclePlayer pl ) return;
+		if ( trailParticle == null ) return;
+
+		var a = Math.Min( pl.Velocity.Length / 500f, 1f );
+		trailParticle.SetPosition( 6, new Vector3( a, 0, 0 ) );
+	}
+
 }
 
