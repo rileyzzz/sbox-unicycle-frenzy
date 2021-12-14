@@ -1,7 +1,8 @@
 ﻿using Hammer;
 using Sandbox;
 
-[EditorModel("models/leaderboard_post.vmdl")]
+
+[Hammer.Model( Model = "models/leaderboard_post.vmdl")]
 [Library( "uf_leaderboard", Description = "Shows a leaderboard in-game" )]
 [EntityTool( "Leaderboard Post", "Unicycle Frenzy", "Shows a leaderboard in-game" )]
 internal class LeaderboardPost : ModelEntity
@@ -10,7 +11,7 @@ internal class LeaderboardPost : ModelEntity
 	{
 		base.Spawn();
 
-		SetModel( "models/leaderboard_post.vmdl" );
+		//SetModel( "models/leaderboard_post.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Static );
 
 		EnableAllCollisions = true;
