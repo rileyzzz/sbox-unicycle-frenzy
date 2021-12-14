@@ -41,6 +41,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		var c = Controller as UnicycleController;
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, c.Mins, c.Maxs );
 
+		RemoveCollisionLayer( CollisionLayer.Solid );
+
 		if ( clothing == null )
 		{
 			clothing = new();
