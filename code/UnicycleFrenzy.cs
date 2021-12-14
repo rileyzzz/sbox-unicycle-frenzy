@@ -70,12 +70,14 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 	private string[] fallMessages =
 	{
-		"{0} ate 💩",
+		"{0} ate shit 💩",
 		"{0} fell ass over tea-kettle",
 		"Wow, did you see {0} bail that landing?",
-		"{0} just went arse over tit",
+		"{0} just went arse over tit!",
 		"{0} adopted a tree this morning!",
 		"{0} needs some practice 😂",
+		"It's a skill problem for {0} 🤙",
+		"{0} must have missed the \"wet floor\" warning"
 	};
 
 }
