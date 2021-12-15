@@ -11,24 +11,24 @@ internal class CourseTimer : Panel
 		get
 		{
 			if ( Local.Pawn is not UnicyclePlayer pl || pl.TimerState != TimerState.Live )
-				return FormattedTime( 0 );
+				return FormattedTimeMs( 0 );
 
-			return FormattedTime( pl.TimeSinceStart );
+			return FormattedTimeMs( pl.TimeSinceStart );
 		} 
 	}
 
-	public string GameTime => FormattedTime( UnicycleFrenzy.Game.GameTime );
+	public string GameTime => FormattedTimeMs( UnicycleFrenzy.Game.GameTime );
 
 	public string MenuHotkey => Input.GetKeyWithBinding( "+iv_score" ) ?? "UNSET";
 
-	public static string FormattedTime( float seconds )
+	public static string FormattedTimeMsf( float seconds )
 	{
-		return TimeSpan.FromSeconds( seconds ).ToString( @"mm\:ss" );
+		return TimeSpan.FromSeconds( seconds ).ToString( @"m\:ss\.ff" );
 	}
 
-	public static string FormattedTime2( float seconds )
+	public static string FormattedTimeMs( float seconds )
 	{
-		return TimeSpan.FromSeconds( seconds ).ToString( @"mm\m\:ss\s" );
+		return TimeSpan.FromSeconds( seconds ).ToString( @"m\:ss" );
 	}
 
 }

@@ -24,7 +24,7 @@ internal partial class UnicyclePlayer
 		{
 			ClearCheckpoints();
 
-			var formattedTime = CourseTimer.FormattedTime2( TimeSinceStart );
+			var formattedTime = CourseTimer.FormattedTimeMsf( TimeSinceStart );
 
 			if ( TimeSinceStart < BestTime )
 			{
@@ -34,7 +34,7 @@ internal partial class UnicyclePlayer
 				}
 				else
 				{
-					var improvement = CourseTimer.FormattedTime2( BestTime - TimeSinceStart );
+					var improvement = CourseTimer.FormattedTimeMsf( BestTime - TimeSinceStart );
 					UfChatbox.AddCustom( To.Everyone, $"{Client.Name} completed the course in {formattedTime}, improving by {improvement}!", "timer-msg" );
 				}
 
