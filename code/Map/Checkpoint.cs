@@ -1,6 +1,7 @@
 ﻿using Hammer;
 using Sandbox;
 using Sandbox.Internal;
+using System.Linq;
 
 [Library("uf_checkpoint", Description = "Defines a checkpoint where the player will respawn after falling")]
 [EditorModel("models/editor/playerstart.vmdl", staticGreen: 100, FixedBounds = true)]
@@ -79,8 +80,7 @@ internal partial class Checkpoint : ModelEntity
 
 		if ( this.IsStart )
 		{
-			pl.TimerState = TimerState.InStartZone;
-
+			pl.EnterStartZone();
 		}
 
 	}
@@ -97,18 +97,29 @@ internal partial class Checkpoint : ModelEntity
 		}
 	}
 
+	private bool active;
 	[Event.Frame]
 	private void OnFrame()
 	{
-		var color = Color.White;
-		if (Local.Pawn is UnicyclePlayer pl && pl.Checkpoints.Contains(this))
+		//DebugOverlay.Box( Position + Mins, Position + Maxs, color );
+
+		if ( Local.Pawn is not UnicyclePlayer pl ) return;
+		if ( this.IsEnd || this.IsStart ) return;
+
+		var isLatestCheckpoint = pl.Checkpoints.LastOrDefault() == this;
+
+		if ( !active && isLatestCheckpoint )
 		{
-			FlagModel.SetModel("models/flag/flag.vmdl");
-			color = Color.Red;
+			active = true;
+
+			FlagModel.SetModel( "models/flag/flag.vmdl" );
 		}
+		else if( active && !isLatestCheckpoint )
+		{
+			active = false;
 
-		DebugOverlay.Box( Position + Mins, Position + Maxs, color );
-
+			FlagModel.SetModel( "models/flag/flag_pole.vmdl" );
+		}
 	}
 
 	public void GetSpawnPoint( out Vector3 position, out Rotation rotation )

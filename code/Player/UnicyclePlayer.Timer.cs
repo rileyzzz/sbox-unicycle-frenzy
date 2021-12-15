@@ -10,6 +10,14 @@ internal partial class UnicyclePlayer
 	[Net]
 	public float BestTime { get; set; } = float.MaxValue;
 
+	public void EnterStartZone()
+	{
+		TimerState = TimerState.InStartZone;
+		TimeSinceStart = 0;
+
+		if ( IsServer ) ClearCheckpoints();
+	}
+
 	public void StartCourse()
 	{
 		TimeSinceStart = 0;
