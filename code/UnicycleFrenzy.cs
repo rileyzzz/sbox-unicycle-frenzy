@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
+using System.Linq;
 
 partial class UnicycleFrenzy : Sandbox.Game
 {
@@ -8,6 +9,8 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 	[Net]
 	public float GameTime { get; set; }
+	[Net]
+	public string NextMap { get; set; }
 
 	private List<string> mapCycle = new()
 	{
@@ -37,9 +40,8 @@ partial class UnicycleFrenzy : Sandbox.Game
 		if ( IsServer )
 		{
 			GameTime = 1800;
+			NextMap = Rand.FromArray( mapCycle.Where( x => x != Global.MapName ).ToArray() );
 		}
-
-		mapCycle.Remove( Global.MapName.ToLower() );
 	}
 
 	public override void ClientJoined( Client cl )
@@ -71,14 +73,9 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 			if ( GameTime <= 0 )
 			{
-				LoadNextMap();
+				Global.ChangeLevel( NextMap );
 			}
 		}
-	}
-
-	private void LoadNextMap()
-	{
-		Global.ChangeLevel( Rand.FromArray( mapCycle.ToArray() ) );
 	}
 
 	private int lastFallMessage;

@@ -19,6 +19,8 @@ internal class CourseTimer : Panel
 
 	public string GameTime => FormattedTimeMs( UnicycleFrenzy.Game.GameTime );
 
+	public string NextMap => UnicycleFrenzy.Game.NextMap;
+
 	public string MenuHotkey => Input.GetKeyWithBinding( "+iv_score" ) ?? "UNSET";
 
 	public static string FormattedTimeMsf( float seconds )
