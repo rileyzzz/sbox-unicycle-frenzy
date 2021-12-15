@@ -78,9 +78,7 @@ internal partial class Checkpoint : ModelEntity
 
 	public void GetSpawnPoint( out Vector3 position, out Rotation rotation )
 	{
-		var bounds = new BBox( Position + Mins, Position + Maxs );
-
-		position = bounds.RandomPointInside.WithZ( Position.z );
+		position = Position;
 		rotation = Rotation;
 	}
 

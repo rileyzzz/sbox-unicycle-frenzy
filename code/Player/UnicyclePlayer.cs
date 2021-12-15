@@ -15,7 +15,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 
 	private Clothing.Container clothing;
-	private Dictionary<Checkpoint, Tuple<Vector3, Rotation>> spawnSlots = new();
 
 	public override void Respawn()
 	{
@@ -95,7 +94,6 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Host.AssertServer();
 
 		Checkpoints.Clear();
-		spawnSlots.Clear();
 	}
 
 	public void TrySetCheckpoint( Checkpoint checkpoint )
@@ -117,14 +115,10 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			if ( cp == null ) return;
 		}
 
-		if ( !spawnSlots.ContainsKey( cp ) )
-		{
-			cp.GetSpawnPoint( out Vector3 position, out Rotation rotation );
-			spawnSlots.Add( cp, Tuple.Create(position, rotation) );
-		}
+		cp.GetSpawnPoint( out Vector3 position, out Rotation rotation );
 
-		Position = spawnSlots[cp].Item1 + Vector3.Up * 5;
-		Rotation = spawnSlots[cp].Item2;
+		Position = position + Vector3.Up * 5;
+		Rotation = rotation;
 		Velocity = Vector3.Zero;
 
 		SetRotationOnClient( Rotation );
