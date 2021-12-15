@@ -21,9 +21,14 @@ internal class CourseTimer : Panel
 
 	public string MenuHotkey => Input.GetKeyWithBinding( "+iv_score" ) ?? "UNSET";
 
-	public string FormattedTime( float seconds )
+	public static string FormattedTime( float seconds )
 	{
 		return TimeSpan.FromSeconds( seconds ).ToString( @"mm\:ss" );
+	}
+
+	public static string FormattedTime2( float seconds )
+	{
+		return TimeSpan.FromSeconds( seconds ).ToString( @"mm\m\:ss\s" );
 	}
 
 }

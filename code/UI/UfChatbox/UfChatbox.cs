@@ -92,5 +92,11 @@ public partial class UfChatbox : Panel
 		Current?.AddEntry( name, message, "info" );
 	}
 
+	[ClientCmd( "uf_chat_add_info", CanBeCalledFromServer = true )]
+	public static void AddCustom( string message, string c = default )
+	{
+		Current?.AddEntry( string.Empty, message, "custom " + c );
+	}
+
 }
 

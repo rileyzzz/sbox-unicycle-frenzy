@@ -1,5 +1,4 @@
 ﻿using Sandbox;
-using System;
 
 internal partial class UnicyclePlayer
 {
@@ -8,8 +7,8 @@ internal partial class UnicyclePlayer
 	public TimerState TimerState { get; set; }
 	[Net, Predicted]
 	public TimeSince TimeSinceStart { get; set; }
-
-	private float finishTime;
+	[Net]
+	public float BestTime { get; set; } = float.MaxValue;
 
 	public void StartCourse()
 	{
@@ -19,8 +18,29 @@ internal partial class UnicyclePlayer
 
 	public void CompleteCourse()
 	{
-		finishTime = TimeSinceStart;
 		TimerState = TimerState.Finished;
+
+		if( IsServer )
+		{
+			ClearCheckpoints();
+
+			var formattedTime = CourseTimer.FormattedTime2( TimeSinceStart );
+
+			if ( TimeSinceStart < BestTime )
+			{
+				if( BestTime == float.MaxValue )
+				{
+					UfChatbox.AddCustom( To.Everyone, $"{Client.Name} completed the course in {formattedTime}", "timer-msg" );
+				}
+				else
+				{
+					var improvement = CourseTimer.FormattedTime2( BestTime - TimeSinceStart );
+					UfChatbox.AddCustom( To.Everyone, $"{Client.Name} completed the course in {formattedTime}, improving by {improvement}!", "timer-msg" );
+				}
+
+				BestTime = TimeSinceStart;
+			}
+		}
 	}
 
 }
