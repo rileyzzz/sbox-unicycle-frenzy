@@ -89,7 +89,7 @@ internal partial class UnicycleEntity : Entity
 		RightPedalModel.LocalPosition += pedalHub.Position;
 		RightPedalModel.LocalRotation *= Rotation.From( 180, 180, 0 );
 
-		PedalsPivot.LocalRotation = PedalsPivot.LocalRotation.RotateAroundAxis( Vector3.Right, 90 );
+		PedalsPivot.LocalRotation = PedalsPivot.LocalRotation.RotateAroundAxis( Vector3.Right, -90 );
 
 		if( trail != null )
 		{
@@ -127,7 +127,8 @@ internal partial class UnicycleEntity : Entity
 		var targetRot = Rotation.From( targetPitch, 0, 0 );
 
 		var ang = targetRot.Angle() - PedalsPivot.LocalRotation.Angle();
-		PedalsPivot.LocalRotation = PedalsPivot.LocalRotation.RotateAroundAxis( Vector3.Left, Math.Abs( ang ) );
+
+		PedalsPivot.LocalRotation = PedalsPivot.LocalRotation.RotateAroundAxis( Vector3.Left, Math.Abs( ang ) * Time.Delta * 10 );
 
 		var angularSpeed = 180f * pl.Velocity.WithZ( 0 ).Length / ((float)Math.PI * WheelRadius);
 		var dir = Math.Sign( Vector3.Dot( pl.Velocity.Normal, pl.Rotation.Forward ) );
