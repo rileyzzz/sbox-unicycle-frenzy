@@ -1,7 +1,5 @@
 ﻿using Sandbox;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 internal partial class UnicyclePlayer : Sandbox.Player
 {
@@ -22,24 +20,23 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		// todo: not sure I like this setup, might prefer it like CarEntity
 		// so the player is actually a normal terry instead of an invisible entity w/ controller
-		SetModel( "models/citizen/citizen.vmdl" );
+		SetModel( "models/parts/seats/dev_seat.vmdl" );
 		EnableDrawing = false;
 		EnableAllCollisions = true;
 
 		Unicycle = new UnicycleEntity();
-		Unicycle.SetParent( this, null, Transform.Zero.WithScale( 1 ) );
+		Unicycle.SetParent( this, null, Transform.Zero );
 
 		Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
-		Terry.SetParent( Unicycle, null, Transform.Zero.WithScale( 1 ) );
+		Terry.SetParent( Unicycle, null, Transform.Zero );
 		Terry.SetAnimBool( "b_sit", true );
 
 		Camera = new UnicycleCamera();
 		Controller = new UnicycleController();
 		Animator = new UnicycleAnimator();
-
+		
 		var c = Controller as UnicycleController;
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, c.Mins, c.Maxs );
-
 		RemoveCollisionLayer( CollisionLayer.Solid );
 
 		if ( clothing == null )
@@ -84,46 +81,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		if ( GetActiveController() == DevController )
 		{
-			TargetForward = Rotation;
-			Tilt = Angles.Zero;
+			ResetMovement();
 		}
-	}
-
-	public void ClearCheckpoints()
-	{
-		Host.AssertServer();
-
-		Checkpoints.Clear();
-	}
-
-	public void TrySetCheckpoint( Checkpoint checkpoint )
-	{
-		Host.AssertServer();
-
-		if ( Checkpoints.Contains( checkpoint ) ) return;
-		Checkpoints.Add( checkpoint );
-	}
-
-	public void GotoBestCheckpoint()
-	{
-		Host.AssertServer();
-
-		var cp = Checkpoints.LastOrDefault();
-		if ( !cp.IsValid() )
-		{
-			cp = Entity.All.FirstOrDefault( x => x is Checkpoint c && c.IsStart ) as Checkpoint;
-			if ( cp == null ) return;
-		}
-
-		cp.GetSpawnPoint( out Vector3 position, out Rotation rotation );
-
-		Position = position + Vector3.Up * 5;
-		Rotation = rotation;
-		Velocity = Vector3.Zero;
-
-		SetRotationOnClient( Rotation );
-		ResetInterpolation();
-		ResetMovement();
 	}
 
 }

@@ -47,6 +47,7 @@ internal partial class UnicyclePlayer
 		}
 
 		Fallen = true;
+		ResetMovement();
 
 		Game.Current.DoPlayerSuicide( Client );
 	}

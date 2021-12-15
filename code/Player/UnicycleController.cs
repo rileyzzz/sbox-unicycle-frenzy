@@ -25,7 +25,7 @@ internal partial class UnicycleController : BasePlayerController
 	public float LeanSafeZone => 8f;
 	public float LeanSpeed => 80f;
 	public float TipSpeed => 1.5f;
-	public float SlopeTipSpeed => 2.5f;
+	public float SlopeTipSpeed => 3.25f;
 	public float GroundTurnSpeed => 2f;
 	public float AirTurnSpeed => 2f;
 	public float SlopeSpeed => 800f;
@@ -388,8 +388,8 @@ internal partial class UnicycleController : BasePlayerController
 			Velocity = ClipVelocity( Velocity, pl.TargetForward.Right );
 		}
 
-		var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
-		targetRot *= pl.TargetForward;
+		//var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
+		var targetRot = pl.TargetForward;
 		targetRot *= Rotation.From( pl.Tilt );
 		Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
 
