@@ -35,6 +35,17 @@ internal partial class Checkpoint : ModelEntity
 		EnableTouch = true;
 	}
 
+	public override void ClientSpawn()
+	{
+		base.ClientSpawn();
+		
+		var modelEnt = new ModelEntity( "models/checkpoint_flag.vmdl" );
+		var fwdLeft = Rotation.Forward + Rotation.Left;
+		var bounds = new BBox( Position + Mins, Position + Maxs );
+		modelEnt.Position = bounds.ClosestPoint( Position + fwdLeft * 500 ) - fwdLeft.Normal * 5;
+		modelEnt.Rotation = Rotation.LookAt( Rotation.Right );
+	}
+
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
