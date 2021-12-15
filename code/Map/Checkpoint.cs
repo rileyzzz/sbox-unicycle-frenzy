@@ -33,22 +33,38 @@ internal partial class Checkpoint : ModelEntity
 		CollisionGroup = CollisionGroup.Trigger;
 		EnableSolidCollisions = false;
 		EnableTouch = true;
+
 	}
 
 	public override void ClientSpawn()
 	{
 		base.ClientSpawn();
 		
-		var modelEnt = new ModelEntity( "models/checkpoint_flag.vmdl" );
+		var modelEnt = new ModelEntity("models/flag/flag_pole.vmdl");
 		var fwdLeft = Rotation.Forward + Rotation.Left;
 		var bounds = new BBox( Position + Mins, Position + Maxs );
 		modelEnt.Position = bounds.ClosestPoint( Position + fwdLeft * 500 ) - fwdLeft.Normal * 5;
 		modelEnt.Rotation = Rotation.LookAt( Rotation.Right );
+
+		if (this.IsStart)
+		{
+			modelEnt.SetMaterialGroup("Green");
+			modelEnt.SetModel("models/flag/flag.vmdl");
+		}
+
+		if (this.IsEnd)
+		{
+			modelEnt.SetMaterialGroup("Checker");
+			modelEnt.SetModel("models/flag/flag.vmdl");
+		}
+
 	}
 
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
+
+		
 
 		if ( other is not UnicyclePlayer pl ) return;
 
@@ -62,7 +78,9 @@ internal partial class Checkpoint : ModelEntity
 		if ( this.IsStart )
 		{
 			pl.TimerState = TimerState.InStartZone;
+
 		}
+
 	}
 
 	public override void EndTouch( Entity other )
@@ -85,6 +103,7 @@ internal partial class Checkpoint : ModelEntity
 			color = Color.Red;
 
 		DebugOverlay.Box( Position + Mins, Position + Maxs, color );
+
 	}
 
 	public void GetSpawnPoint( out Vector3 position, out Rotation rotation )
