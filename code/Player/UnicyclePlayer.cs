@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 
 internal partial class UnicyclePlayer : Sandbox.Player
@@ -11,7 +12,9 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	[Net]
 	public List<Checkpoint> Checkpoints { get; set; } = new();
 
+	public const float RespawnDelay = 3f;
 
+	private TimeSince timeSinceDied;
 	private Clothing.Container clothing;
 
 	public override void Respawn()
@@ -55,6 +58,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	{
 		base.OnKilled();
 
+		timeSinceDied = 0;
+
 		EnableAllCollisions = false;
 		EnableDrawing = false;
 
@@ -77,11 +82,34 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 	public override void Simulate( Client cl )
 	{
-		base.Simulate( cl );
-
-		if ( GetActiveController() == DevController )
+		if( LifeState == LifeState.Alive )
 		{
-			ResetMovement();
+			var controller = GetActiveController();
+			controller?.Simulate( cl, this, GetActiveAnimator() );
+
+			if ( GetActiveController() == DevController )
+			{
+				ResetMovement();
+			}
+		}
+
+		if( LifeState == LifeState.Dead )
+		{
+			if( IsServer && timeSinceDied > RespawnDelay )
+				Respawn();
+		}
+
+		if ( Input.Pressed( InputButton.Drop ) )
+		{
+			Fall();
+			ResetTimer();
+			timeSinceDied = RespawnDelay - .5f;
+		}
+
+		if ( Input.Pressed( InputButton.Reload ) )
+		{
+			Fall();
+			timeSinceDied = RespawnDelay - .5f;
 		}
 	}
 
