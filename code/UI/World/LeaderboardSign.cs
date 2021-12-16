@@ -52,11 +52,11 @@ internal class LeaderboardSign : WorldPanel
 		DeleteChildren();
 
 		var players = Player.All.Where( x => x is UnicyclePlayer && x.IsValid() && x.Client.IsValid() ).ToList();
-		players.OrderBy( x => (x as UnicyclePlayer).BestTime );
+		var orderedPlayers = players.OrderBy( x => (x as UnicyclePlayer).BestTime );
 
 		int rank = 1;
 
-		foreach( var player in players )
+		foreach( var player in orderedPlayers )
 		{
 			if ( player is not UnicyclePlayer pl ) continue;
 			var entry = new LeaderboardSignEntry( rank, pl );
