@@ -14,9 +14,9 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 	private List<string> mapCycle = new()
 	{
-		"uf_steps",
-		"uf_hop_stop",
-		"uf_pop_rock"
+		"facepunch.uf_steps",
+		"facepunch.uf_hop_stop",
+		"facepunch.uf_pop_rock"
 	};
 
 	private List<string> fallMessages = new()
