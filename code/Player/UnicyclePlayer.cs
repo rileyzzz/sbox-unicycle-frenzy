@@ -104,13 +104,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		{
 			Fall();
 			ResetTimer();
-			timeSinceDied = RespawnDelay - .5f;
+			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
 		}
 
 		if ( Input.Pressed( InputButton.Reload ) )
 		{
 			Fall();
-			timeSinceDied = RespawnDelay - .5f;
+			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
 		}
 	}
 

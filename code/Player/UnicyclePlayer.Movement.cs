@@ -40,14 +40,9 @@ internal partial class UnicyclePlayer
 
 	public void Fall()
 	{
-		if ( Fallen )
-		{
-			Log.Error( "falling when already fallen" );
-			return;
-		}
+		if ( Fallen ) return;
 
 		Fallen = true;
-		ResetMovement();
 
 		Sound.FromWorld( "unicycle.crash.default", Position );
 
