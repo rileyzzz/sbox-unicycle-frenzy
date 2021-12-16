@@ -10,6 +10,35 @@ ControlsTab {
         padding: 20px;
     }
 
+    .misc-binds {
+        position: absolute;
+        top: 32px;
+        left: 32px;
+        flex-direction: column;
+        border-radius: $smallradius;
+        font-size: 16px;
+        font-family: Poppins;
+
+        .bind {
+            margin-bottom: 6px;
+        }
+
+        .key {
+            padding: 6px 8px;
+            background-color: rgba($primary .1);
+            border-radius: $smallradius;
+            min-width: 32px;
+            text-align: center;
+            margin-right: 8px;
+            box-shadow: 2px 2px 0 1px black;
+            text-transform: uppercase;
+        }
+
+        .action {
+            align-items: center;
+        }
+    }
+
     .diagram {
         margin: -80px auto;
         width: 1280px;
@@ -56,8 +85,8 @@ ControlsTab {
         }
 
         .lean {
-            left:21%;
-            top:19.25%;
+            left: 21%;
+            top: 19.25%;
         }
     }
 }

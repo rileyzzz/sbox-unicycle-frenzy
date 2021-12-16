@@ -11,6 +11,8 @@ internal class ControlsTab : Panel
 	public string RightPedalBind => Input.GetKeyWithBinding( "+iv_attack2" ) ?? "UNSET";
 	public string JumpBind => Input.GetKeyWithBinding( "+iv_jump" ) ?? "UNSET";
 	public string LeanBind => GetLeanBindString();
+	public string RestartBind => Input.GetKeyWithBinding( "+iv_drop" ) ?? "UNSET";
+	public string GoBackBind => Input.GetKeyWithBinding( "+iv_reload" ) ?? "UNSET";
 
 	private string GetLeanBindString()
 	{
