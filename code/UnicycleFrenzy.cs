@@ -62,13 +62,10 @@ partial class UnicycleFrenzy : Sandbox.Game
 		UfChatbox.AddInfo( To.Everyone, GetRandomFallMessage( client.Name ), "Spectator" );
 	}
 
-	public override void Simulate( Client cl )
+	[Event.Tick.Server]
+	private void OnTick()
 	{
-		base.Simulate( cl );
-
-		if ( !IsServer ) return;
-
-		if( GameTime > 0 )
+		if ( GameTime > 0 )
 		{
 			GameTime -= Time.Delta;
 
