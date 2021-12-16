@@ -15,9 +15,6 @@ internal partial class UnicycleController
 				var vol = Math.Clamp( Math.Abs( pl.PrevVelocity.z ) / 600f, .15f, 1f );
 				snd.SetVolume( vol );
 				break;
-			case "fall":
-				Sound.FromWorld( "unicycle.crash.default", Position );
-				break;
 			case "pedal":
 				Sound.FromWorld( "unicycle.pedal", Position );
 				break;
