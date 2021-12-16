@@ -90,6 +90,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			if ( GetActiveController() == DevController )
 			{
 				ResetMovement();
+				ResetTimer();
 			}
 		}
 
