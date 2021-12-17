@@ -16,17 +16,17 @@ public class UnicyclePart
 	public static List<UnicyclePart> All = new()
 	{
 		//
-		new() { Id = 0, Type = PartType.Wheel, Name = "Dev Wheel", Model = "models/parts/wheels/dev_wheel", IsDefault = true },
-		new() { Id = 2, Type = PartType.Wheel, Name = "Mini Dev Wheel", Model = "models/parts/wheels/dev_wheel_mini" },
+		new() { Id = 0, Type = PartType.Wheel, Name = "Dev Wheel", Model = "models/parts/wheels/dev_wheel.vmdl", IsDefault = true },
+		new() { Id = 2, Type = PartType.Wheel, Name = "Mini Dev Wheel", Model = "models/parts/wheels/dev_wheel_mini.vmdl" },
 
 		//
-		new() { Id = 3, Type = PartType.Frame, Name = "Dev Frame", Model = "models/parts/frames/dev_frame", IsDefault = true },
+		new() { Id = 3, Type = PartType.Frame, Name = "Dev Frame", Model = "models/parts/frames/dev_frame.vmdl", IsDefault = true },
 
 		//
-		new() { Id = 4, Type = PartType.Seat, Name = "Dev Seat", Model = "models/parts/seats/dev_seat", IsDefault = true },
+		new() { Id = 4, Type = PartType.Seat, Name = "Dev Seat", Model = "models/parts/seats/dev_seat.vmdl", IsDefault = true },
 
 		//
-		new() { Id = 5, Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/pedals/dev_pedal", IsDefault = true },
+		new() { Id = 5, Type = PartType.Pedal, Name = "Dev Pedal", Model = "models/parts/pedals/dev_pedal.vmdl", IsDefault = true },
 
 		//
 		new() { Id = 6, Type = PartType.Trail, Name = "Default", Model = "particles/trails/default_trail.vpcf", IsDefault = true },
