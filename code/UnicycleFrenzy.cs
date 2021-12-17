@@ -59,7 +59,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 	{
 		base.OnKilled( client, pawn );
 
-		UfChatbox.AddInfo( To.Everyone, GetRandomFallMessage( client.Name ), "Spectator" );
+		UfKillfeed.AddEntryOnClient( To.Everyone, GetRandomFallMessage( client.Name ), client.NetworkIdent );
 	}
 
 	[Event.Tick.Server]
