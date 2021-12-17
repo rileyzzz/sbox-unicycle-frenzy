@@ -6,6 +6,12 @@ internal partial class UnicyclePlayer
 
 	private void RagdollModel( ModelEntity modelEnt, bool isCorpse )
 	{
+		if ( !modelEnt.IsValid() )
+		{
+			Log.Error( "??" );
+			return;
+		}
+
 		var ent = new ModelEntity();
 		ent.Position = Position;
 		ent.Rotation = Rotation;
@@ -62,10 +68,21 @@ internal partial class UnicyclePlayer
 	[ClientRpc]
 	private void RagdollOnClient()
 	{
-		RagdollModel( Terry, true );
-		RagdollModel( Unicycle.FrameModel, false );
-		RagdollModel( Unicycle.WheelModel, false );
-		RagdollModel( Unicycle.SeatModel, false );
+		// todo: might be able to tidy up the player's hierarchy and networked life/death cycle 
+		//		 so we're not paranoid about an nre here
+		//		 maybe also predicted ragdolling to smooth out high ping deaths
+
+		if ( Terry.IsValid() )
+		{
+			RagdollModel( Terry, true );
+		}
+
+		if ( Unicycle.IsValid() )
+		{
+			RagdollModel( Unicycle.FrameModel, false );
+			RagdollModel( Unicycle.WheelModel, false );
+			RagdollModel( Unicycle.SeatModel, false );
+		}
 	}
 
 }
