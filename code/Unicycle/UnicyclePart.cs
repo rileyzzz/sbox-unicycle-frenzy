@@ -50,7 +50,22 @@ public class UnicyclePart
 		new() { Id = 12, Type = PartType.Trail, Name = "Pixel Fire", Model = "particles/trails/fire_pixel_trail.vpcf", IsDefault = false },
 
 		//
-		new() { Id = 13, Type = PartType.Trail, Name = "Water", Model = "particles/trails/water_trail.vpcf", IsDefault = false }
+		new() { Id = 13, Type = PartType.Trail, Name = "Water", Model = "particles/trails/water_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 14, Type = PartType.Trail, Name = "Shapes", Model = "particles/trails/Shapes_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 15, Type = PartType.Trail, Name = "Binary", Model = "particles/trails/binary_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 16, Type = PartType.Trail, Name = "Coin", Model = "particles/trails/coins_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 17, Type = PartType.Trail, Name = "Trash", Model = "particles/trails/Trash_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 18, Type = PartType.Trail, Name = "Miami", Model = "particles/trails/Miami_trail.vpcf", IsDefault = false }
 	};
 
 }
