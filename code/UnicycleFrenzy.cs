@@ -14,8 +14,9 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 	private List<string> mapCycle = new()
 	{
-		"uf_steps",
-		"uf_hop_stop"
+		"facepunch.uf_steps",
+		"facepunch.uf_hop_stop",
+		"facepunch.uf_pop_rock"
 	};
 
 	private List<string> fallMessages = new()
@@ -61,13 +62,10 @@ partial class UnicycleFrenzy : Sandbox.Game
 		UfChatbox.AddInfo( To.Everyone, GetRandomFallMessage( client.Name ), "Spectator" );
 	}
 
-	public override void Simulate( Client cl )
+	[Event.Tick.Server]
+	private void OnTick()
 	{
-		base.Simulate( cl );
-
-		if ( !IsServer ) return;
-
-		if( GameTime > 0 )
+		if ( GameTime > 0 )
 		{
 			GameTime -= Time.Delta;
 
