@@ -31,13 +31,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Unicycle.SetParent( this, null, Transform.Zero );
 
 		Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
-		Terry.SetParent( Unicycle, null, Transform.Zero );
+		Terry.SetParent( this, null, Transform.Zero );
 		Terry.SetAnimBool( "b_sit", true );
 
 		Camera = new UnicycleCamera();
 		Controller = new UnicycleController();
 		Animator = new UnicycleAnimator();
-		
+
 		var c = Controller as UnicycleController;
 		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, c.Mins, c.Maxs );
 		RemoveCollisionLayer( CollisionLayer.Solid );
@@ -63,19 +63,10 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		EnableAllCollisions = false;
 		EnableDrawing = false;
 
-		if ( Unicycle.IsValid() )
-		{
-			Unicycle.EnableDrawing = false;
-			Unicycle.Delete();
-		}
-
-		if ( Terry.IsValid() )
-		{
-			Terry.EnableDrawing = false;
-			Terry.DeleteAsync( 10f );
-		}
-
 		Camera = new SpectateRagdollCamera();
+
+		Unicycle?.Delete();
+		Terry?.Delete();
 
 		RagdollOnClient();
 	}
