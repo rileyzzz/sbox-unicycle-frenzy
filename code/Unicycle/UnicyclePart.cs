@@ -65,7 +65,11 @@ public class UnicyclePart
 		new() { Id = 17, Type = PartType.Trail, Name = "Trash", Model = "particles/trails/Trash_trail.vpcf", IsDefault = false },
 
 		//
-		new() { Id = 18, Type = PartType.Trail, Name = "Miami", Model = "particles/trails/Miami_trail.vpcf", IsDefault = false }
+		new() { Id = 18, Type = PartType.Trail, Name = "Miami", Model = "particles/trails/Miami_trail.vpcf", IsDefault = false },
+
+		//
+		new() { Id = 19, Type = PartType.Trail, Name = "Clouds", Model = "particles/trails/cloud_trail.vpcf", IsDefault = false }
+
 	};
 
 }
