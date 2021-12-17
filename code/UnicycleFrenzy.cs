@@ -42,6 +42,11 @@ partial class UnicycleFrenzy : Sandbox.Game
 		{
 			GameTime = 1800;
 			NextMap = Rand.FromArray( mapCycle.Where( x => x != Global.MapName ).ToArray() );
+
+			foreach( var part in UnicyclePart.All )
+			{
+				Precache.Add( part.Model );
+			}
 		}
 	}
 
