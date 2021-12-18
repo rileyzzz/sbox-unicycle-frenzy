@@ -1986,7 +1986,6 @@
 	[
 		{
 			m_ChildRef = resource:"particles/trails/blackhole_trail_a.vpcf"
-			m_bDisableChild = true
 		},
 	]
 }
