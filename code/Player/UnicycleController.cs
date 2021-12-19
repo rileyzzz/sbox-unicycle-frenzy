@@ -356,7 +356,7 @@ internal partial class UnicycleController : BasePlayerController
 		// this should give a deterministic random tilt to avoid
 		// having to net sync additional stuff
 
-		var seed = Time.Tick / 50f;
+		var seed = pl.NetworkIdent + ( Time.Tick / 50f );
 		t = seed - (int)seed;
 
 		Rand.SetSeed( (int)seed );
