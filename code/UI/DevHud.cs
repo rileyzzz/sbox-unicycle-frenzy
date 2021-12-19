@@ -21,12 +21,7 @@ internal class DevHud : Panel
 	{
 		base.Tick();
 
-		if ( Local.Client.GetClientData<bool>( "uf_devhud" ) )
-			ShowDevHud = true;
-		else
-			ShowDevHud = false;
-
-		if ( !ShowDevHud )
+		if ( !Local.Client.GetClientData<bool>( "uf_devhud" ) )
 		{
 			Style.Display = DisplayMode.None;
 			return;
