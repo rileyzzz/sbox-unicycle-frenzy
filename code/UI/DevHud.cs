@@ -6,8 +6,8 @@ using System;
 internal class DevHud : Panel
 {
 
-	[ConVar.Replicated( "uf_devhud" )]
-	public static bool ShowDevHud { get; set; } = false;
+	[ConVar.ClientData( "uf_devhud" )]
+	public bool ShowDevHud { get; set; } = false;
 
 	public Panel LeftPedal { get; set; }
 	public Panel RightPedal { get; set; }
@@ -21,7 +21,7 @@ internal class DevHud : Panel
 	{
 		base.Tick();
 
-		if( !ShowDevHud )
+		if ( !Local.Client.GetClientData<bool>( "uf_devhud" ) )
 		{
 			Style.Display = DisplayMode.None;
 			return;
