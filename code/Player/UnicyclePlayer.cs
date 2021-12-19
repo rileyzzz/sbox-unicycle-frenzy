@@ -12,6 +12,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	[Net]
 	public List<Checkpoint> Checkpoints { get; set; } = new();
 
+	public const float MaxRenderDistance = 300f;
 	public const float RespawnDelay = 3f;
 
 	private TimeSince timeSinceDied;
@@ -103,6 +104,22 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			Fall();
 			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
 		}
+	}
+
+	[Event.Frame]
+	private void UpdateRenderAlpha()
+	{
+		if ( Local.Pawn == this ) return;
+		if ( Local.Pawn == null ) return;
+		if ( !Terry.IsValid() || !Unicycle.IsValid() ) return;
+
+		var dist = Local.Pawn.Position.Distance( Position );
+		var a = 1f - dist.LerpInverse( MaxRenderDistance, MaxRenderDistance * .1f );
+		a = Math.Max( a, .15f );
+		a = Easing.EaseOut( a );
+
+		Terry.RenderColor = Terry.RenderColor.WithAlpha( a );
+		Unicycle.SetRenderAlphaOnAllParts( a );
 	}
 
 }

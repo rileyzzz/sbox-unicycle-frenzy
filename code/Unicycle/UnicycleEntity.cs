@@ -34,6 +34,16 @@ internal partial class UnicycleEntity : Entity
 		return assAttachment.Value.Position;
 	}
 
+	public void SetRenderAlphaOnAllParts( float a )
+	{
+		// this is kind of annoying, alternatives?
+		FrameModel.RenderColor = FrameModel.RenderColor.WithAlpha( a );
+		SeatModel.RenderColor = SeatModel.RenderColor.WithAlpha( a );
+		WheelModel.RenderColor = WheelModel.RenderColor.WithAlpha( a );
+		LeftPedalModel.RenderColor = LeftPedalModel.RenderColor.WithAlpha( a );
+		RightPedalModel.RenderColor = RightPedalModel.RenderColor.WithAlpha( a );
+	}
+
 	private void AssembleParts()
 	{
 		Host.AssertServer();
