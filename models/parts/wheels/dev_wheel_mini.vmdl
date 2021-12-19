@@ -14,7 +14,15 @@
 						remaps = 
 						[
 							{
-								from = ""
+								from = "hub.vmat"
+								to = "materials/dev/dev_08_orange.vmat"
+							},
+							{
+								from = "rimspokes.vmat"
+								to = "materials/dev/dev_08_light.vmat"
+							},
+							{
+								from = "rubber.vmat"
 								to = "materials/hotspots/rubber_a_hs.vmat"
 							},
 						]

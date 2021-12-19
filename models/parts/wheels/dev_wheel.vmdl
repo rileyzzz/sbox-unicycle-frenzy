@@ -14,7 +14,15 @@
 						remaps = 
 						[
 							{
-								from = ""
+								from = "hub.vmat"
+								to = "materials/dev/dev_08_orange.vmat"
+							},
+							{
+								from = "rimspokes.vmat"
+								to = "materials/dev/dev_08_light.vmat"
+							},
+							{
+								from = "rubber.vmat"
 								to = "materials/hotspots/rubber_a_hs.vmat"
 							},
 						]
@@ -29,6 +37,7 @@
 				[
 					{
 						_class = "RenderMeshFile"
+						name = "Wheel"
 						filename = "models/parts/wheels/dev-wheel.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
@@ -40,7 +49,11 @@
 						import_filter = 
 						{
 							exclude_by_default = false
-							exception_list = [  ]
+							exception_list = 
+							[
+								"Wheel_001",
+								"Wheel_002",
+							]
 						}
 					},
 				]

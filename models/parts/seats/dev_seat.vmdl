@@ -11,15 +11,9 @@
 				[
 					{
 						_class = "DefaultMaterialGroup"
-						remaps = 
-						[
-							{
-								from = "mat.vmat"
-								to = "models/citizen_clothes/accessory/unibrow.vmat"
-							},
-						]
-						use_global_default = false
-						global_default_material = ""
+						remaps = [  ]
+						use_global_default = true
+						global_default_material = "materials/dev/dev_08_mud.vmat"
 					},
 				]
 			},

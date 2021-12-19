@@ -14,7 +14,11 @@
 						remaps = 
 						[
 							{
-								from = "mat.vmat"
+								from = "arm.vmat"
+								to = "materials/dev/dev_08_light.vmat"
+							},
+							{
+								from = "pedal.vmat"
 								to = "materials/dev/dev_08_dark.vmat"
 							},
 						]

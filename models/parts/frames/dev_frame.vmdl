@@ -18,8 +18,8 @@
 								to = "materials/dev/dev_08_orange.vmat"
 							},
 						]
-						use_global_default = false
-						global_default_material = ""
+						use_global_default = true
+						global_default_material = "materials/dev/dev_08_orange.vmat"
 					},
 				]
 			},
