@@ -119,6 +119,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		a = Easing.EaseOut( a );
 
 		Terry.RenderColor = Terry.RenderColor.WithAlpha( a );
+
+		foreach(var child in Terry.Children)
+		{
+			if ( child is not ModelEntity m || !child.IsValid() ) continue;
+			m.RenderColor = m.RenderColor.WithAlpha( a );
+		}
+
 		Unicycle.SetRenderAlphaOnAllParts( a );
 	}
 
