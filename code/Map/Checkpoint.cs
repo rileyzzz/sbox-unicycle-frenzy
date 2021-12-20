@@ -113,6 +113,11 @@ internal partial class Checkpoint : ModelEntity
 			active = true;
 
 			FlagModel.SetModel( "models/flag/flag.vmdl" );
+
+			Juice.Scale( 1f, 1.25f, 1f )
+				.WithDuration( .5f )
+				.WithEasing( EasingType.BounceOut )
+				.WithTarget( FlagModel );
 		}
 		else if( active && !isLatestCheckpoint )
 		{
