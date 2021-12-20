@@ -3,8 +3,8 @@
 
 UfChatbox {
     position: absolute;
-    bottom: 120px;
-    left: 125px;
+    bottom: 140px;
+    left: 135px;
     width: 620px;
     height: 570px;
     border-radius: $radius;
@@ -95,7 +95,7 @@ UfChatboxEntry {
         }
 
         &.timer-msg {
-            color: $secondary;
+            color: $primary;
         }
     }
 }
