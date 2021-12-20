@@ -73,7 +73,7 @@ internal partial class Checkpoint : ModelEntity
 
 		if(pl.IsServer) pl.TrySetCheckpoint( this );
 
-		if ( this.IsEnd )
+		if ( this.IsEnd && pl.TimerState == TimerState.Live )
 		{
 			pl.CompleteCourse();
 		}
