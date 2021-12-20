@@ -1,6 +1,4 @@
 ﻿
-using Sandbox;
-
 public class ScaleEffect : BaseEffect
 {
 
@@ -17,17 +15,7 @@ public class ScaleEffect : BaseEffect
 
 	public override void OnTick()
 	{
-		base.OnTick();
-
-		if( !Target.IsValid() )
-		{
-			Stop();
-			return;
-		}
-
-		if ( !Target.IsServer && !Target.IsClientOnly ) return;
-
-		Target.LocalScale = Lerp3( a, b, c, T );
+		Target.SetScale( Lerp3( a, b, c, T ) );
 	}
 
 }

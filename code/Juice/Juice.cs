@@ -25,6 +25,12 @@ public static class Juice
 				continue;
 			}
 
+			if( effects[i].Target == null || !effects[i].Target.IsValid() )
+			{
+				effects.RemoveAt( i );
+				continue;
+			}
+
 			effects[i].TimeSinceCreated += Time.Delta;
 
 			if ( effects[i].Delay > effects[i].TimeSinceCreated )

@@ -1,5 +1,6 @@
 ﻿
 using Sandbox;
+using Sandbox.UI;
 
 public abstract class BaseEffect
 {
@@ -8,8 +9,8 @@ public abstract class BaseEffect
 	public float Duration;
 	public float TimeSinceCreated;
 	public EasingType Easing;
-	public Entity Target;
 	public bool Stopped;
+	public IJuiceTarget Target;
 
 	public float T => ( TimeSinceCreated - Delay ) / Duration;
 	public bool HasStarted => TimeSinceCreated >= Delay;
@@ -38,7 +39,19 @@ public abstract class BaseEffect
 		return this;
 	}
 
-	public BaseEffect WithTarget( Entity target )
+	public BaseEffect WithTarget( Entity entity )
+	{
+		Target = new EntityJuiceTarget( entity );
+		return this;
+	}
+
+	public BaseEffect WithTarget( Panel panel )
+	{
+		Target = new PanelJuiceTarget( panel );
+		return this;
+	}
+
+	public BaseEffect WithTarget( IJuiceTarget target )
 	{
 		Target = target;
 		return this;
