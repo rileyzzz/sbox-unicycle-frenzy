@@ -14,6 +14,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 	private List<string> mapCycle = new()
 	{
+		"facepunch.uf_wooden_gaps",
 		"facepunch.uf_steps",
 		"facepunch.uf_hop_stop",
 		"facepunch.uf_pop_rock",
@@ -29,7 +30,10 @@ partial class UnicycleFrenzy : Sandbox.Game
 		"{0} adopted a tree this morning!",
 		"{0} needs some practice 😂",
 		"It's a skill problem for {0} 🤙",
-		"{0} must have missed the \"wet floor\" warning"
+		"{0} must have missed the \"wet floor\" warning",
+		"{0} had an oopsy!",
+		"That wasn't insane {0}",
+		"{0} lost the plot!"
 	};
 
 	public UnicycleFrenzy()
