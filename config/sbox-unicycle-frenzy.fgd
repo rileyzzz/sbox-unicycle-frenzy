@@ -16,7 +16,7 @@
 //
 // Checkpoint
 //
-@PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/editor/playerstart.vmdl", fixedbounds, lightModeTint, "255 100 255", "255 255 255" ) box_world_aligned( "mins", "maxs" ) 
+@PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/checkpoint_platform_hammer.vmdl", fixedbounds ) 
 metadata
 {
 	entity_tool_name = "Player Checkpoint"
@@ -25,8 +25,6 @@ metadata
 }
 = uf_checkpoint : "Defines a checkpoint where the player will respawn after falling"
 [
-	mins(vector) : "Checkpoint mins" : "-75 -75 0" : ""
-	maxs(vector) : "Checkpoint maxs" : "75 75 100" : ""
 	isstart(boolean) : "Is Start" : 0 : ""
 	isend(boolean) : "Is End" : 0 : ""
 	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"

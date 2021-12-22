@@ -1,77 +1,70 @@
 ﻿using Hammer;
 using Sandbox;
-using Sandbox.Internal;
 using System.Linq;
 
 [Library("uf_checkpoint", Description = "Defines a checkpoint where the player will respawn after falling")]
-[EditorModel("models/editor/playerstart.vmdl", staticGreen: 100, FixedBounds = true)]
+[EditorModel( "models/checkpoint_platform_hammer.vmdl", FixedBounds = true)]
 [EntityTool("Player Checkpoint", "Unicycle Frenzy", "Defines a checkpoint where the player will respawn after falling")]
-[BoundsHelper("mins", "maxs", false, true)]
 internal partial class Checkpoint : ModelEntity
 {
-
-	[Property("mins", Title = "Checkpoint mins")]
-	[DefaultValue("-75 -75 0")]
-	[Net]
-	public Vector3 Mins { get; set; } = new Vector3(-75, -75, 0);
-	[Property("maxs", Title = "Checkpoint maxs")]
-	[DefaultValue("75 75 100")]
-	[Net]
-	public Vector3 Maxs { get; set; } = new Vector3(75, 75, 100);
 
 	[Net, Property]
 	public bool IsStart { get; set; }
 	[Net, Property]
 	public bool IsEnd { get; set; }
 
-	public ModelEntity FlagModel;
+	private ModelEntity flag;
 
 	public override void Spawn()
 	{
 		base.Spawn();
 
-		SetupPhysicsFromAABB( PhysicsMotionType.Static, Mins, Maxs );
-
 		Transmit = TransmitType.Always;
-		CollisionGroup = CollisionGroup.Trigger;
-		EnableSolidCollisions = false;
+		EnableAllCollisions = true;
 		EnableTouch = true;
 
+		SetModel( "models/checkpoint_platform.vmdl" );
+		SetupPhysicsFromModel( PhysicsMotionType.Static );
+
+		var bounds = PhysicsBody.GetBounds();
+		var extents = ( bounds.Maxs - bounds.Mins ) * 0.5f;
+
+		var trigger = new BaseTrigger();
+		trigger.SetParent( this, null, Transform.Zero );
+		trigger.SetupPhysicsFromAABB( PhysicsMotionType.Static, -extents.WithZ( 0 ), extents.WithZ( 128 ) );
+		trigger.Transmit = TransmitType.Always;
 	}
 
 	public override void ClientSpawn()
 	{
 		base.ClientSpawn();
 
-		//var modelEnt = new ModelEntity("models/flag/flag_pole.vmdl");
-		FlagModel = new ModelEntity("models/flag/flag_pole.vmdl");
-		var fwdLeft = Rotation.Forward + Rotation.Left;
-		var bounds = new BBox( Position + Mins, Position + Maxs );
-		FlagModel.Position = bounds.ClosestPoint( Position + fwdLeft * 500 ) - fwdLeft.Normal * 5;
-		FlagModel.Rotation = Rotation.LookAt( Rotation.Right );
+		var flagAttachment = GetAttachment( "Flag" );
 
-		if (this.IsStart)
+		flag = new ModelEntity( "models/flag/flag_pole.vmdl" );
+		flag.Position = flagAttachment.Value.Position;
+		flag.Rotation = flagAttachment.Value.Rotation;
+
+		if ( this.IsStart )
 		{
-			FlagModel.SetModel("models/flag/flag.vmdl");
-			FlagModel.SetMaterialGroup("Green");
+			flag.SetModel( "models/flag/flag.vmdl" );
+			flag.SetMaterialGroup( "Green" );
 		}
 
-		if (this.IsEnd)
+		if ( this.IsEnd )
 		{
-			FlagModel.SetModel("models/flag/flag.vmdl");
-			FlagModel.SetMaterialGroup("Checker");
+			flag.SetModel( "models/flag/flag.vmdl" );
+			flag.SetMaterialGroup( "Checker" );
 		}
-
 	}
 
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
 
-
 		if ( other is not UnicyclePlayer pl ) return;
 
-		if(pl.IsServer) pl.TrySetCheckpoint( this );
+		if( pl.IsServer ) pl.TrySetCheckpoint( this );
 
 		if ( this.IsEnd && pl.TimerState == TimerState.Live )
 		{
@@ -82,7 +75,6 @@ internal partial class Checkpoint : ModelEntity
 		{
 			pl.EnterStartZone();
 		}
-
 	}
 
 	public override void EndTouch( Entity other )
@@ -101,8 +93,6 @@ internal partial class Checkpoint : ModelEntity
 	[Event.Frame]
 	private void OnFrame()
 	{
-		//DebugOverlay.Box( Position + Mins, Position + Maxs, color );
-
 		if ( Local.Pawn is not UnicyclePlayer pl ) return;
 		if ( this.IsEnd || this.IsStart ) return;
 
@@ -112,18 +102,18 @@ internal partial class Checkpoint : ModelEntity
 		{
 			active = true;
 
-			FlagModel.SetModel( "models/flag/flag.vmdl" );
+			flag.SetModel( "models/flag/flag.vmdl" );
 
 			Juice.Scale( 1f, 1.25f, 1f )
 				.WithDuration( .5f )
 				.WithEasing( EasingType.BounceOut )
-				.WithTarget( FlagModel );
+				.WithTarget( flag );
 		}
 		else if( active && !isLatestCheckpoint )
 		{
 			active = false;
 
-			FlagModel.SetModel( "models/flag/flag_pole.vmdl" );
+			flag.SetModel( "models/flag/flag_pole.vmdl" );
 		}
 	}
 
