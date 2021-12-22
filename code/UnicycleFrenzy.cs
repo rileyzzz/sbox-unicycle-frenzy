@@ -63,6 +63,15 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 		cl.Pawn = new UnicyclePlayer();
 		(cl.Pawn as Player).Respawn();
+
+		UfChatbox.AddInfo( To.Everyone, $"{cl.Name} has joined the game" );
+	}
+
+	public override void ClientDisconnect( Client cl, NetworkDisconnectionReason reason )
+	{
+		base.ClientDisconnect( cl, reason );
+
+		UfChatbox.AddInfo( To.Everyone, $"{cl.Name} has left the game" );
 	}
 
 	public override void OnKilled( Client client, Entity pawn )
