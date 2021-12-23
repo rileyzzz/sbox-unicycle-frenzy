@@ -78,6 +78,8 @@ internal partial class UnicycleController : BasePlayerController
 		var beforeGrounded = GroundEntity != null;
 		var beforeVelocity = Velocity;
 
+		BaseVelocity = Vector3.Zero;
+
 		CheckGround();
 		CheckPedal();
 		CheckBrake();
@@ -99,7 +101,9 @@ internal partial class UnicycleController : BasePlayerController
 		Gravity();
 
 		// go
+		Velocity += BaseVelocity;
 		Move();
+		Velocity -= BaseVelocity;
 
 		if ( ShouldFall() )
 		{
@@ -222,6 +226,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		}
 
+		BaseVelocity = tr.Entity.Velocity; 
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
 		GroundSurface = tr.Surface.Name;
@@ -412,7 +417,7 @@ internal partial class UnicycleController : BasePlayerController
 
 			pl.JumpTilt = pl.Tilt * -1;
 			pl.PrevJumpTilt = pl.JumpTilt;
-			Velocity = Velocity.WithZ( 0 );
+			Velocity = Velocity.WithZ( 0 ) + BaseVelocity.WithZ( 0 );
 			Velocity += up * jumpStrength;
 			GroundEntity = null;
 			pl.TimeSinceJumpDown = 0;
