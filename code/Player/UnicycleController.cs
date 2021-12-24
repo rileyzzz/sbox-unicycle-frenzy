@@ -100,6 +100,11 @@ internal partial class UnicycleController : BasePlayerController
 		DoRotation();
 		Gravity();
 
+		if ( GroundEntity != null && !GroundEntity.AngularVelocity.Length.AlmostEqual( 0f ) )
+		{
+			Position = Position.RotateAroundPivot( GroundEntity.Position, Rotation.From( GroundEntity.AngularVelocity * Time.Delta ) );
+		}
+
 		// go
 		Velocity += BaseVelocity;
 		Move();
