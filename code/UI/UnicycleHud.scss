@@ -6,6 +6,8 @@ button, navlink, .button {
     }
 
     &:hover {
+        cursor: pointer;
+
         &:not( .active ) {
             sound-in: button.hover;
         }

@@ -1,0 +1,129 @@
+﻿
+@import "../../Vars.scss";
+
+StatsTab {
+
+    .tab-container {
+        flex-grow: 1;
+        flex-direction: column;
+
+        .tabs {
+            navlink {
+                padding: 20px;
+                font-size: 20px;
+                font-family: Poppins;
+                background-color: $lightbg;
+                transition: all .15s ease-out;
+                color: $fontcolorfaded;
+
+                &:first-child {
+                    border-radius: $radius 0 0 0;
+                }
+
+                &:last-child {
+                    border-radius: 0 $radius 0 0;
+                }
+
+                &:hover {
+                    background-color: $lighterbg;
+                    color: $fontcolor;
+                }
+
+                &.active {
+                    background-color: rgba($bg, 2);
+                    color: $fontcolor;
+                }
+            }
+        }
+
+        .content {
+            background-color: $bg;
+            padding: $padding;
+            border-radius: 0 $radius $radius $radius;
+        }
+    }
+}
+
+StatsTabLeaderboard {
+    flex-grow: 1;
+
+    .tab-container .tabs navlink {
+        background-color: $bg;
+        padding: 11px 20px;
+        font-size: 18px;
+
+        &:hover {
+            background-color: $lightbg;
+        }
+
+        &.active {
+            background-color: $lighterbg;
+        }
+    }
+
+    .tab-container .content {
+        padding: 0;
+    }
+}
+
+StatsTabLeaderboardSingle {
+    flex-grow: 1;
+    background-color: $lighterbg;
+    border-radius: 0 $radius $radius $radius;
+    padding: $padding;
+
+    .leaderboard-canvas {
+        width: 80%;
+        margin-right: $padding;
+        flex-direction: column;
+
+        .entry {
+            padding: 12px 20px;
+            margin-bottom: 2px;
+            border-radius: $radius;
+            transition: all .15s ease-out;
+
+            &:nth-child(odd) {
+                background-color: $lightbg;
+            }
+
+            &:hover {
+                background-color: $bg;
+            }
+
+            .rank {
+                width: 100px;
+            }
+
+            .name {
+                flex-grow: 1;
+            }
+
+            .time {
+                width: 200px;
+                text-align: right;
+            }
+        }
+    }
+
+    .leaderboard-sorting {
+        flex-grow: 1;
+        flex-direction: column;
+
+        button {
+            background-color: $lightbg;
+            padding: 10px;
+            margin-bottom: 4px;
+            border-radius: $radius;
+            justify-content: center;
+            font-family: Poppins;
+            font-size: 18px;
+            text-shadow: 1px 1px 1px black;
+            transition: all .15s ease-out;
+
+            &:hover {
+                background-color: $primary;
+            }
+        }
+    }
+}
