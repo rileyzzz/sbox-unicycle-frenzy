@@ -413,7 +413,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void CheckJump()
 	{
 		if ( Input.Released( InputButton.Jump ) && 
-			(GroundEntity != null || pl.TimeSinceNotGrounded < .25f) )
+			(GroundEntity != null || pl.TimeSinceNotGrounded < .1f) )
 		{
 			var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
 			t = Easing.EaseOut( t );
