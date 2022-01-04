@@ -44,6 +44,90 @@ StatsTab {
     }
 }
 
+StatsTabDetails {
+    flex-grow: 1;
+
+    .details {
+        width: 600px;
+        flex-direction: column;
+        margin-right: $padding;
+
+        .thumbnail {
+            background-image: url("https://files.facepunch.com/crayz/1b0311b1/msedge_2022-01-03_21-04-42.png");
+            width: 600px;
+            height: 350px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            margin-bottom: $padding;
+        }
+
+        .stats {
+            flex-grow: 1;
+            flex-direction: column;
+            font-size: 20px;
+            font-family: Poppins;
+
+            .stat-entry {
+                justify-content: space-between;
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+                border-bottom: 4px solid $lightbg;
+
+                .value {
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+    .achievements {
+        flex-grow: 1;
+        background-color: $lightbg;
+        border-radius: $radius;
+        padding: $padding;
+        flex-direction: column;
+
+        .heading {
+            font-size: 28px;
+            font-weight: 600;
+            font-family: Poppins;
+            margin-bottom: 30px;
+        }
+
+        .achievement-icons {
+            flex-wrap: wrap;
+            justify-content: center;
+
+            .icon {
+                margin: 0 45px 45px 0;
+                width: 110px;
+                height: 110px;
+                background-color: $bg;
+                border-radius: $radius;
+                border: 8px solid $lightbg;
+                transition: all .08s linear;
+                cursor: pointer;
+                background-image: url("https://files.facepunch.com/crayz/1b0311b1/msedge_2022-01-03_21-39-33.png");
+                background-size: 80px 80px;
+                background-repeat: no-repeat;
+                background-position: center center;
+
+                &:hover {
+                    border-color: $lighterbg;
+                }
+            }
+        }
+
+        .achievement-description {
+            border-top: 4px solid $lighterbg;
+            font-size: 20px;
+            font-family: Poppins;
+            padding: $padding;
+        }
+    }
+}
+
 StatsTabLeaderboard {
     flex-grow: 1;
 
