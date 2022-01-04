@@ -15,6 +15,20 @@ internal partial class Checkpoint : ModelEntity
 
 	private ModelEntity flag;
 
+	public enum ModelType
+	{
+		Dev,
+		Metal,
+		Stone,
+		Wood
+	}
+
+	/// <summary>
+	/// Movement type of the door.
+	/// </summary>
+	[Property("model_type", Title = "Model Type")]
+	public ModelType ModelTypeList { get; set; } = ModelType.Dev;
+
 	public override void Spawn()
 	{
 		base.Spawn();
@@ -23,7 +37,26 @@ internal partial class Checkpoint : ModelEntity
 		EnableAllCollisions = true;
 		EnableTouch = true;
 
-		SetModel( "models/checkpoint_platform.vmdl" );
+		if (ModelTypeList == ModelType.Dev)
+		{
+			SetModel("models/checkpoint_platform.vmdl");
+		}
+
+		else if (ModelTypeList == ModelType.Metal)
+		{
+			SetModel("models/checkpoint_platform_metal.vmdl");
+		}
+
+		else if (ModelTypeList == ModelType.Stone)
+		{
+			SetModel("models/checkpoint_platform_stone.vmdl");
+		}
+
+		else if (ModelTypeList == ModelType.Wood)
+		{
+			SetModel("models/checkpoint_platform_wood.vmdl");
+		}
+
 		SetupPhysicsFromModel( PhysicsMotionType.Static );
 
 		var bounds = PhysicsBody.GetBounds();
@@ -33,6 +66,8 @@ internal partial class Checkpoint : ModelEntity
 		trigger.SetParent( this, null, Transform.Zero );
 		trigger.SetupPhysicsFromAABB( PhysicsMotionType.Static, -extents.WithZ( 0 ), extents.WithZ( 128 ) );
 		trigger.Transmit = TransmitType.Always;
+
+
 	}
 
 	public override void ClientSpawn()

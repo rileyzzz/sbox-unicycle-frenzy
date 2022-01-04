@@ -27,6 +27,13 @@ metadata
 [
 	isstart(boolean) : "Is Start" : 0 : ""
 	isend(boolean) : "Is End" : 0 : ""
+	model_type(choices) : "Model Type" : 0 : "Movement type of the door." =
+	[
+		0 : "Dev"
+		1 : "Metal"
+		2 : "Stone"
+		3 : "Wood"
+	]
 	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
 
 	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
