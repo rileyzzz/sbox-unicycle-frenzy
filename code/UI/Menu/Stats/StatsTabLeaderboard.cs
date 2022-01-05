@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 
 [UseTemplate]
 [NavigatorTarget( "menu/stats/leaderboard" )]

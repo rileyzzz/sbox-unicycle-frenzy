@@ -69,7 +69,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Unicycle?.Delete();
 		Terry?.Delete();
 
-		RagdollOnClient();
+		KillOnClient();
 	}
 
 	public override void Simulate( Client cl )
@@ -127,6 +127,14 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		}
 
 		Unicycle.SetRenderAlphaOnAllParts( a );
+	}
+
+	[ClientRpc]
+	private void KillOnClient()
+	{
+		Ragdoll();
+
+		MapStats.Local.AddFall();
 	}
 
 }

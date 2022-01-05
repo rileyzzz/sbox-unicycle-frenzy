@@ -2,27 +2,27 @@
 <root>
 
     <div class="details">
-        <div class="thumbnail"></div>
+        <div @ref="Thumbnail" class="thumbnail"></div>
         <div class="stats">
             <div class="stat-entry">
                 <label class="name">Name</label>
-                <label class="value">Pop Rock</label>
+                <label class="value" @text="MapName">Pop Rock</label>
             </div>
             <div class="stat-entry">
                 <label class="name">Falls</label>
-                <label class="value">107</label>
+                <label class="value" @text="Stats.Falls">107</label>
             </div>
             <div class="stat-entry">
                 <label class="name">Respawns</label>
-                <label class="value">53</label>
+                <label class="value" @text="Stats.Respawns">53</label>
             </div>
             <div class="stat-entry">
                 <label class="name">Best Time</label>
-                <label class="value">00:26.56</label>
+                <label class="value" @text="BestTime"></label>
             </div>
             <div class="stat-entry">
                 <label class="name">Times Played</label>
-                <label class="value">3</label>
+                <label class="value" @text="Stats.TimesPlayed">3</label>
             </div>
         </div>
     </div>

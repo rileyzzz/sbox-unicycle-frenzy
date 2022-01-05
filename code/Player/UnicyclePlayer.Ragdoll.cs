@@ -65,9 +65,9 @@ internal partial class UnicyclePlayer
 		ent.DeleteAsync( 10.0f );
 	}
 
-	[ClientRpc]
-	private void RagdollOnClient()
+	private void Ragdoll()
 	{
+		Host.AssertClient();
 		// todo: might be able to tidy up the player's hierarchy and networked life/death cycle 
 		//		 so we're not paranoid about an nre here
 		//		 maybe also predicted ragdolling to smooth out high ping deaths

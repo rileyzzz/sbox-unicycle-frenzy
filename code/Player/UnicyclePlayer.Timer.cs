@@ -8,7 +8,7 @@ internal partial class UnicyclePlayer
 	public TimerState TimerState { get; set; }
 	[Net, Predicted]
 	public TimeSince TimeSinceStart { get; set; }
-	[Net]
+	[Net, Change]
 	public float BestTime { get; set; } = float.MaxValue;
 
 	public void EnterStartZone()
@@ -92,6 +92,12 @@ internal partial class UnicyclePlayer
 		SetRotationOnClient( Rotation );
 		ResetInterpolation();
 		ResetMovement();
+	}
+
+	private void OnBestTimeChanged()
+	{
+		if ( !IsLocalPawn ) return;
+		MapStats.Local.SetBestTime( BestTime );
 	}
 
 }
