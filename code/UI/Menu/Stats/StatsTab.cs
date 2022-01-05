@@ -7,7 +7,7 @@ internal class StatsTab : NavigatorPanel
 
 	public StatsTab()
 	{
-		Navigate( "menu/stats/leaderboard" );
+		Navigate( "menu/stats/details" );
 	}
 
 }
