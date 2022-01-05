@@ -20,6 +20,8 @@ internal partial class UnicyclePlayer
 	{
 		TimeSinceStart = 0;
 		TimerState = TimerState.Live;
+
+		AddTimesPlayed();
 	}
 
 	public void CompleteCourse()
@@ -98,6 +100,13 @@ internal partial class UnicyclePlayer
 	{
 		if ( !IsLocalPawn ) return;
 		MapStats.Local.SetBestTime( BestTime );
+	}
+
+	[ClientRpc]
+	private void AddTimesPlayed()
+	{
+		if ( !IsLocalPawn ) return;
+		MapStats.Local.AddTimesPlayed();
 	}
 
 }
