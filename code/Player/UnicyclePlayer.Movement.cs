@@ -47,6 +47,8 @@ internal partial class UnicyclePlayer
 		Sound.FromWorld( "unicycle.crash.default", Position );
 
 		Game.Current.DoPlayerSuicide( Client );
+
+		AddFallOnClient();
 	}
 
 	public void ResetMovement()
@@ -81,6 +83,13 @@ internal partial class UnicyclePlayer
 	{
 		overrideRot = true;
 		rotOverride = rotation;
+	}
+
+	[ClientRpc]
+	private void AddFallOnClient()
+	{
+		if ( !IsLocalPawn ) return;
+		MapStats.Local.AddFall();
 	}
 
 }
