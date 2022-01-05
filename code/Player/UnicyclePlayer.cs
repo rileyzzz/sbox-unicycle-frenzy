@@ -74,7 +74,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 	public override void Simulate( Client cl )
 	{
-		if( LifeState == LifeState.Alive )
+		if ( LifeState == LifeState.Alive )
 		{
 			var controller = GetActiveController();
 			controller?.Simulate( cl, this, GetActiveAnimator() );
@@ -86,24 +86,21 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			}
 		}
 
-		if( LifeState == LifeState.Dead )
+		if ( LifeState == LifeState.Dead )
 		{
-			if( IsServer && timeSinceDied > RespawnDelay )
+			if ( IsServer && timeSinceDied > RespawnDelay )
 				Respawn();
 		}
 
-		if ( Input.Pressed( InputButton.Drop ) )
+		if ( Input.Pressed( InputButton.Drop ) || Input.Pressed( InputButton.Reload ) )
 		{
-			Fall();
-			ResetTimer();
-			AddRespawnOnClient();
-			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
-		}
+			if ( LifeState != LifeState.Dead )
+				AddRespawnOnClient();
 
-		if ( Input.Pressed( InputButton.Reload ) )
-		{
-			Fall();
-			AddRespawnOnClient();
+			if ( Input.Pressed( InputButton.Drop ) )
+				ResetTimer();
+
+			Fall( false );
 			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
 		}
 	}
@@ -122,7 +119,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		Terry.RenderColor = Terry.RenderColor.WithAlpha( a );
 
-		foreach(var child in Terry.Children)
+		foreach ( var child in Terry.Children )
 		{
 			if ( child is not ModelEntity m || !child.IsValid() ) continue;
 			m.RenderColor = m.RenderColor.WithAlpha( a );

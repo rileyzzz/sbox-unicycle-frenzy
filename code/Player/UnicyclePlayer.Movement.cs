@@ -38,7 +38,7 @@ internal partial class UnicyclePlayer
 	private bool overrideRot;
 	private Rotation rotOverride;
 
-	public void Fall()
+	public void Fall( bool incrementFallStat = true )
 	{
 		if ( Fallen ) return;
 
@@ -48,7 +48,7 @@ internal partial class UnicyclePlayer
 
 		Game.Current.DoPlayerSuicide( Client );
 
-		AddFallOnClient();
+		if( incrementFallStat ) AddFallOnClient();
 	}
 
 	public void ResetMovement()
