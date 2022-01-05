@@ -21,7 +21,7 @@ internal partial class UnicyclePlayer
 		TimeSinceStart = 0;
 		TimerState = TimerState.Live;
 
-		AddTimesPlayed();
+		AddAttempts();
 	}
 
 	public void CompleteCourse()
@@ -103,10 +103,10 @@ internal partial class UnicyclePlayer
 	}
 
 	[ClientRpc]
-	private void AddTimesPlayed()
+	private void AddAttempts()
 	{
 		if ( !IsLocalPawn ) return;
-		MapStats.Local.AddTimesPlayed();
+		MapStats.Local.AddAttempts();
 	}
 
 }

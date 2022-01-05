@@ -4,7 +4,7 @@ internal class MapStats
 
 	public int Falls { get; set; }
 	public int Respawns { get; set; }
-	public int TimesPlayed { get; set; }
+	public int Attempts { get; set; }
 	public float BestTime { get; set; }
 
 	public void AddFall()
@@ -19,9 +19,9 @@ internal class MapStats
 		LocalCookie = ToJson();
 	}
 
-	public void AddTimesPlayed()
+	public void AddAttempts()
 	{
-		TimesPlayed++;
+		Attempts++;
 		LocalCookie = ToJson();
 	}
 
