@@ -96,12 +96,14 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		{
 			Fall();
 			ResetTimer();
+			AddRespawnOnClient();
 			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
 		}
 
 		if ( Input.Pressed( InputButton.Reload ) )
 		{
 			Fall();
+			AddRespawnOnClient();
 			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
 		}
 	}
@@ -127,6 +129,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		}
 
 		Unicycle.SetRenderAlphaOnAllParts( a );
+	}
+
+	[ClientRpc]
+	private void AddRespawnOnClient()
+	{
+		if ( !IsLocalPawn ) return;
+		MapStats.Local.AddRespawn();
 	}
 
 }
