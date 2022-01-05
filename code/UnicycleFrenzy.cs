@@ -43,6 +43,8 @@ partial class UnicycleFrenzy : Sandbox.Game
 		if ( IsClient )
 		{
 			new UnicycleHud();
+
+			MapStats.Local.AddTimesPlayed();
 		}
 
 		if ( IsServer )
