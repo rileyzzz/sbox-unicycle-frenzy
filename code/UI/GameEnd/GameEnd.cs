@@ -35,7 +35,7 @@ internal class GameEnd : Panel
 	[Event.Frame]
 	private void OnFrame()
 	{
-		SetClass( "open", UnicycleFrenzy.Game.TimeLeft < 1 * 60 );
+		SetClass( "open", UnicycleFrenzy.Game.TimeLeft < UnicycleFrenzy.EndGameDuration );
 	}
 
 }

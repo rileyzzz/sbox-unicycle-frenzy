@@ -7,6 +7,9 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 	public static UnicycleFrenzy Game => Current as UnicycleFrenzy;
 
+	[ConVar.Replicated("uf_endgame_duration")]
+	public static float EndGameDuration { get; set; } = 60 * 1.5f;
+
 	[Net]
 	public float TimeLeft { get; set; }
 	[Net]
