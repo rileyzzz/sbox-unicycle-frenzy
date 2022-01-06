@@ -12,7 +12,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 	[Net]
 	public string NextMap { get; set; }
 
-	private List<string> mapCycle = new()
+	public static List<string> MapCycle = new()
 	{
 		"facepunch.uf_wooden_gaps",
 		"barrelzzen.uf_industry",
@@ -48,7 +48,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 		if ( IsServer )
 		{
 			GameTime = 1800;
-			NextMap = Rand.FromArray( mapCycle.Where( x => x != Global.MapName ).ToArray() );
+			NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
 
 			foreach( var part in UnicyclePart.All )
 			{
