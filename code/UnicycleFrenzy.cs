@@ -8,7 +8,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 	public static UnicycleFrenzy Game => Current as UnicycleFrenzy;
 
 	[Net]
-	public float GameTime { get; set; }
+	public float TimeLeft { get; set; }
 	[Net]
 	public string NextMap { get; set; }
 
@@ -47,7 +47,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 		if ( IsServer )
 		{
-			GameTime = 1800;
+			TimeLeft = 1800;
 			NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
 
 			foreach( var part in UnicyclePart.All )
@@ -86,11 +86,11 @@ partial class UnicycleFrenzy : Sandbox.Game
 	[Event.Tick.Server]
 	private void OnTick()
 	{
-		if ( GameTime > 0 )
+		if ( TimeLeft > 0 )
 		{
-			GameTime -= Time.Delta;
+			TimeLeft -= Time.Delta;
 
-			if ( GameTime <= 0 )
+			if ( TimeLeft <= 0 )
 			{
 				Global.ChangeLevel( NextMap );
 			}

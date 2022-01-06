@@ -31,11 +31,11 @@ internal class GameEnd : Panel
 			MapCanvas.AddChild( btn );
 		}
 	}
-
+		
 	[Event.Frame]
 	private void OnFrame()
 	{
-		SetClass( "open", UnicycleFrenzy.Game.GameTime < 1 * 60 );
+		SetClass( "open", UnicycleFrenzy.Game.TimeLeft < 1 * 60 );
 	}
 
 }
