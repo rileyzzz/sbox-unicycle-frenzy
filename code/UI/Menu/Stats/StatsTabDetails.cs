@@ -7,7 +7,7 @@ internal class StatsTabDetails : Panel
 {
 
 	public MapStats Stats => MapStats.Local;
-	public string BestTime => CourseTimer.FormattedTimeMsf( Stats.BestTime );
+	public string BestTime => Stats.BestTime == 0 ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( Stats.BestTime );
 	public string MapName => Global.MapName;
 	public Panel Thumbnail { get; set; }
 
@@ -22,6 +22,13 @@ internal class StatsTabDetails : Panel
 		var pgk = await Package.Fetch( Global.MapName, true );
 		if ( pgk == null ) return;
 		Thumbnail.Style.SetBackgroundImage( pgk.Thumb );
+	}
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		SetClass( "incomplete", Stats.BestTime == 0 );
 	}
 
 }

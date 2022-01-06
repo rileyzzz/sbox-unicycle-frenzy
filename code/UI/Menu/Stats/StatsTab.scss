@@ -81,6 +81,10 @@ StatsTabDetails {
         }
     }
 
+    &.incomplete .best-time .value {
+        color: $secondary;
+    }
+
     .achievements {
         flex-grow: 1;
         background-color: $lightbg;
