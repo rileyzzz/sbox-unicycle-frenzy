@@ -1,12 +1,13 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System.Linq;
 
 [UseTemplate]
 internal class MapVoteButton : Button
 {
 
 	public Image Thumbnail { get; set; }
-	public string Votes { get; } = "0 votes";
+	public string Votes { get; set; } = "0 votes";
 	public string MapIdent { get; }
 
 	public MapVoteButton( string mapIdent )
@@ -20,7 +21,7 @@ internal class MapVoteButton : Button
 	{
 		base.OnClick( e );
 
-
+		UnicycleFrenzy.SetMapVote( MapIdent );
 	}
 
 	private async void SetThumbnail()
@@ -33,6 +34,18 @@ internal class MapVoteButton : Button
 		}
 
 		Thumbnail.SetTexture( pkg.Thumb );
+	}
+
+	public override void Tick()
+	{
+		base.Tick();
+
+		var voteCount = UnicycleFrenzy.Game.MapVotes.Values.Count( x => x == MapIdent );
+		var localVoted = UnicycleFrenzy.Game.MapVotes.ContainsKey( Local.PlayerId ) && UnicycleFrenzy.Game.MapVotes[Local.PlayerId] == MapIdent;
+		var term = voteCount == 1 ? "vote" : "votes";
+
+		SetClass( "active", localVoted );
+		Votes = $"{voteCount} {term}";
 	}
 
 }

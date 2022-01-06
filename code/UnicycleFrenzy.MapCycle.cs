@@ -22,6 +22,8 @@ internal partial class UnicycleFrenzy
 	public float TimeLeft { get; set; }
 	[Net]
 	public string NextMap { get; set; }
+	[Net]
+	public Dictionary<long, string> MapVotes { get; set; } = new();
 
 	private void InitMapCycle()
 	{
@@ -41,6 +43,26 @@ internal partial class UnicycleFrenzy
 				Global.ChangeLevel( NextMap );
 			}
 		}
+	}
+
+	[ServerCmd]
+	public static void SetMapVote( string mapIdent )
+	{
+		if ( !ConsoleSystem.Caller.IsValid() ) return;
+		Game.MapVotes[ConsoleSystem.Caller.PlayerId] = mapIdent;
+
+		var sort = new Dictionary<string, int>();
+		foreach( var kvp in Game.MapVotes )
+		{
+			if ( !sort.ContainsKey( kvp.Value ) )
+			{
+				sort.Add( kvp.Value, 0 );
+			}
+			sort[kvp.Value]++;
+		}
+		Game.NextMap = sort.OrderByDescending( x => x.Value ).First().Key;
+
+		UfChatbox.AddInfo( To.Everyone, string.Format( "{0} voted for {1}", ConsoleSystem.Caller.Name, mapIdent ) );
 	}
 
 }
