@@ -1,30 +1,10 @@
 ﻿using Sandbox;
 using System.Collections.Generic;
-using System.Linq;
 
 partial class UnicycleFrenzy : Sandbox.Game
 {
 
 	public static UnicycleFrenzy Game => Current as UnicycleFrenzy;
-
-	[ConVar.Replicated("uf_endgame_duration")]
-	public static float EndGameDuration { get; set; } = 60 * 1.5f;
-
-	[Net]
-	public float TimeLeft { get; set; }
-	[Net]
-	public string NextMap { get; set; }
-
-	public static List<string> MapCycle = new()
-	{
-		"facepunch.uf_wooden_gaps",
-		"barrelzzen.uf_industry",
-		"facepunch.uf_pop_rock",
-		"gvar.uf_canyon",
-		"facepunch.uf_steps",
-		"facepunch.uf_hop_stop"
-
-	};
 
 	private List<string> fallMessages = new()
 	{
@@ -50,8 +30,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 		if ( IsServer )
 		{
-			TimeLeft = 1800;
-			NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
+			InitMapCycle();
 
 			foreach( var part in UnicyclePart.All )
 			{
@@ -84,20 +63,6 @@ partial class UnicycleFrenzy : Sandbox.Game
 		base.OnKilled( client, pawn );
 
 		UfKillfeed.AddEntryOnClient( To.Everyone, GetRandomFallMessage( client.Name ), client.NetworkIdent );
-	}
-
-	[Event.Tick.Server]
-	private void OnTick()
-	{
-		if ( TimeLeft > 0 )
-		{
-			TimeLeft -= Time.Delta;
-
-			if ( TimeLeft <= 0 )
-			{
-				Global.ChangeLevel( NextMap );
-			}
-		}
 	}
 
 	private int lastFallMessage;
