@@ -33,7 +33,10 @@ internal class MapVoteButton : Button
 			return;
 		}
 
-		Thumbnail.SetTexture( pkg.Thumb );
+		var tex = await Texture.LoadAsync( FileSystem.Mounted, pkg.Thumb );
+		if ( tex == null || !tex.IsLoaded ) return;
+
+		Thumbnail.Texture = tex;
 	}
 
 	public override void Tick()
