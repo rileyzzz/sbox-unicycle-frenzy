@@ -48,6 +48,8 @@ internal partial class UnicyclePlayer
 
 				BestTime = TimeSinceStart;
 			}
+
+			Celebrate();
 		}
 	}
 
@@ -107,6 +109,15 @@ internal partial class UnicyclePlayer
 	{
 		if ( !IsLocalPawn ) return;
 		MapStats.Local.AddAttempts();
+	}
+
+	[ClientRpc]
+	private void Celebrate()
+	{
+		if ( !IsLocalPawn ) return;
+
+		Particles.Create( "particles/finish/finish_effect.vpcf" );
+		Sound.FromScreen( "course.complete" );
 	}
 
 }
