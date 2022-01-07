@@ -50,6 +50,13 @@ internal partial class UnicycleFrenzy
 	public static void SetMapVote( string mapIdent )
 	{
 		if ( !ConsoleSystem.Caller.IsValid() ) return;
+
+		if(Game.MapVotes.ContainsKey(ConsoleSystem.Caller.PlayerId)
+			&& Game.MapVotes[ConsoleSystem.Caller.PlayerId] == mapIdent )
+		{
+			return;
+		}
+
 		Game.MapVotes[ConsoleSystem.Caller.PlayerId] = mapIdent;
 
 		var sort = new Dictionary<string, int>();
