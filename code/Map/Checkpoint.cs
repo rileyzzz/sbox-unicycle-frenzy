@@ -66,8 +66,7 @@ internal partial class Checkpoint : ModelEntity
 		trigger.SetParent( this, null, Transform.Zero );
 		trigger.SetupPhysicsFromAABB( PhysicsMotionType.Static, -extents.WithZ( 0 ), extents.WithZ( 128 ) );
 		trigger.Transmit = TransmitType.Always;
-
-
+		trigger.EnableTouchPersists = true;
 	}
 
 	public override void ClientSpawn()
@@ -93,23 +92,17 @@ internal partial class Checkpoint : ModelEntity
 		}
 	}
 
-	public override void StartTouch( Entity other )
+	public override void Touch( Entity other )
 	{
-		base.StartTouch( other );
+		base.Touch( other );
 
 		if ( other is not UnicyclePlayer pl ) return;
+		if ( !CanPlayerCheckpoint( pl ) ) return;
 
-		if( pl.IsServer ) pl.TrySetCheckpoint( this );
+		pl.TrySetCheckpoint( this );
 
-		if ( this.IsEnd && pl.TimerState == TimerState.Live )
-		{
-			pl.CompleteCourse();
-		}
-
-		if ( this.IsStart )
-		{
-			pl.EnterStartZone();
-		}
+		if ( IsEnd ) pl.CompleteCourse();
+		else if ( IsStart ) pl.EnterStartZone();
 	}
 
 	public override void EndTouch( Entity other )
@@ -117,11 +110,18 @@ internal partial class Checkpoint : ModelEntity
 		base.EndTouch( other );
 
 		if ( other is not UnicyclePlayer pl ) return;
+		if ( !IsStart ) return;
 
-		if( this.IsStart )
-		{
-			pl.StartCourse();
-		}
+		pl.StartCourse();
+	}
+
+	private bool CanPlayerCheckpoint( UnicyclePlayer pl )
+	{
+		if ( pl.GroundEntity == null ) return false;
+		if ( pl.Fallen ) return false;
+		if ( pl.TimerState != TimerState.Live ) return false;
+
+		return true;
 	}
 
 	private bool active;
