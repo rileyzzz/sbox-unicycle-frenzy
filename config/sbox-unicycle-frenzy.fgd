@@ -14,6 +14,16 @@
 ]
 
 //
+// AchievementMedals
+//
+@PointClass base(BaseProperties_sbox_unicycle_frenzy) = uf_achievement_medals : ""
+[
+	gold_threshold(float) : "Gold" : 0 : "Time (in seconds) to achieve the gold medal for this map"
+	silver_threshold(float) : "Silver" : 0 : "Time (in seconds) to achieve the silver medal for this map"
+	bronze_threshold(float) : "Bronze" : 0 : "Time (in seconds) to achieve the bronze medal for this map"
+]
+
+//
 // Checkpoint
 //
 @PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/checkpoint_platform_hammer.vmdl", fixedbounds ) 
