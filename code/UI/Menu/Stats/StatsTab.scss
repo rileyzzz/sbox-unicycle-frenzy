@@ -11,7 +11,7 @@ StatsTab {
             navlink {
                 padding: 20px;
                 font-size: 20px;
-                font-family: Poppins;
+                font-family: $stylefont;
                 background-color: $lightbg;
                 transition: all .15s ease-out;
                 color: $fontcolorfaded;
@@ -95,7 +95,8 @@ StatsTabDetails {
         .heading {
             font-size: 28px;
             font-weight: 600;
-            font-family: Poppins;
+            font-family: $stylefont;
+            letter-spacing: 1px;
             margin-bottom: 30px;
         }
 
