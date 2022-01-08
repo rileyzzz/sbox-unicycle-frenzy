@@ -18,6 +18,16 @@ GameEnd {
         opacity: 1;
     }
 
+    .timer {
+        position: absolute;
+        right: 128px;
+        bottom: 128px;
+        font-size: 32px;
+        font-family: Luckiest Guy;
+        color: $secondary;
+        text-shadow: 1px 1px 2px black;
+    }
+
     .map-canvas {
         position: absolute;
         top: 60px;

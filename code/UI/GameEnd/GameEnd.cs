@@ -6,6 +6,7 @@ internal class GameEnd : Panel
 {
 
 	public Panel MapCanvas { get; set; }
+	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.TimeLeft );
 
 	protected override void PostTemplateApplied()
 	{
