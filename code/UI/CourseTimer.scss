@@ -17,9 +17,9 @@ CourseTimer {
         font-size: 32px;
         text-transform: uppercase;
         font-weight: 600;
-        font-family: Poppins;
+        font-family: $stylefont;
         text-shadow: 0 0 4px $bg;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
     }
 
     .game-time {

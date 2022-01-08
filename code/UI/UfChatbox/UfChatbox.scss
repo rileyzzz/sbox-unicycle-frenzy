@@ -60,7 +60,6 @@ UfChatboxEntry {
     width: 100%;
     transition: opacity .15s linear;
     text-shadow: 1px 1px 1px black;
-    font-family: Poppins;
     margin-bottom: 4px;
 
     &.faded {
@@ -71,6 +70,9 @@ UfChatboxEntry {
         font-weight: 800;
         margin-right: 10px;
         color: $primary;
+        font-family: $stylefont;
+        padding-top: 3px;
+        letter-spacing: 1px;
     }
 
     .message {

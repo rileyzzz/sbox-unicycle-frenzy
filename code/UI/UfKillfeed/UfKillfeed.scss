@@ -19,7 +19,7 @@ UfKillfeedEntry {
     background-color: rgba($primary, .5);
     margin-bottom: 6px;
     transform: scale(1);
-    font-family: Poppins;
+    font-family: $readingfont;
     transition: transform .15s linear;
     transition: margin .15s linear;
     font-size: 16px;
