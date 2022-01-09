@@ -9,7 +9,11 @@ internal partial class UnicyclePlayer
 	[Net, Predicted]
 	public TimeSince TimeSinceStart { get; set; }
 	[Net, Change]
-	public float BestTime { get; set; } = float.MaxValue;
+	public float BestTime { get; set; } = defaultBestTime;
+
+	public bool CourseIncomplete => BestTime == defaultBestTime;
+
+	private const float defaultBestTime = 3600f; // easier to check for this than sorting out 0/default
 
 	public void EnterStartZone()
 	{
@@ -36,7 +40,7 @@ internal partial class UnicyclePlayer
 
 			if ( TimeSinceStart < BestTime )
 			{
-				if( BestTime == float.MaxValue )
+				if( CourseIncomplete )
 				{
 					UfChatbox.AddCustom( To.Everyone, $"{Client.Name} completed the course in {formattedTime}", "timer-msg" );
 				}

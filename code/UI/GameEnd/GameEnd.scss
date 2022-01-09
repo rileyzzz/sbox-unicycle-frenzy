@@ -20,12 +20,54 @@ GameEnd {
 
     .timer {
         position: absolute;
-        right: 128px;
-        bottom: 128px;
+        right: 64px;
+        bottom: 32px;
         font-size: 32px;
         font-family: $stylefont;
         color: $secondary;
         text-shadow: 1px 1px 2px black;
+    }
+
+    .top3 {
+        width: 100%;
+        position: absolute;
+        top: 400px;
+        justify-content: center;
+
+        .podium {
+            margin-right: 64px;
+            width: 500px;
+            height: 600px;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: rgba($bg .2);
+            border-radius: $radius;
+            padding: 20px;
+
+            .name {
+                font-family: $stylefont;
+                font-size: 20px;
+                padding: 8px;
+                margin-bottom: 10px;
+                text-shadow: 2px 2px 3px black;
+            }
+
+            .time {
+                font-size: 20px;
+                text-shadow: 1px 1px 1px black;
+            }
+
+            &.first .name {
+                font-size: 36px;
+                color: $secondary;
+            }
+
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
     }
 
     .map-canvas {

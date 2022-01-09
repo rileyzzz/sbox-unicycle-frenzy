@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System.Linq;
 
 [UseTemplate]
 internal class GameEnd : Panel
@@ -8,10 +9,17 @@ internal class GameEnd : Panel
 	public Panel MapCanvas { get; set; }
 	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.TimeLeft );
 
+	public string FirstName { get; set; }
+	public string FirstTime { get; set; }
+	public string SecondName { get; set; }
+	public string SecondTime { get; set; }
+	public string ThirdName { get; set; }
+	public string ThirdTime { get; set; }
+
 	protected override void PostTemplateApplied()
 	{
 		base.PostTemplateApplied();
-
+		
 		RefreshMaps();
 	}
 
@@ -36,7 +44,38 @@ internal class GameEnd : Panel
 	[Event.Frame]
 	private void OnFrame()
 	{
-		SetClass( "open", UnicycleFrenzy.Game.TimeLeft < UnicycleFrenzy.EndGameDuration );
+		var open = UnicycleFrenzy.Game.TimeLeft < UnicycleFrenzy.EndGameDuration;
+
+		SetClass( "open", open );
+
+		if ( !open ) return;
+
+		var players = Player.All.Where( x => x is UnicyclePlayer && x.IsValid() && x.Client.IsValid() ).ToList();
+		var orderedPlayers = players.OrderBy( x => (x as UnicyclePlayer).BestTime );
+
+		int rank = 1;
+
+		foreach ( var player in orderedPlayers )
+		{
+			var pl = player as UnicyclePlayer;
+			switch ( rank )
+			{
+				case 1:
+					FirstName = $"#1 " + pl.Client.Name;
+					FirstTime = pl.CourseIncomplete ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( pl.BestTime );
+					break;
+				case 2:
+					SecondName = $"#2 " + pl.Client.Name;
+					SecondTime = pl.CourseIncomplete ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( pl.BestTime );
+					break;
+				case 3:
+					ThirdName = $"#3 " + pl.Client.Name;
+					ThirdTime = pl.CourseIncomplete ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( pl.BestTime );
+					break;
+				default: 
+					return;
+			}
+		}
 	}
 
 }

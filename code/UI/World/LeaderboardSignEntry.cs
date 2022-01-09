@@ -14,7 +14,7 @@ internal class LeaderboardSignEntry : Panel
 		PlayerRank.Text = rank.ToString();
 		PlayerName.Text = pl.Client.Name;
 
-		if ( pl.BestTime == float.MaxValue ) CompletionTime.Text = "INCOMPLETE";
+		if ( pl.CourseIncomplete ) CompletionTime.Text = "INCOMPLETE";
 		else CompletionTime.Text = CourseTimer.FormattedTimeMsf( pl.BestTime );
 
 		if ( pl.IsLocalPawn ) AddClass( "local" );
