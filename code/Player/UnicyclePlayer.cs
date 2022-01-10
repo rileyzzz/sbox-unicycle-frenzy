@@ -1,6 +1,7 @@
 ﻿using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 internal partial class UnicyclePlayer : Sandbox.Player
 {
@@ -92,6 +93,11 @@ internal partial class UnicyclePlayer : Sandbox.Player
 				ResetMovement();
 				ResetTimer();
 			}
+
+			if ( IsServer && Input.Pressed( InputButton.Flashlight ) )
+			{
+				Spray();
+			}
 		}
 
 		if ( LifeState == LifeState.Dead )
@@ -148,6 +154,19 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	{
 		if ( !IsLocalPawn ) return;
 		MapStats.Local.AddRespawn();
+	}
+
+	private TimeSince timeSinceSpray;
+	private void Spray()
+	{
+		if ( GroundEntity == null || Fallen ) return;
+		if ( timeSinceSpray < 3f ) return;
+		timeSinceSpray = 0;
+
+		var sprayPart = Client.Components.Get<UnicycleEnsemble>().GetPart( PartType.Spray );
+		var mat = Material.Load( sprayPart.Model );
+
+		Decals.Place( mat, Position, Vector3.One * 50, Rotation.LookAt( Vector3.Up ) );
 	}
 
 }
