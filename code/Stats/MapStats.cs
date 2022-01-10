@@ -6,6 +6,7 @@ internal class MapStats
 	public int Respawns { get; set; }
 	public int Attempts { get; set; }
 	public float BestTime { get; set; }
+	public float TimePlayed { get; set; }
 
 	public void AddFall()
 	{
@@ -29,6 +30,12 @@ internal class MapStats
 	{
 		if ( BestTime != default && BestTime < newTime ) return;
 		BestTime = newTime;
+		LocalCookie = ToJson();
+	}
+
+	public void AddTimePlayed( float seconds )
+	{
+		TimePlayed += seconds;
 		LocalCookie = ToJson();
 	}
 
