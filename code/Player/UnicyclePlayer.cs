@@ -17,6 +17,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 	private TimeSince timeSinceDied;
 	private Clothing.Container clothing;
+	private UfNametag nametag;
 
 	public override void Respawn()
 	{
@@ -53,6 +54,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		ResetMovement();
 		GotoBestCheckpoint();
+	}
+
+	public override void ClientSpawn()
+	{
+		base.ClientSpawn();
+
+		nametag = new( this );
 	}
 
 	public override void OnKilled()
@@ -112,10 +120,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		if ( Local.Pawn == null ) return;
 		if ( !Terry.IsValid() || !Unicycle.IsValid() ) return;
 
-		var dist = Local.Pawn.Position.Distance( Position );
-		var a = 1f - dist.LerpInverse( MaxRenderDistance, MaxRenderDistance * .1f );
-		a = Math.Max( a, .15f );
-		a = Easing.EaseOut( a );
+		var a = GetRenderAlpha();
 
 		Terry.RenderColor = Terry.RenderColor.WithAlpha( a );
 
@@ -126,6 +131,16 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		}
 
 		Unicycle.SetRenderAlphaOnAllParts( a );
+	}
+
+	public float GetRenderAlpha()
+	{
+		var dist = Local.Pawn.Position.Distance( Position );
+		var a = 1f - dist.LerpInverse( MaxRenderDistance, MaxRenderDistance * .1f );
+		a = Math.Max( a, .15f );
+		a = Easing.EaseOut( a );
+
+		return a;
 	}
 
 	[ClientRpc]
