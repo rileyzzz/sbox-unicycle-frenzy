@@ -11,6 +11,23 @@ internal partial class UnicyclePlayer
 	[Net, Change]
 	public float BestTime { get; set; } = defaultBestTime;
 
+	public int SessionRank
+	{
+		get
+		{
+			var rank = 1;
+			foreach( var ent in Entity.All )
+			{
+				if ( !ent.IsValid() || ent == this ) continue;
+				if ( ent is not UnicyclePlayer pl ) continue;
+				if ( pl.CourseIncomplete ) continue;
+				if ( pl.BestTime > BestTime ) continue;
+				rank++;
+			}
+			return rank;
+		}
+	}
+
 	public bool CourseIncomplete => BestTime == defaultBestTime;
 
 	private const float defaultBestTime = 3600f; // easier to check for this than sorting out 0/default

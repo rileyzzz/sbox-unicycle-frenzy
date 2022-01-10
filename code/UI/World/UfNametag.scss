@@ -2,12 +2,19 @@
 @import "../Vars.scss";
 
 UfNametag {
-
-    color:black;
-    font-size: 64px;
     justify-content: center;
     align-items: center;
-    font-family: $stylefont;
-    color: $secondary;
+    flex-direction: column;
 
+    .name {
+        font-family: $stylefont;
+        color: $secondary;
+        font-size: 64px;
+    }
+
+    .stats {
+        font-size: 24px;
+        font-family: $readingfont;
+        color: white;
+    }
 }
