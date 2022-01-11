@@ -13,6 +13,7 @@ internal class ControlsTab : Panel
 	public string LeanBind => GetLeanBindString();
 	public string RestartBind => Input.GetKeyWithBinding( "+iv_drop" ) ?? "UNSET";
 	public string GoBackBind => Input.GetKeyWithBinding( "+iv_reload" ) ?? "UNSET";
+	public string SprayBind => Input.GetKeyWithBinding( "+iv_flashlight" ) ?? "UNSET";
 
 	private string GetLeanBindString()
 	{
