@@ -40,7 +40,7 @@ internal class CustomizeTab : Panel
 		var parts = UnicyclePart.All.Where( x => x.Type == type );
 		foreach ( var part in parts )
 		{
-			var icon = new UnicyclePartIcon( part );
+			var icon = new CustomizePartIcon( part );
 			icon.Parent = PartsList;
 		}
 	}

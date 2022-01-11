@@ -1,4 +1,4 @@
-﻿@import "../vars.scss";
+﻿@import "../../vars.scss";
 
 CustomizeTab {
     flex-direction: row;
@@ -86,7 +86,7 @@ CustomizeTab {
             flex-grow: 1;
             flex-wrap: wrap;
 
-            UnicyclePartIcon {
+            CustomizePartIcon {
                 width: 78px;
                 height: 78px;
                 padding: 15px;
@@ -99,6 +99,9 @@ CustomizeTab {
                 justify-content: center;
                 align-items: center;
                 border: 2px solid transparent;
+                background-size: 90%;
+                background-repeat: no-repeat;
+                background-position: center center;
 
                 &:hover:not(.equipped), &.active {
                     border-color: rgba($primary 1);
@@ -107,6 +110,14 @@ CustomizeTab {
 
                 &.equipped {
                     border-color: $secondary;
+                }
+
+                .partname {
+                    display: none;
+                }
+
+                &.missing-icon .partname {
+                    display:flex;
                 }
             }
         }
