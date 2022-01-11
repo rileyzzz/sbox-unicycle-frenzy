@@ -1,10 +1,12 @@
 ﻿
 <root>
 
-    <img @ref="Thumbnail" class="thumb" src="textures/ui/map-thumbnail-placeholder.png" />
-    <div class="votes">
-        <label @text="Votes"></label>
+    <div>
+        <div @ref="Thumbnail" class="thumb"></div>
+        <div class="votes">
+            <label @text="Votes"></label>
+        </div>
+        <label class="tooltip" @text="MapIdent">uf_hop_stop</label>
     </div>
-    <label class="tooltip" @text="MapIdent">uf_hop_stop</label>
 
 </root>

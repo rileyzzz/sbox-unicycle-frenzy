@@ -418,12 +418,11 @@ internal partial class UnicycleController : BasePlayerController
 			var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
 			t = Easing.EaseOut( t );
 			var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
-			var up = Rotation.From( Rotation.Angles() ).Up;
 
 			pl.JumpTilt = pl.Tilt * -1;
 			pl.PrevJumpTilt = pl.JumpTilt;
 			Velocity = Velocity.WithZ( 0 ) + BaseVelocity.WithZ( 0 );
-			Velocity += up * jumpStrength;
+			Velocity += Rotation.Up * jumpStrength;
 			GroundEntity = null;
 			pl.TimeSinceJumpDown = 0;
 
@@ -431,7 +430,7 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		if ( !CanIncrementJump() || !Input.Down( InputButton.Jump ) )
+		if ( !CanIncrementJump() )
 		{
 			pl.TimeSinceJumpDown = 0;
 			return;
@@ -445,6 +444,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private bool CanIncrementJump()
 	{
+		if ( !Input.Down( InputButton.Jump ) ) return false;
 		if ( GroundEntity != null ) return true;
 		if ( pl.TimeSinceNotGrounded < .75f ) return true;
 

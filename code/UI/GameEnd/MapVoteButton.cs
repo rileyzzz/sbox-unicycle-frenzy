@@ -6,7 +6,7 @@ using System.Linq;
 internal class MapVoteButton : Button
 {
 
-	public Image Thumbnail { get; set; }
+	public Panel Thumbnail { get; set; }
 	public string Votes { get; set; } = "0 votes";
 	public string MapIdent { get; }
 
@@ -33,10 +33,7 @@ internal class MapVoteButton : Button
 			return;
 		}
 
-		var tex = await Texture.LoadAsync( FileSystem.Mounted, pkg.Thumb );
-		if ( tex == null || !tex.IsLoaded ) return;
-
-		Thumbnail.Texture = tex;
+		await Thumbnail.Style.SetBackgroundImageAsync( pkg.Thumb );
 	}
 
 	public override void Tick()

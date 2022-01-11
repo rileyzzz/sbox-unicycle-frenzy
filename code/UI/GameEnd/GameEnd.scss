@@ -101,6 +101,10 @@ GameEnd {
 
             .thumb {
                 border-radius: $radius;
+                background-image: url(textures/ui/map-thumbnail-placeholder.png);
+                background-position: center center;
+                background-size: cover;
+                width:256px;
             }
 
             .votes {
