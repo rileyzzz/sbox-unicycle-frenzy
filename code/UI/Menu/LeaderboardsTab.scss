@@ -17,7 +17,6 @@ LeaderboardsTab {
         align-items: center;
         background-color: rgba($primary .035);
         font-size: 15px;
-        font-family: Poppins;
         font-weight: 600;
         text-transform: uppercase;
         border-radius: $smallradius;
@@ -69,7 +68,6 @@ LeaderboardsTab {
             border-radius: $smallradius 0 0 $smallradius;
             font-size: 18px;
             font-weight: 800;
-            font-family: Poppins;
             text-align: center;
             transition: all .1s ease-in;
         }
@@ -87,7 +85,6 @@ LeaderboardsTab {
             border-radius: 0 $smallradius $smallradius 0;
             font-size: 18px;
             font-weight: 800;
-            font-family: Poppins;
             text-align: center;
             transition: all .1s ease-in;
         }
