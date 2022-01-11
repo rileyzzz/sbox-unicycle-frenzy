@@ -87,10 +87,8 @@ CustomizeTab {
             flex-wrap: wrap;
 
             CustomizePartIcon {
-                width: 78px;
-                height: 78px;
-                padding: 15px;
-                text-shadow: 1px 1px 1px black;
+                width: 100px;
+                height: 100px;
                 background-color: rgba($primary .1);
                 border-radius: $radius;
                 transition: background-color .15s ease-out;
@@ -102,6 +100,7 @@ CustomizeTab {
                 background-size: 90%;
                 background-repeat: no-repeat;
                 background-position: center center;
+                margin-bottom: 4px;
 
                 &:hover:not(.equipped), &.active {
                     border-color: rgba($primary 1);
@@ -114,10 +113,11 @@ CustomizeTab {
 
                 .partname {
                     display: none;
+                    text-shadow: 1px 1px 1px black;
                 }
 
                 &.missing-icon .partname {
-                    display:flex;
+                    display: flex;
                 }
             }
         }
