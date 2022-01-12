@@ -89,11 +89,23 @@ internal partial class UnicyclePlayer
 		Checkpoints.Clear();
 	}
 
-	public void TrySetCheckpoint( Checkpoint checkpoint )
+	public void TrySetCheckpoint( Checkpoint checkpoint, bool overridePosition = false )
 	{
 		Host.AssertServer();
 
-		if ( Checkpoints.Contains( checkpoint ) ) return;
+		if ( Checkpoints.Contains( checkpoint ) )
+		{
+			if ( overridePosition )
+			{
+				for( int i = Checkpoints.Count - 1; i >= 0; i-- )
+				{
+					if ( Checkpoints[i] != checkpoint )
+						Checkpoints.RemoveAt( i );
+				}
+			}
+			return;
+		}
+
 		Checkpoints.Add( checkpoint );
 	}
 
@@ -139,6 +151,34 @@ internal partial class UnicyclePlayer
 
 		Particles.Create( "particles/finish/finish_effect.vpcf" );
 		Sound.FromScreen( "course.complete" );
+	}
+
+	[ServerCmd( "uf_nextcp" )]
+	private static void GotoNextCheckpoint()
+	{
+		if ( !ConsoleSystem.Caller.IsValid() || ConsoleSystem.Caller.Pawn is not UnicyclePlayer pl ) return;
+
+		var currentCp = pl.Checkpoints.LastOrDefault();
+		var targetCp = currentCp == null ? 1 : currentCp.Number + 1;
+		var nextCp = Entity.All.FirstOrDefault( x => x is Checkpoint cp && cp.Number == targetCp ) as Checkpoint;
+		if ( nextCp == null ) return;
+		pl.TimerState = TimerState.InStartZone;
+		pl.TrySetCheckpoint( nextCp, true );
+		pl.GotoBestCheckpoint();
+	}
+
+	[ServerCmd( "uf_prevcp" )]
+	private static void GotoPreviousCheckpoint()
+	{
+		if ( !ConsoleSystem.Caller.IsValid() || ConsoleSystem.Caller.Pawn is not UnicyclePlayer pl ) return;
+
+		var currentCp = pl.Checkpoints.LastOrDefault();
+		var targetCp = currentCp == null ? 0 : currentCp.Number - 1;
+		var nextCp = Entity.All.FirstOrDefault( x => x is Checkpoint cp && cp.Number == targetCp ) as Checkpoint;
+		if ( nextCp == null ) return;
+		pl.TimerState = TimerState.InStartZone;
+		pl.TrySetCheckpoint( nextCp, true );
+		pl.GotoBestCheckpoint();
 	}
 
 }
