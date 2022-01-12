@@ -39,8 +39,8 @@ internal partial class UnicycleController : BasePlayerController
 	public string GroundSurface { get; private set; }
 
 	private UnicyclePlayer pl => Pawn as UnicyclePlayer;
-	public Vector3 Mins => new( -8, -8, 0 );
-	public Vector3 Maxs => new( 8, 8, 48 );
+	public Vector3 Mins => new( -1, -1, 0 );
+	public Vector3 Maxs => new( 1, 1, 16 );
 
 	private UnicycleUnstuck unstuck;
 
@@ -157,7 +157,7 @@ internal partial class UnicycleController : BasePlayerController
 		if ( aroll + apitch > maxLean * 1.50f )
 			return true;
 
-		var trs = Trace.Sphere( 10f, Position + Vector3.Up * 12f, Position + Rotation.Up * 55 )
+		var trs = Trace.Sphere( 10f, Position + Vector3.Up * 24f, Position + Rotation.Up * 55 )
 			.Ignore( Pawn )
 			.Run();
 
