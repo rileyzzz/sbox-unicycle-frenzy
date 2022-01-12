@@ -37,6 +37,7 @@ metadata
 [
 	isstart(boolean) : "Is Start" : 0 : ""
 	isend(boolean) : "Is End" : 0 : ""
+	number(integer) : "Number" : 0 : ""
 	model_type(choices) : "Model Type" : 0 : "Movement type of the door." =
 	[
 		0 : "Dev"
