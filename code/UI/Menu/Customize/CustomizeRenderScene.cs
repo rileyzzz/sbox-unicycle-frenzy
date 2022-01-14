@@ -88,6 +88,7 @@ internal class CustomizeRenderScene : Panel
 	private SceneObject BuildUnicycleObject( UnicycleEnsemble ensemble )
 	{
 		var frame = ensemble.GetPart( PartType.Frame );
+		var trail = ensemble.GetPart( PartType.Trail);
 		var wheel = ensemble.GetPart( PartType.Wheel );
 		var seat = ensemble.GetPart( PartType.Seat );
 		var pedal = ensemble.GetPart( PartType.Pedal );
@@ -122,6 +123,11 @@ internal class CustomizeRenderScene : Panel
 		frameObj.AddChild( "seat", seatObj );
 		frameObj.AddChild( "pedalL", pedalObjL );
 		frameObj.AddChild( "pedalR", pedalObjR );
+
+		var trailParticle = Particles.Create(trail.Model, seatAttachment.Value.Position);
+		trailParticle.SetPosition(6, .75f);
+		trailParticle.SetPosition(7, 1);
+		trailParticle.SetPosition(8, 0);
 
 		return frameObj;
 	}

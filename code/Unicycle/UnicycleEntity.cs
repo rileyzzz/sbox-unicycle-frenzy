@@ -174,6 +174,7 @@ internal partial class UnicycleEntity : Entity
 
 		var a = Math.Min( pl.Velocity.Length / 500f, 1f );
 		trailParticle.SetPosition( 6, new Vector3( a, 0, 0 ) );
+		trailParticle.SetPosition(8, 1);
 	}
 
 	[Event.Frame]
