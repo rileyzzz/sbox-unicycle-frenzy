@@ -21,6 +21,7 @@
 			m_bSetOnce = true
 			m_vecCP1Pos = [ 255.0, 255.0, 255.0 ]
 			m_nCP1 = 6
+			m_bDisableOperator = true
 		},
 	]
 	m_Emitters = 
@@ -840,7 +841,6 @@
 		{
 			_class = "C_OP_PinParticleToCP"
 			m_nParticleSelection = "PARTICLE_SELECTION_LAST"
-			m_bDisableOperator = true
 		},
 		{
 			_class = "C_OP_FadeAndKill"
