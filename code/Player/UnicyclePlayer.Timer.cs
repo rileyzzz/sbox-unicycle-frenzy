@@ -141,7 +141,7 @@ internal partial class UnicyclePlayer
 	private void AddAttempts()
 	{
 		if ( !IsLocalPawn ) return;
-		MapStats.Local.AddAttempts();
+		MapStats.Local.AddAttempt();
 	}
 
 	[ClientRpc]
@@ -151,6 +151,8 @@ internal partial class UnicyclePlayer
 
 		Particles.Create( "particles/finish/finish_effect.vpcf" );
 		Sound.FromScreen( "course.complete" );
+
+		MapStats.Local.AddCompletion();
 	}
 
 	[ServerCmd( "uf_nextcp" )]
