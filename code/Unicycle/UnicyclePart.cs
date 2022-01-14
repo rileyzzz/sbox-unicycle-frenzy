@@ -18,9 +18,31 @@ public class UnicyclePart
 		// wheels
 		new() { Id = 0, Type = PartType.Wheel, Name = "Dev Wheel", Model = "models/parts/wheels/dev_wheel.vmdl", IsDefault = true },
 		new() { Id = 2, Type = PartType.Wheel, Name = "Mini Dev Wheel", Model = "models/parts/wheels/dev_wheel_mini.vmdl" },
+		new() { Id = 24, Type = PartType.Wheel, Name = "Dev Wheel Cyan", Model = "models/parts/wheels/colours/dev_wheel_cyan.vmdl", IsDefault = false },
+		new() { Id = 36, Type = PartType.Wheel, Name = "Dev Wheel Blue", Model = "models/parts/wheels/colours/dev_wheel_blue.vmdl", IsDefault = false },
+		new() { Id = 37, Type = PartType.Wheel, Name = "Dev Wheel Green", Model = "models/parts/wheels/colours/dev_wheel_green.vmdl", IsDefault = false },
+		new() { Id = 38, Type = PartType.Wheel, Name = "Dev Wheel Orange", Model = "models/parts/wheels/colours/dev_wheel_orange.vmdl", IsDefault = false },
+		new() { Id = 39, Type = PartType.Wheel, Name = "Dev Wheel Pink", Model = "models/parts/wheels/colours/dev_wheel_pink.vmdl", IsDefault = false },
+		new() { Id = 40, Type = PartType.Wheel, Name = "Dev Wheel Purple", Model = "models/parts/wheels/colours/dev_wheel_purple.vmdl", IsDefault = false },
+		new() { Id = 41, Type = PartType.Wheel, Name = "Dev Wheel Red", Model = "models/parts/wheels/colours/dev_wheel_red.vmdl", IsDefault = false },
+		new() { Id = 42, Type = PartType.Wheel, Name = "Dev Wheel Teal", Model = "models/parts/wheels/colours/dev_wheel_teal.vmdl", IsDefault = false },
+		new() { Id = 43, Type = PartType.Wheel, Name = "Dev Wheel Yellow", Model = "models/parts/wheels/colours/dev_wheel_yellow.vmdl", IsDefault = false },
+		new() { Id = 44, Type = PartType.Wheel, Name = "Dev Wheel Black", Model = "models/parts/wheels/colours/dev_wheel_black.vmdl", IsDefault = false },
+		new() { Id = 45, Type = PartType.Wheel, Name = "Dev Wheel White", Model = "models/parts/wheels/colours/dev_wheel_white.vmdl", IsDefault = false },
 
 		// frames
 		new() { Id = 3, Type = PartType.Frame, Name = "Dev Frame", Model = "models/parts/frames/dev_frame.vmdl", IsDefault = true },
+		new() { Id = 25, Type = PartType.Frame, Name = "Dev Frame Cyan", Model = "models/parts/frames/colours/dev_frame_cyan.vmdl", IsDefault = false },
+		new() { Id = 26, Type = PartType.Frame, Name = "Dev Frame Blue", Model = "models/parts/frames/colours/dev_frame_blue.vmdl", IsDefault = false },
+		new() { Id = 27, Type = PartType.Frame, Name = "Dev Frame Green", Model = "models/parts/frames/colours/dev_frame_green.vmdl", IsDefault = false },
+		new() { Id = 28, Type = PartType.Frame, Name = "Dev Frame Orange", Model = "models/parts/frames/colours/dev_frame_orange.vmdl", IsDefault = false },
+		new() { Id = 29, Type = PartType.Frame, Name = "Dev Frame Pink", Model = "models/parts/frames/colours/dev_frame_pink.vmdl", IsDefault = false },
+		new() { Id = 30, Type = PartType.Frame, Name = "Dev Frame Purple", Model = "models/parts/frames/colours/dev_frame_purple.vmdl", IsDefault = false },
+		new() { Id = 31, Type = PartType.Frame, Name = "Dev Frame Red", Model = "models/parts/frames/colours/dev_frame_red.vmdl", IsDefault = false },
+		new() { Id = 32, Type = PartType.Frame, Name = "Dev Frame Teal", Model = "models/parts/frames/colours/dev_frame_teal.vmdl", IsDefault = false },
+		new() { Id = 33, Type = PartType.Frame, Name = "Dev Frame Yellow", Model = "models/parts/frames/colours/dev_frame_yellow.vmdl", IsDefault = false },
+		new() { Id = 34, Type = PartType.Frame, Name = "Dev Frame Black", Model = "models/parts/frames/colours/dev_frame_black.vmdl", IsDefault = false },
+		new() { Id = 35, Type = PartType.Frame, Name = "Dev Frame White", Model = "models/parts/frames/colours/dev_frame_white.vmdl", IsDefault = false },
 
 		// seats
 		new() { Id = 4, Type = PartType.Seat, Name = "Dev Seat", Model = "models/parts/seats/dev_seat.vmdl", IsDefault = true },
