@@ -1,3 +1,15 @@
 {
-    "sharedassets": "*.*"
+  "SharedAssets": null,
+  "Title": "Sbox Unicycle Frenzy",
+  "Type": "game",
+  "Org": "local",
+  "Ident": "sbox-unicycle-frenzy",
+  "FullIdent": "local.sbox-unicycle-frenzy",
+  "Schema": 1,
+  "NeedsUpgrade": false,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": "Sandbox"
 }
