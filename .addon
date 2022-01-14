@@ -1,5 +1,5 @@
 {
-  "SharedAssets": null,
+  "SharedAssets": "*",
   "Title": "Sbox Unicycle Frenzy",
   "Type": "game",
   "Org": "local",
