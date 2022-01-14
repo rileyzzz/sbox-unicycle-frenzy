@@ -58,7 +58,8 @@ internal class CustomizeRenderScene : Panel
 		{
 			BuildUnicycleObject( ensemble );
 
-			SceneObject.CreateModel( "models/room.vmdl", Transform.Zero.WithScale( 10 ).WithPosition( Vector3.Down * 10 ) );
+			//SceneObject.CreateModel("models/checkpoint_platform_wood.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ) );
+			SceneObject.CreateModel("models/sceneobject/scene_unicycle_ensemble_main.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ));
 
 			var skycolor = Color.Orange;
 
@@ -73,7 +74,7 @@ internal class CustomizeRenderScene : Panel
 			Light.Point( Vector3.Up * 75.0f + Vector3.Backward * 100.0f, 200, Color.White * 15f );
 			Light.Point( Vector3.Up * 75.0f + Vector3.Left * 100.0f, 200, skycolor * 20.0f );
 			Light.Point( Vector3.Up * 75.0f + Vector3.Right * 100.0f, 200, Color.White * 15.0f );
-			Light.Point( Vector3.Up * 100.0f + Vector3.Up, 200, Color.White * 15.0f );
+			Light.Point( Vector3.Up * 100.0f + Vector3.Up, 200, Color.Yellow * 15.0f );
 
 			renderScene = Add.ScenePanel( SceneWorld.Current, renderScenePos, Rotation.From( renderSceneAngles ), 75 );
 			renderScene.Style.Width = Length.Percent( 100 );
