@@ -1147,6 +1147,7 @@
 					m_vDomainMaxs = [ 0.0, 0.0 ]
 				}
 			}
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_OP_BasicMovement"
@@ -1683,6 +1684,8 @@
 				}
 			}
 			m_hTexture = resource:"particles/trails/sprites/miami/miami_shapes.vtex"
+			m_bGammaCorrectVertexColors = false
+			m_bSaturateColorPreAlphaBlend = false
 		},
 		{
 			_class = "C_OP_RenderSprites"
