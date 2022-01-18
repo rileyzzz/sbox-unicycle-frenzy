@@ -1,5 +1,5 @@
 
-@BaseClass = BaseProperties_sbox_unicycle_frenzy
+@BaseClass = BaseProperties_facepunch_unicycle_frenzy
 [
 	parentname(target_destination) [ group="Hierarchy" ] : "Parent" : : "The name of this entity's parent in the movement hierarchy. Entities with parents move with their parent."
 	parentAttachmentName(parentAttachment) [ group="Hierarchy" ] : "Parent Model Bone/Attachment Name" : : "The name of the bone or attachment to attach to on the entity's parent in the movement hierarchy. Use !bonemerge to use bone-merge style attachment."
@@ -16,7 +16,7 @@
 //
 // AchievementMedals
 //
-@PointClass base(BaseProperties_sbox_unicycle_frenzy) = uf_achievement_medals : ""
+@PointClass base(BaseProperties_facepunch_unicycle_frenzy) = uf_achievement_medals : ""
 [
 	gold_threshold(float) : "Gold" : 0 : "Time (in seconds) to achieve the gold medal for this map"
 	silver_threshold(float) : "Silver" : 0 : "Time (in seconds) to achieve the silver medal for this map"
@@ -26,7 +26,7 @@
 //
 // Checkpoint
 //
-@PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/checkpoint_platform_hammer.vmdl", fixedbounds ) 
+@PointClass base(BaseProperties_facepunch_unicycle_frenzy) editormodel( "models/checkpoint_platform_hammer.vmdl", fixedbounds ) 
 metadata
 {
 	entity_tool_name = "Player Checkpoint"
@@ -53,7 +53,7 @@ metadata
 //
 // FallTrigger
 //
-@SolidClass base(BaseProperties_sbox_unicycle_frenzy) tags( Trigger ) 
+@SolidClass base(BaseProperties_facepunch_unicycle_frenzy) tags( Trigger ) 
 metadata
 {
 	auto_apply_material = "materials/editor/uf_trigger_fall.vmat"
@@ -89,7 +89,7 @@ metadata
 //
 // LeaderboardPost
 //
-@PointClass base(BaseProperties_sbox_unicycle_frenzy) editormodel( "models/leaderboard_post.vmdl" ) 
+@PointClass base(BaseProperties_facepunch_unicycle_frenzy) editormodel( "models/leaderboard_post.vmdl" ) 
 metadata
 {
 	entity_tool_name = "Leaderboard Post"
@@ -112,7 +112,7 @@ metadata
 //
 // ResetProgressTrigger
 //
-@SolidClass base(BaseProperties_sbox_unicycle_frenzy) tags( Trigger ) 
+@SolidClass base(BaseProperties_facepunch_unicycle_frenzy) tags( Trigger ) 
 metadata
 {
 	auto_apply_material = "materials/editor/uf_trigger_reset_progress.vmat"
