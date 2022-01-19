@@ -7,6 +7,7 @@ internal partial class UnicycleFrenzy
 
 	public static List<string> MapCycle = new()
 	{
+		"willow.uf_climb",
 		"facepunch.uf_splinter",
 		"saandy.uf_fort",
 		"facepunch.uf_beach",
