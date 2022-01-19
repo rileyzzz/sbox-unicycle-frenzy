@@ -416,9 +416,23 @@ internal partial class UnicycleController : BasePlayerController
 		}
 	}
 
+	private bool JumpReleased()
+	{
+		if ( Input.Released( InputButton.Jump ) ) return true;
+		if ( Input.UsingController && Input.Released( InputButton.SlotNext ) ) return true;
+		return false;
+	}
+
+	private bool JumpDown()
+	{
+		if ( Input.Down( InputButton.Jump ) ) return true;
+		if ( Input.UsingController && Input.Down( InputButton.SlotNext ) ) return true;
+		return false;
+	}
+
 	private void CheckJump()
 	{
-		if ( Input.Released( InputButton.Jump ) && 
+		if ( JumpReleased() && 
 			(GroundEntity != null || pl.TimeSinceNotGrounded < .1f) )
 		{
 			var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
@@ -442,7 +456,7 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		if ( Input.Down( InputButton.Jump ) )
+		if ( JumpDown() )
 		{
 			pl.TimeSinceJumpDown += Time.Delta;
 		}
@@ -450,7 +464,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private bool CanIncrementJump()
 	{
-		if ( !Input.Down( InputButton.Jump ) ) return false;
+		if ( !JumpDown() ) return false;
 		if ( GroundEntity != null ) return true;
 		if ( pl.TimeSinceNotGrounded < .75f ) return true;
 
@@ -469,7 +483,7 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		if ( Input.Down( InputButton.Jump ) ) return;
+		if ( JumpDown() ) return;
 
 		if ( Input.UsingController )
 		{
