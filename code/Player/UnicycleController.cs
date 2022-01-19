@@ -471,11 +471,25 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( Input.Down( InputButton.Jump ) ) return;
 
-		if ( Input.Pressed( InputButton.Attack1 ) && pl.PedalPosition >= -.4f )
-			SetPedalTarget( -1f, PedalTime, true );
+		if ( Input.UsingController )
+		{
+			var ra = Input.GetAnalog( InputAnalog.RightTrigger ).x;
+			var la = Input.GetAnalog( InputAnalog.LeftTrigger ).x;
 
-		if ( Input.Pressed( InputButton.Attack2 ) && pl.PedalPosition <= .4f )
-			SetPedalTarget( 1f, PedalTime, true );
+			if ( ra > 0 && pl.PedalPosition <= .4f && ra > pl.PedalTargetPosition )
+				SetPedalTarget( ra, PedalTime * ra, Input.Pressed( InputButton.Attack1 ) );
+
+			if ( la > 0 && pl.PedalPosition >= -.4f && -la < pl.PedalTargetPosition )
+				SetPedalTarget( -la, PedalTime * la, Input.Pressed( InputButton.Attack2 ) );
+		}
+		else
+		{
+			if ( Input.Pressed( InputButton.Attack1 ) && pl.PedalPosition >= -.4f )
+				SetPedalTarget( -1f, PedalTime, true );
+
+			if ( Input.Pressed( InputButton.Attack2 ) && pl.PedalPosition <= .4f )
+				SetPedalTarget( 1f, PedalTime, true );
+		}
 	}
 
 	private void CheckBrake()
@@ -493,6 +507,8 @@ internal partial class UnicycleController : BasePlayerController
 
 	private void SetPedalTarget( float target, float timeToReach, bool tryBoost = false )
 	{
+		if ( pl.PedalTargetPosition.AlmostEqual( target, .1f ) ) return;
+
 		var prevStart = pl.PedalPosition;
 		var prevStartTime = pl.TimeSincePedalStart;
 
