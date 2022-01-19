@@ -180,6 +180,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void DoSlope()
 	{
 		if ( GroundEntity == null ) return;
+		if ( Input.Down( InputButton.Duck ) && Velocity.Length < StopSpeed * 2 ) return;
 
 		var slopeAngle = Vector3.GetAngle( GroundNormal, Vector3.Up );
 		if ( slopeAngle == 0 ) return;
