@@ -80,16 +80,21 @@ GameEnd {
         left: 5%;
         width: 90%;
         height: 256px;
+        flex-wrap: wrap;
+        overflow: scroll;
+        justify-content: center;
+        padding: $padding;
+        border-radius: $radius;
 
         MapVoteButton {
             padding-right: 20px;
             cursor: pointer;
             transition: all .15s ease-out;
-            margin: 10px;
+            margin-bottom: 10px;
+            min-width: 200px;
+            min-height: 200px;
 
             &:hover, &.active {
-                margin: 0px;
-
                 .tooltip {
                     opacity: 1;
                 }
@@ -102,7 +107,7 @@ GameEnd {
             .thumb {
                 border-radius: $radius;
                 background-image: url(textures/ui/map-thumbnail-placeholder.png);
-                background-position: center center;
+                background-position: center -5%;
                 background-size: cover;
                 width:256px;
             }
@@ -125,13 +130,13 @@ GameEnd {
             .tooltip {
                 opacity: 0;
                 position: absolute;
-                top: 100%;
-                padding: 8px;
+                bottom: 1px;
                 width: 100%;
                 text-align: center;
                 font-family: $readingfont;
                 border-radius: $smallradius;
                 transition: all .15s ease-out;
+                text-shadow: 1px 1px 1px black;
             }
 
             &:last-child {
