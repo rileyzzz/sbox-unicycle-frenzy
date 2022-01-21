@@ -38,11 +38,11 @@ internal partial class UnicycleEntity : Entity
 	public void SetRenderAlphaOnAllParts( float a )
 	{
 		// this is kind of annoying, alternatives?
-		FrameModel.RenderColor = FrameModel.RenderColor.WithAlpha( a );
-		SeatModel.RenderColor = SeatModel.RenderColor.WithAlpha( a );
-		WheelModel.RenderColor = WheelModel.RenderColor.WithAlpha( a );
-		LeftPedalModel.RenderColor = LeftPedalModel.RenderColor.WithAlpha( a );
-		RightPedalModel.RenderColor = RightPedalModel.RenderColor.WithAlpha( a );
+		if ( FrameModel.IsValid() ) FrameModel.RenderColor = FrameModel.RenderColor.WithAlpha( a );
+		if ( SeatModel.IsValid() ) SeatModel.RenderColor = SeatModel.RenderColor.WithAlpha( a );
+		if ( WheelModel.IsValid() ) WheelModel.RenderColor = WheelModel.RenderColor.WithAlpha( a );
+		if ( LeftPedalModel.IsValid() ) LeftPedalModel.RenderColor = LeftPedalModel.RenderColor.WithAlpha( a );
+		if ( RightPedalModel.IsValid() ) RightPedalModel.RenderColor = RightPedalModel.RenderColor.WithAlpha( a );
 	}
 
 	private void AssembleParts()
