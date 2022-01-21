@@ -164,9 +164,7 @@ internal partial class UnicyclePlayer
 		var targetCp = currentCp == null ? 1 : currentCp.Number + 1;
 		var nextCp = Entity.All.FirstOrDefault( x => x is Checkpoint cp && cp.Number == targetCp ) as Checkpoint;
 		if ( nextCp == null ) return;
-		pl.TimerState = TimerState.InStartZone;
-		pl.TrySetCheckpoint( nextCp, true );
-		pl.GotoBestCheckpoint();
+		pl.TeleportToCheckpoint( nextCp );
 	}
 
 	[ServerCmd( "uf_prevcp" )]
@@ -178,9 +176,18 @@ internal partial class UnicyclePlayer
 		var targetCp = currentCp == null ? 0 : currentCp.Number - 1;
 		var nextCp = Entity.All.FirstOrDefault( x => x is Checkpoint cp && cp.Number == targetCp ) as Checkpoint;
 		if ( nextCp == null ) return;
-		pl.TimerState = TimerState.InStartZone;
-		pl.TrySetCheckpoint( nextCp, true );
-		pl.GotoBestCheckpoint();
+		pl.TeleportToCheckpoint( nextCp );
+	}
+
+	private async void TeleportToCheckpoint( Checkpoint cp )
+	{
+		TimerState = TimerState.InStartZone;
+		TrySetCheckpoint( cp, true );
+		GotoBestCheckpoint();
+
+		await System.Threading.Tasks.Task.Delay( 100 );
+
+		TimerState = TimerState.InStartZone;
 	}
 
 }
