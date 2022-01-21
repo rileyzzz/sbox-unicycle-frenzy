@@ -180,7 +180,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void DoSlope()
 	{
 		if ( GroundEntity == null ) return;
-		if ( Input.Down( InputButton.Duck ) && Velocity.Length < StopSpeed * 2 ) return;
+		if ( Input.Down( InputButton.Duck ) && Velocity.Length < StopSpeed * 4 ) return;
 
 		var slopeAngle = Vector3.GetAngle( GroundNormal, Vector3.Up );
 		if ( slopeAngle == 0 ) return;
@@ -317,13 +317,15 @@ internal partial class UnicycleController : BasePlayerController
 		}
 
 		// tilt while on uneven ground
-		if( GroundEntity != null && Vector3.GetAngle(GroundNormal, Vector3.Up) > 2f )
+		var groundAngle = Vector3.GetAngle( GroundNormal, Vector3.Up );
+		if ( GroundEntity != null && groundAngle > 3f )
 		{
 			var groundRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
 			groundRot *= pl.TargetForward;
 			var groundTilt = groundRot.Angles().WithYaw( 0 );
+			var tiltAlpha = Easing.EaseIn( groundAngle / 30f );
 
-			tilt += groundTilt * SlopeTipSpeed * Time.Delta;
+			tilt += groundTilt * tiltAlpha * SlopeTipSpeed * Time.Delta;
 		}
 
 		// this handles how we tilt and recover tilt after jumping
