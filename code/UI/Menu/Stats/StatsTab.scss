@@ -11,7 +11,7 @@ StatsTab {
             navlink {
                 padding: 20px;
                 font-size: 20px;
-                font-family: $stylefont;
+                font-family: $readingfont;
                 background-color: $lightbg;
                 transition: all .15s ease-out;
                 color: $fontcolorfaded;
@@ -165,12 +165,14 @@ StatsTabLeaderboardSingle {
         flex-direction: column;
         overflow: scroll;
 
-       StatsTabLeaderboardEntry {
+        StatsTabLeaderboardEntry {
             padding: 12px 20px;
             margin-bottom: 2px;
             border-radius: $radius;
             transition: all .15s ease-out;
             min-height: 48px;
+            font-size: 20px;
+            letter-spacing: 1px;
 
             &:nth-child(odd) {
                 background-color: $lightbg;
@@ -186,6 +188,8 @@ StatsTabLeaderboardSingle {
 
             .name {
                 flex-grow: 1;
+                font-family: $stylefont;
+                padding-top: 4px;
             }
 
             .time {
