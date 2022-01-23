@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 
 [UseTemplate]
 internal class StatsTabLeaderboardEntry : Panel
@@ -8,11 +9,13 @@ internal class StatsTabLeaderboardEntry : Panel
 	public string Name { get; set; }
 	public string Time { get; set; }
 
-	public StatsTabLeaderboardEntry( int rank, string name, float score )
+	public StatsTabLeaderboardEntry( int rank, string name, float score, long playerId = 0 )
 	{
 		Rank = rank;
 		Name = name;
 		Time = CourseTimer.FormattedTimeMsf( score );
+
+		SetClass( "me", Local.PlayerId == playerId );
 	}
 
 }

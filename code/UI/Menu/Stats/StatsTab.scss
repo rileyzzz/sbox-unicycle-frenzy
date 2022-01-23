@@ -166,11 +166,11 @@ StatsTabLeaderboardSingle {
         overflow: scroll;
 
         StatsTabLeaderboardEntry {
-            padding: 12px 20px;
-            margin-bottom: 2px;
+            padding: 6px 20px;
+            margin-bottom: 4px;
             border-radius: $radius;
             transition: all .15s ease-out;
-            min-height: 48px;
+            min-height: 32px;
             font-size: 20px;
             letter-spacing: 1px;
 
@@ -180,6 +180,10 @@ StatsTabLeaderboardSingle {
 
             &:hover {
                 background-color: $bg;
+            }
+
+            &.me {
+                background-color: rgba( $primary .25 );
             }
 
             .rank {

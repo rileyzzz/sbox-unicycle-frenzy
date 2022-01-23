@@ -65,7 +65,7 @@ internal class StatsTabLeaderboardSingle : NavigatorPanel
 
 				foreach ( var entry in sorted )
 				{
-					var el = new StatsTabLeaderboardEntry( rank, entry.DisplayName, entry.Rating );
+					var el = new StatsTabLeaderboardEntry( rank, entry.DisplayName, entry.Rating, entry.PlayerId );
 					el.Parent = Canvas;
 					rank++;
 				}
