@@ -36,6 +36,18 @@ partial class UnicycleFrenzy : Sandbox.Game
 			{
 				Precache.Add( part.Model );
 			}
+
+			GameServices.StartGame();
+		}
+	}
+
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+
+		if ( IsServer )
+		{
+			GameServices.EndGame();
 		}
 	}
 
