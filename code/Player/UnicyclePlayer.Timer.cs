@@ -69,7 +69,9 @@ internal partial class UnicyclePlayer
 
 				BestTime = TimeSinceStart;
 
+				GameServices.StartGame();
 				GameServices.RecordScore( Client.PlayerId, false, GameplayResult.None, BestTime );
+				GameServices.EndGame();
 			}
 
 			Celebrate();

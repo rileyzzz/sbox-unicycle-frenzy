@@ -37,7 +37,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 				Precache.Add( part.Model );
 			}
 
-			GameServices.StartGame();
+			//GameServices.StartGame();
 		}
 	}
 
@@ -47,7 +47,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 		if ( IsServer )
 		{
-			GameServices.EndGame();
+			//GameServices.EndGame();
 		}
 	}
 
