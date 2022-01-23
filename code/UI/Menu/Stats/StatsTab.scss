@@ -163,12 +163,14 @@ StatsTabLeaderboardSingle {
         width: 80%;
         margin-right: $padding;
         flex-direction: column;
+        overflow: scroll;
 
-        .entry {
+       StatsTabLeaderboardEntry {
             padding: 12px 20px;
             margin-bottom: 2px;
             border-radius: $radius;
             transition: all .15s ease-out;
+            min-height: 48px;
 
             &:nth-child(odd) {
                 background-color: $lightbg;
