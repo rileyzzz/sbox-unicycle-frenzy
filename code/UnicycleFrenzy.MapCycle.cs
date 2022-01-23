@@ -5,20 +5,9 @@ using System.Linq;
 internal partial class UnicycleFrenzy
 {
 
-	public static List<string> MapCycle = new()
-	{
-		"willow.uf_climb",
-		"facepunch.uf_splinter",
-		"saandy.uf_fort",
-		"facepunch.uf_beach",
-		"facepunch.uf_flow",
-		"facepunch.uf_wooden_gaps",
-		"barrelzzen.uf_industry",
-		"facepunch.uf_pop_rock",
-		"gvar.uf_canyon",
-		"facepunch.uf_steps",
-		"facepunch.uf_hop_stop"
-	};
+	//
+	// NOTE: Add new maps in the in-game setup menu
+	//
 
 	[ConVar.Replicated( "uf_endgame_duration" )]
 	public static float EndGameDuration { get; set; } = 60 * 1.5f;
@@ -29,10 +18,24 @@ internal partial class UnicycleFrenzy
 	public string NextMap { get; set; }
 	[Net]
 	public Dictionary<long, string> MapVotes { get; set; } = new();
+	[Net]
+	public List<string> MapCycle { get; set; } = new();
 
-	private void InitMapCycle()
+	private async void InitMapCycle()
 	{
 		TimeLeft = 1800;
+		NextMap = Global.MapName;
+
+		var pkg = await Package.Fetch( Global.GameName, true );
+		if( pkg == null )
+		{
+			Log.Error( "Failed to load map cycle" );
+			return;
+		}
+
+		foreach( var map in pkg.GameConfiguration.MapList )
+			MapCycle.Add( map );
+
 		NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
 	}
 

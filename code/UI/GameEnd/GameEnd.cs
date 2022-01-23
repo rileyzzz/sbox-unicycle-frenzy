@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System;
 using System.Linq;
 
 [UseTemplate]
@@ -34,12 +35,14 @@ internal class GameEnd : Panel
 	{
 		MapCanvas.DeleteChildren();
 
-		foreach ( var map in UnicycleFrenzy.MapCycle )
+		foreach ( var map in UnicycleFrenzy.Game.MapCycle )
 		{
 			var btn = new MapVoteButton( map );
 			MapCanvas.AddChild( btn );
 		}
 	}
+
+	private int maphash = 0;
 		
 	[Event.Frame]
 	private void OnFrame()
@@ -49,6 +52,8 @@ internal class GameEnd : Panel
 		SetClass( "open", open );
 
 		if ( !open ) return;
+
+		EnsureMaps();
 
 		var players = Player.All.Where( x => x is UnicyclePlayer && x.IsValid() && x.Client.IsValid() ).ToList();
 		var orderedPlayers = players.OrderBy( x => (x as UnicyclePlayer).BestTime );
@@ -75,6 +80,21 @@ internal class GameEnd : Panel
 				default: 
 					return;
 			}
+		}
+	}
+
+	private void EnsureMaps()
+	{
+		var newhash = 0;
+		foreach ( var map in UnicycleFrenzy.Game.MapCycle )
+		{
+			newhash = HashCode.Combine( map );
+		}
+
+		if ( newhash != maphash )
+		{
+			RefreshMaps();
+			maphash = newhash;
 		}
 	}
 
