@@ -186,6 +186,10 @@ StatsTabLeaderboardSingle {
                 background-color: rgba( $primary .25 );
             }
 
+            &.friend {
+                background-color: rgba( $primary .05 );
+            }
+
             .rank {
                 width: 100px;
             }

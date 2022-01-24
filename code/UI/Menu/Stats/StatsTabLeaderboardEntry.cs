@@ -16,6 +16,7 @@ internal class StatsTabLeaderboardEntry : Panel
 		Time = CourseTimer.FormattedTimeMsf( score );
 
 		SetClass( "me", Local.PlayerId == playerId );
+		SetClass( "friend", new Friend( playerId ).IsFriend );
 	}
 
 }
