@@ -81,6 +81,13 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		RagdollOnClient();
 	}
 
+	protected override void OnDestroy()
+	{
+		base.OnDestroy();
+
+		crown?.Destroy();
+	}
+
 	public override void Simulate( Client cl )
 	{
 		if ( LifeState == LifeState.Alive )

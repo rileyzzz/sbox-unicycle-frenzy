@@ -11,6 +11,8 @@ internal partial class UnicyclePlayer
 	[Net, Change]
 	public float BestTime { get; set; } = defaultBestTime;
 
+	private Particles crown;
+
 	public int SessionRank
 	{
 		get
@@ -139,6 +141,26 @@ internal partial class UnicyclePlayer
 	{
 		if ( !IsLocalPawn ) return;
 		MapStats.Local.SetBestTime( BestTime );
+	}
+
+	[Event.Tick.Server]
+	private void EnsureCrown()
+	{
+		var needsCrown = !Fallen 
+			&& !CourseIncomplete
+			&& SessionRank == 1
+			&& Terry.IsValid();
+
+		if( needsCrown && crown == null )
+		{
+			crown = Particles.Create( "particles\\crown\\current_session\\current_session_crown.vpcf" );
+			crown.SetEntityAttachment( 0, Terry, "hat", true );
+		}
+		else if( !needsCrown && crown != null )
+		{
+			crown?.Destroy();
+			crown = null;
+		}
 	}
 
 	[ClientRpc]
