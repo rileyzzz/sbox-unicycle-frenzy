@@ -60,6 +60,11 @@ partial class UnicycleFrenzy : Sandbox.Game
 		cl.Pawn = new UnicyclePlayer();
 		(cl.Pawn as Player).Respawn();
 
+		if ( cl.IsBot )
+		{
+			(cl.Pawn as UnicyclePlayer).BestTime = new System.Random().Next( 180, 1800 );
+		}
+
 		UfChatbox.AddInfo( To.Everyone, $"{cl.Name} has joined the game" );
 	}
 
