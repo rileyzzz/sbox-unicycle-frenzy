@@ -13,7 +13,7 @@ internal class StatsTabLeaderboardEntry : Panel
 	{
 		Rank = rank;
 		Name = name;
-		Time = CourseTimer.FormattedTimeMsf( score );
+		Time = score == 0f ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( score );
 
 		SetClass( "me", Local.PlayerId == playerId );
 		SetClass( "friend", new Friend( playerId ).IsFriend );

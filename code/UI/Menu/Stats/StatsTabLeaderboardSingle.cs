@@ -71,6 +71,21 @@ internal class StatsTabLeaderboardSingle : NavigatorPanel
 					rank++;
 				}
 				break;
+			case LeaderboardScope.Session:
+				var players = Player.All.OfType<UnicyclePlayer>()
+					.Where( x => x.IsValid() && x.Client.IsValid() )
+					.OrderBy( x => x.BestTime );
+
+				var srank = 1;
+
+				foreach( var pl in players )
+				{
+					var time = pl.CourseIncomplete ? 0f : pl.BestTime;
+					var el = new StatsTabLeaderboardEntry( srank, pl.Client.Name, time, pl.Client.PlayerId );
+					el.Parent = Canvas;
+					srank++;
+				}
+				break;
 		}
 	}
 
