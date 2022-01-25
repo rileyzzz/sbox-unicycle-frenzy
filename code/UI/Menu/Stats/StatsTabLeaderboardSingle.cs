@@ -60,9 +60,17 @@ internal class StatsTabLeaderboardSingle : NavigatorPanel
 		switch ( scope )
 		{
 			case LeaderboardScope.Global:
+			case LeaderboardScope.Friends:
 				var q = await GameServices.Leaderboard.Query( game: Global.GameName, bucket: Global.MapName );
-				var sorted = q.Entries.OrderBy( x => x.Rating );
+				var sorted = q.Entries.OrderBy( x => x.Rating ).ToList();
 				var rank = 1;
+
+				if( scope == LeaderboardScope.Friends )
+				{
+					sorted = sorted
+						.Where( x => x.PlayerId == Local.PlayerId || new Friend( x.PlayerId ).IsFriend )
+						.ToList();
+				}
 
 				foreach ( var entry in sorted )
 				{
