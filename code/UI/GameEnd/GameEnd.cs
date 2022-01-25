@@ -80,6 +80,7 @@ internal class GameEnd : Panel
 				default: 
 					return;
 			}
+			rank++;
 		}
 	}
 
