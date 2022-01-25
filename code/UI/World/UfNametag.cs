@@ -34,7 +34,9 @@ internal class UfNametag : WorldPanel
 		if ( !player.Terry.IsValid() ) return;
 
 		var hat = player.Terry.GetAttachment( "hat" ) ?? new Transform( player.EyePos );
-		Position = hat.Position + Vector3.Up * 8;
+		var crowned = player.SessionRank == 1;
+		var height = crowned ? 16 : 8;
+		Position = hat.Position + Vector3.Up * height;
 		Rotation = Rotation.LookAt( -Screen.GetDirection( new Vector2( Screen.Width * 0.5f, Screen.Height * 0.5f ) ) );
 		Style.Opacity = player.IsLocalPawn ? 0 : player.GetRenderAlpha();
 
