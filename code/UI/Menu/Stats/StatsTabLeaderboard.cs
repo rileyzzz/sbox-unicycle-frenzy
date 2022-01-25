@@ -8,7 +8,7 @@ internal class StatsTabLeaderboard : NavigatorPanel
 
 	public StatsTabLeaderboard()
 	{
-		Navigate( "/menu/stats/leaderboard/global" );
+		Navigate( "/menu/stats/leaderboard/session" );
 	}
 
 }
