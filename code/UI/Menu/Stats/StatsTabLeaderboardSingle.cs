@@ -65,7 +65,9 @@ internal class StatsTabLeaderboardSingle : NavigatorPanel
 				var sorted = q.Entries.OrderBy( x => x.Rating ).ToList();
 				var rank = 1;
 
-				if( scope == LeaderboardScope.Friends )
+				Canvas.DeleteChildren( true );
+
+				if ( scope == LeaderboardScope.Friends )
 				{
 					sorted = sorted
 						.Where( x => x.PlayerId == Local.PlayerId || new Friend( x.PlayerId ).IsFriend )
