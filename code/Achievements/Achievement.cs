@@ -48,9 +48,9 @@ internal class Achievement
 			result.Add( new Achievement()
 			{
 				AchievementId = 1,
-				Description = "Complete any map in Unicycle Frenzy",
-				DisplayName = "Unicyclist",
-				ShortName = "uf_unicyclist",
+				Description = "A dummy achievement",
+				DisplayName = "Dummy",
+				ShortName = "uf_dummy",
 				GameName = Global.GameName,
 				ImageThumb = "https://files.facepunch.com/crayz/1b2511b1/msedge_2022-01-25_17-06-28.png"
 			} );
