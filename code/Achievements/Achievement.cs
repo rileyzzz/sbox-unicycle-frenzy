@@ -7,6 +7,7 @@ internal class Achievement
 
 	public long AchievementId { get; set; }
 	public string GameName { get; set; }
+	public string MapName { get; set; }
 	// we'd use these in api instead of game/map name
 	//public long GameAssetId { get; set; } 
 	//public long MapAssetId { get; set; }
@@ -34,6 +35,13 @@ internal class Achievement
 		return All.Where( x => x.GameName == game );
 	}
 
+	public static void Set( long playerid, string shortname )
+	{
+		var ach = All.FirstOrDefault( x => x.GameName == Global.GameName && x.ShortName == shortname );
+		if ( ach == null ) return;
+		ach.Set( playerid );
+	}
+
 	public static List<Achievement> All
 	{
 		get
@@ -43,12 +51,12 @@ internal class Achievement
 
 			result.Add( new Achievement()
 			{
-				AchievementId = 1,
-				Description = "A dummy achievement",
-				DisplayName = "Dummy",
-				ShortName = "uf_dummy",
+				AchievementId = 2,
+				Description = "Complete any map in Unicycle Frenzy",
+				DisplayName = "Unicyclist",
+				ShortName = "uf_unicyclist",
 				GameName = Global.GameName,
-				ImageThumb = "https://files.facepunch.com/crayz/1b2511b1/msedge_2022-01-25_17-06-28.png"
+				ImageThumb = "https://files.facepunch.com/crayz/1b2611b1/icon-unicyclist.jpg"
 			} );
 
 			return result;
