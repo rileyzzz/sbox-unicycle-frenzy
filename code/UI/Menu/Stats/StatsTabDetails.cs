@@ -14,6 +14,8 @@ internal class StatsTabDetails : Panel
 	public Panel Thumbnail { get; set; }
 	public Panel AchievementCanvas { get; set; }
 	public string AchievementCount { get; set; }
+	public string AchievementName { get; set; }
+	public string AchievementDescription { get; set; }
 
 	public StatsTabDetails()
 	{
@@ -72,6 +74,12 @@ internal class StatsTabDetails : Panel
 				achieved++;
 				btn.AddClass( "completed" );
 			}
+
+			btn.AddEventListener( "onmouseover", () =>
+			 {
+				 AchievementName = ach.DisplayName;
+				 AchievementDescription = ach.Description;
+			 } );
 
 			total++;
 		}

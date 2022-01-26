@@ -118,7 +118,7 @@ StatsTabDetails {
                 background-position: center center;
 
                 &.completed {
-                    background-color: red;
+                    background-color: $primary;
                 }
 
                 &:hover {
@@ -131,6 +131,12 @@ StatsTabDetails {
             border-top: 4px solid $lighterbg;
             font-size: 20px;
             padding: $padding;
+            flex-direction:column;
+
+            .name {
+                font-size: 28px;
+                font-family: $stylefont;
+            }
         }
     }
 }
