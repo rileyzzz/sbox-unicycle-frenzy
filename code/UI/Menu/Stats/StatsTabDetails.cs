@@ -13,6 +13,7 @@ internal class StatsTabDetails : Panel
 	public string MapName => Global.MapName;
 	public Panel Thumbnail { get; set; }
 	public Panel AchievementCanvas { get; set; }
+	public string AchievementCount { get; set; }
 
 	public StatsTabDetails()
 	{
@@ -54,6 +55,8 @@ internal class StatsTabDetails : Panel
 
 		var mapAchievements = Achievement.Query( Global.GameName, map: Global.MapName );
 		var globalAchievements = Achievement.Query( Global.GameName );
+		var total = 0;
+		var achieved = 0;
 
 		foreach ( var ach in mapAchievements.Concat( globalAchievements ) )
 		{
@@ -66,9 +69,14 @@ internal class StatsTabDetails : Panel
 
 			if ( ach.IsCompleted( Local.PlayerId, Global.GameName, map ) )
 			{
+				achieved++;
 				btn.AddClass( "completed" );
 			}
+
+			total++;
 		}
+
+		AchievementCount = $"({achieved}/{total})";
 	}
 
 }
