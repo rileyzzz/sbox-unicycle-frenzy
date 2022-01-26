@@ -117,6 +117,10 @@ StatsTabDetails {
                 background-repeat: no-repeat;
                 background-position: center center;
 
+                &.completed {
+                    background-color: red;
+                }
+
                 &:hover {
                     border-color: $lighterbg;
                 }
