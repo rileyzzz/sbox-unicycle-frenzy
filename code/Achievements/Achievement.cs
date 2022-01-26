@@ -25,10 +25,7 @@ internal class Achievement
 
 	public bool IsCompleted( long playerid )
 	{
-		var completion = AchievementCompletion.Query( playerid, Global.GameName )
-			.FirstOrDefault( x => x.AchievementId == AchievementId );
-
-		return completion != null;
+		return AchievementCompletion.Query( playerid, Global.GameName ).Any( x => x.AchievementId == AchievementId );
 	}
 
 	public static IEnumerable<Achievement> Query( string game, string shortname = null )
