@@ -6,6 +6,8 @@ using Sandbox.UI;
 internal class StatsTabLeaderboard : NavigatorPanel
 {
 
+	public string MapName => Global.MapName;
+
 	public StatsTabLeaderboard()
 	{
 		Navigate( "/menu/stats/leaderboard/session" );

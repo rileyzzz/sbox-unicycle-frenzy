@@ -138,6 +138,15 @@ StatsTabDetails {
 StatsTabLeaderboard {
     flex-grow: 1;
 
+    .mapname {
+        font-family: $stylefont;
+        font-color: $secondary;
+        font-size: 24px;
+        margin-right: 8px;
+        margin-top: 4px;
+        letter-spacing: 1px;
+    }
+
     .tab-container .tabs navlink {
         background-color: $bg;
         padding: 11px 20px;
@@ -170,16 +179,16 @@ StatsTabLeaderboardSingle {
         overflow: scroll;
 
         StatsTabLeaderboardEntry {
-            padding: 6px 20px;
+            padding: 2px 20px;
             margin-bottom: 4px;
-            border-radius: $radius;
+            border-radius: $smallradius;
             transition: all .15s ease-out;
             min-height: 32px;
-            font-size: 20px;
+            font-size: 16px;
             letter-spacing: 1px;
 
             &:nth-child(odd) {
-                background-color: $lightbg;
+                background-color: rgba( $bg .5 );
             }
 
             &:hover {
@@ -196,17 +205,19 @@ StatsTabLeaderboardSingle {
 
             .rank {
                 width: 100px;
+                align-items: center;
             }
 
             .name {
                 flex-grow: 1;
-                font-family: $stylefont;
                 padding-top: 4px;
+                align-items: center;
             }
 
             .time {
                 width: 200px;
                 text-align: right;
+                align-items: center;
             }
         }
     }
@@ -217,11 +228,11 @@ StatsTabLeaderboardSingle {
 
         button {
             background-color: $lightbg;
-            padding: 10px;
+            padding: 4px;
             margin-bottom: 4px;
-            border-radius: $radius;
+            border-radius: $smallradius;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             text-shadow: 1px 1px 1px black;
             transition: all .15s ease-out;
 
