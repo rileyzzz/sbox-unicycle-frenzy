@@ -98,7 +98,7 @@ internal partial class Achievement
 			{
 				AchievementId = 5,
 				Description = "Complete the map in a good amount of time",
-				DisplayName = "Bronze Medal",
+				DisplayName = "Gold Medal",
 				ShortName = "uf_gold",
 				GameName = Global.GameName,
 				ImageThumb = "",
