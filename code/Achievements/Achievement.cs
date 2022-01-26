@@ -6,6 +6,12 @@ using System.Linq;
 internal partial class Achievement
 {
 
+	//
+	// todo: there's some code confusion with PerMap and MapName
+	// there's probably a better way to separate the two, but we'll see 
+	// what kinda headache it causes first
+	//
+
 	public long AchievementId { get; set; }
 	public string GameName { get; set; }
 	public string MapName { get; set; }
@@ -16,10 +22,18 @@ internal partial class Achievement
 	public string DisplayName { get; set; }
 	public string Description { get; set; }
 	public string ImageThumb { get; set; }
+	public bool PerMap { get; set; }
 
-	public bool IsCompleted( long playerid )
+	public bool IsCompleted( long playerid, string map = null )
 	{
-		return AchievementCompletion.Query( playerid, Global.GameName ).Any( x => x.AchievementId == AchievementId );
+		if( PerMap )
+		{
+			return AchievementCompletion.Query( playerid, Global.GameName )
+				.Any( x => x.AchievementId == AchievementId && x.MapName == map );
+		}
+
+		return AchievementCompletion.Query( playerid, Global.GameName )
+			.Any( x => x.AchievementId == AchievementId );
 	}
 
 	public static IEnumerable<Achievement> Query( string game, string shortname = null, string map = null )
@@ -31,7 +45,7 @@ internal partial class Achievement
 			result = result.Where( x => x.ShortName == shortname );
 
 		if ( !string.IsNullOrEmpty( map ) )
-			result = result.Where( x => x.MapName == map );
+			result = result.Where( x => x.PerMap || x.MapName == map );
 
 		return result;
 	}
@@ -43,9 +57,9 @@ internal partial class Achievement
 		var ach = Query( game, shortname, map ).FirstOrDefault();
 
 		if ( ach == null ) return;
-		if ( ach.IsCompleted( playerid ) ) return;
+		if ( ach.IsCompleted( playerid, map ) ) return;
 
-		AchievementCompletion.Insert( playerid, ach.AchievementId );
+		AchievementCompletion.Insert( playerid, ach.AchievementId, map );
 	}
 
 	public static List<Achievement> All
@@ -63,6 +77,17 @@ internal partial class Achievement
 				ShortName = "uf_unicyclist",
 				GameName = Global.GameName,
 				ImageThumb = "https://files.facepunch.com/crayz/1b2611b1/icon-unicyclist.jpg"
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 3,
+				Description = "Complete the map in an ok amount of time",
+				DisplayName = "Bronze Medal",
+				ShortName = "uf_bronze",
+				GameName = Global.GameName,
+				ImageThumb = "",
+				PerMap = true
 			} );
 
 			return result;

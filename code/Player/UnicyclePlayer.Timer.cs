@@ -59,6 +59,11 @@ internal partial class UnicyclePlayer
 
 			SetAchievementOnClient( To.Single( Client ), "uf_unicyclist" );
 
+			if( TimeSinceStart < 15f )
+			{
+				SetAchievementOnClient( To.Single( Client ), "uf_bronze", Global.MapName );
+			}
+
 			if ( TimeSinceStart < BestTime )
 			{
 				if( CourseIncomplete )

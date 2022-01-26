@@ -58,7 +58,7 @@ internal class StatsTabDetails : Panel
 			btn.Parent = AchievementCanvas;
 			btn.Style.SetBackgroundImage( ach.ImageThumb );
 
-			if ( ach.IsCompleted( Local.PlayerId ) )
+			if ( ach.IsCompleted( Local.PlayerId, Global.MapName ) )
 			{
 				btn.AddClass( "completed" );
 			}

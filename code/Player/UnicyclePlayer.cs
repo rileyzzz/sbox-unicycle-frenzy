@@ -124,6 +124,11 @@ internal partial class UnicyclePlayer : Sandbox.Player
 			Fall( false );
 			timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
 		}
+
+		if( IsServer && Input.Pressed( InputButton.Slot1 ) )
+		{
+			SetAchievementOnClient( To.Single( Client ), "uf_bronze", Global.MapName );
+		}
 	}
 
 	[Event.Frame]
