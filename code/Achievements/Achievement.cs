@@ -26,14 +26,8 @@ internal partial class Achievement
 
 	public bool IsCompleted( long playerid, string map = null )
 	{
-		if( PerMap )
-		{
-			return AchievementCompletion.Query( playerid, Global.GameName )
-				.Any( x => x.AchievementId == AchievementId && x.MapName == map );
-		}
-
 		return AchievementCompletion.Query( playerid, Global.GameName )
-			.Any( x => x.AchievementId == AchievementId );
+			.Any( x => x.AchievementId == AchievementId && x.MapName == map );
 	}
 
 	public static IEnumerable<Achievement> Query( string game, string shortname = null, string map = null )
@@ -110,6 +104,17 @@ internal partial class Achievement
 				GameName = Global.GameName,
 				ImageThumb = "",
 				PerMap = true
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 6,
+				Description = "An achievement specifically for uf_playground",
+				DisplayName = "Playground",
+				ShortName = "uf_playground_test",
+				GameName = Global.GameName,
+				MapName = "uf_playground",
+				ImageThumb = ""
 			} );
 
 			return result;

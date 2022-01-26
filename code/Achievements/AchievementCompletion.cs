@@ -53,7 +53,6 @@ internal class AchievementCompletion
 		{
 			try
 			{
-				Log.Info( Cookie.Get( "uf.achievement_completions", "{}" ) );
 				return JsonSerializer.Deserialize<List<AchievementCompletion>>( Cookie.Get( "uf.achievement_completions", "{}" ) );
 			}
 			catch(Exception e )
