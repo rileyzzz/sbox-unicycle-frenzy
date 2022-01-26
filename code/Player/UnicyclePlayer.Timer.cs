@@ -57,6 +57,8 @@ internal partial class UnicyclePlayer
 
 			var formattedTime = CourseTimer.FormattedTimeMsf( TimeSinceStart );
 
+			SetAchievementOnClient( To.Single( Client ), "uf_unicyclist" );
+
 			if ( TimeSinceStart < BestTime )
 			{
 				if( CourseIncomplete )

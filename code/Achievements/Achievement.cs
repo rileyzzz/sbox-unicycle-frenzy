@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Sandbox;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-internal class Achievement
+internal partial class Achievement
 {
 
 	public long AchievementId { get; set; }
@@ -16,30 +17,35 @@ internal class Achievement
 	public string Description { get; set; }
 	public string ImageThumb { get; set; }
 
-	public void Set( long playerid )
-	{
-		// later: push to api
-		if ( IsCompleted( playerid ) ) return;
-
-		AchievementCompletion.Insert( playerid, AchievementId );
-	}
-
 	public bool IsCompleted( long playerid )
 	{
 		return AchievementCompletion.Query( playerid, Global.GameName ).Any( x => x.AchievementId == AchievementId );
 	}
 
-	public static IEnumerable<Achievement> Query( string game )
+	public static IEnumerable<Achievement> Query( string game, string shortname = null, string map = null )
 	{
 		// later: fetch from api
-		return All.Where( x => x.GameName == game );
+		var result = All.Where( x => x.GameName == game );
+
+		if ( !string.IsNullOrEmpty( shortname ) ) 
+			result = result.Where( x => x.ShortName == shortname );
+
+		if ( !string.IsNullOrEmpty( map ) )
+			result = result.Where( x => x.MapName == map );
+
+		return result;
 	}
 
-	public static void Set( long playerid, string shortname )
+	public static void Set( string game, long playerid, string shortname, string map = null )
 	{
-		var ach = All.FirstOrDefault( x => x.GameName == Global.GameName && x.ShortName == shortname );
+		Host.AssertClient();
+
+		var ach = Query( game, shortname, map ).FirstOrDefault();
+
 		if ( ach == null ) return;
-		ach.Set( playerid );
+		if ( ach.IsCompleted( playerid ) ) return;
+
+		AchievementCompletion.Insert( playerid, ach.AchievementId );
 	}
 
 	public static List<Achievement> All

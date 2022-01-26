@@ -163,6 +163,12 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		MapStats.Local.AddRespawn();
 	}
 
+	[ClientRpc]
+	private void SetAchievementOnClient( string shortname, string map = null )
+	{
+		Achievement.Set( Global.GameName, Client.PlayerId, shortname, map );
+	}
+
 	private TimeSince timeSinceSpray;
 	private void Spray()
 	{
