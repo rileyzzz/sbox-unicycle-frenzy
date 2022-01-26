@@ -59,9 +59,15 @@ internal partial class UnicyclePlayer
 
 			SetAchievementOnClient( To.Single( Client ), "uf_unicyclist" );
 
-			if( TimeSinceStart < 15f )
+			var medalThresholds = Entity.All.FirstOrDefault( x => x is AchievementMedals ) as AchievementMedals;
+			if ( medalThresholds.IsValid() )
 			{
-				SetAchievementOnClient( To.Single( Client ), "uf_bronze", Global.MapName );
+				if( TimeSinceStart <= medalThresholds.Bronze )
+					SetAchievementOnClient( To.Single( Client ), "uf_bronze", Global.MapName );
+				if ( TimeSinceStart <= medalThresholds.Silver )
+					SetAchievementOnClient( To.Single( Client ), "uf_silver", Global.MapName );
+				if ( TimeSinceStart <= medalThresholds.Gold )
+					SetAchievementOnClient( To.Single( Client ), "uf_gold", Global.MapName );
 			}
 
 			if ( TimeSinceStart < BestTime )
