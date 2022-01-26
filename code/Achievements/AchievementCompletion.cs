@@ -28,8 +28,6 @@ internal class AchievementCompletion
 
 	public static void Insert( long playerid, long achievementid )
 	{
-		if ( playerid != Sandbox.Local.PlayerId ) return;
-
 		var final = new List<AchievementCompletion>( All )
 		{
 			new AchievementCompletion()

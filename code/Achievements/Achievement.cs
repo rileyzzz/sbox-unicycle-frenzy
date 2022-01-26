@@ -28,14 +28,10 @@ internal class Achievement
 		return AchievementCompletion.Query( playerid, Global.GameName ).Any( x => x.AchievementId == AchievementId );
 	}
 
-	public static IEnumerable<Achievement> Query( string game, string shortname = null )
+	public static IEnumerable<Achievement> Query( string game )
 	{
 		// later: fetch from api
-		var result = All.Where( x => x.GameName == game );
-
-		if ( shortname == null ) return result;
-
-		return result.Where( x => x.ShortName == shortname );
+		return All.Where( x => x.GameName == game );
 	}
 
 	public static List<Achievement> All
