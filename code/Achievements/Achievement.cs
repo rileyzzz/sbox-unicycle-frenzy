@@ -24,22 +24,18 @@ internal partial class Achievement
 	public string ImageThumb { get; set; }
 	public bool PerMap { get; set; }
 
-	public bool IsCompleted( long playerid, string map = null )
+	public bool IsCompleted( long playerid, string game, string map = null )
 	{
-		return AchievementCompletion.Query( playerid, Global.GameName )
-			.Any( x => x.AchievementId == AchievementId && x.MapName == map );
+		return AchievementCompletion.Query( playerid, game, map ).Any( x => x.AchievementId == AchievementId );
 	}
 
 	public static IEnumerable<Achievement> Query( string game, string shortname = null, string map = null )
 	{
 		// later: fetch from api
-		var result = All.Where( x => x.GameName == game );
+		var result = All.Where( x => x.GameName == game && x.MapName == map );
 
 		if ( !string.IsNullOrEmpty( shortname ) ) 
 			result = result.Where( x => x.ShortName == shortname );
-
-		if ( !string.IsNullOrEmpty( map ) )
-			result = result.Where( x => x.PerMap || x.MapName == map );
 
 		return result;
 	}
@@ -48,12 +44,15 @@ internal partial class Achievement
 	{
 		Host.AssertClient();
 
-		var ach = Query( game, shortname, map ).FirstOrDefault();
+		var ach = Query( game, shortname ).FirstOrDefault();
 
 		if ( ach == null ) return;
-		if ( ach.IsCompleted( playerid, map ) ) return;
+		if ( ach.MapName != null && ach.MapName != map && !ach.PerMap ) return;
+		if ( ach.IsCompleted( playerid, game, map ) ) return;
 
-		AchievementCompletion.Insert( playerid, ach.AchievementId, map );
+		var mapToInsert = ach.PerMap ? map : ach.MapName;
+
+		AchievementCompletion.Insert( playerid, ach.AchievementId, mapToInsert );
 	}
 
 	public static List<Achievement> All

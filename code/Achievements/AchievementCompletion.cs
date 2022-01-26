@@ -16,15 +16,14 @@ internal class AchievementCompletion
 	{
 		// later: fetch from api
 		var result = new List<AchievementCompletion>();
-		var all = All.Where( x => x.SteamId == playerid );
-		if ( map != null ) all = All.Where( x => x.MapName == map );
+		var all = All.Where( x => x.SteamId == playerid && x.MapName == map );
+		var achievements = Achievement.All;
 
 		foreach( var completion in all )
 		{
-			var ach = Achievement.All.FirstOrDefault( x => x.AchievementId == completion.AchievementId );
+			var ach = achievements.FirstOrDefault( x => x.AchievementId == completion.AchievementId );
 			if ( ach == null ) continue;
 			if ( ach.GameName != game ) continue;
-			if ( ach.MapName != map && !ach.PerMap ) continue;
 			result.Add( completion );
 		}
 

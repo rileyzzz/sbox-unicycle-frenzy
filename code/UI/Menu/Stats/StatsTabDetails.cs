@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.UI;
+using System.Linq;
 
 [UseTemplate]
 [NavigatorTarget("menu/stats/details")]
@@ -51,14 +52,19 @@ internal class StatsTabDetails : Panel
 	{
 		AchievementCanvas.DeleteChildren( true );
 
-		foreach( var ach in Achievement.Query( Global.GameName ) )
+		var mapAchievements = Achievement.Query( Global.GameName, map: Global.MapName );
+		var globalAchievements = Achievement.Query( Global.GameName );
+
+		foreach ( var ach in mapAchievements.Concat( globalAchievements ) )
 		{
 			var btn = new Button();
 			btn.AddClass( "button icon" );
 			btn.Parent = AchievementCanvas;
 			btn.Style.SetBackgroundImage( ach.ImageThumb );
 
-			if ( ach.IsCompleted( Local.PlayerId, Global.MapName ) )
+			var map = ach.PerMap ? Global.MapName : null;
+
+			if ( ach.IsCompleted( Local.PlayerId, Global.GameName, map ) )
 			{
 				btn.AddClass( "completed" );
 			}
