@@ -90,6 +90,28 @@ internal partial class Achievement
 				PerMap = true
 			} );
 
+			result.Add( new Achievement()
+			{
+				AchievementId = 4,
+				Description = "Complete the map in a decent amount of time",
+				DisplayName = "Silver Medal",
+				ShortName = "uf_silver",
+				GameName = Global.GameName,
+				ImageThumb = "",
+				PerMap = true
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 5,
+				Description = "Complete the map in a good amount of time",
+				DisplayName = "Bronze Medal",
+				ShortName = "uf_gold",
+				GameName = Global.GameName,
+				ImageThumb = "",
+				PerMap = true
+			} );
+
 			return result;
 		}
 	}
