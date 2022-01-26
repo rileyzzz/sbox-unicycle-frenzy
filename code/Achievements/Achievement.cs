@@ -18,13 +18,17 @@ internal class Achievement
 	public void Set( long playerid )
 	{
 		// later: push to api
+		if ( IsCompleted( playerid ) ) return;
+
+		AchievementCompletion.Insert( playerid, AchievementId );
+	}
+
+	public bool IsCompleted( long playerid )
+	{
 		var completion = AchievementCompletion.Query( playerid, Global.GameName )
 			.FirstOrDefault( x => x.AchievementId == AchievementId );
 
-		// no duplicate achievements
-		if ( completion != null ) return;
-
-		AchievementCompletion.Insert( playerid, AchievementId );
+		return completion != null;
 	}
 
 	public static IEnumerable<Achievement> Query( string game, string shortname = null )
