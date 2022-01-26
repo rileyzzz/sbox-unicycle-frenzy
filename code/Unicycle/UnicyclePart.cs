@@ -71,6 +71,11 @@ public class UnicyclePart
 		// sprays
 		new() { Id = 22, Type = PartType.Spray, Name = "Facepunch", Model = "materials/sprays/spray_facepunch.vmat", IsDefault = true },
 		new() { Id = 23, Type = PartType.Spray, Name = "Unicycle Frenzy", Model = "materials/sprays/spray_unicycle_frenzy.vmat", IsDefault = false },
+		new() { Id = 46, Type = PartType.Spray, Name = "Arrow", Model = "materials/sprays/spray_arrow.vmat", IsDefault = false },
+		new() { Id = 47, Type = PartType.Spray, Name = "Bomb", Model = "materials/sprays/spray_bomb.vmat", IsDefault = false },
+		new() { Id = 48, Type = PartType.Spray, Name = "Checkpoint", Model = "materials/sprays/spray_checkpoint.vmat", IsDefault = false },
+		new() { Id = 49, Type = PartType.Spray, Name = "Head", Model = "materials/sprays/spray_head.vmat", IsDefault = false },
+		new() { Id = 50, Type = PartType.Spray, Name = "Stop", Model = "materials/sprays/spray_stop.vmat", IsDefault = false },
 	};
 
 }
