@@ -53,12 +53,7 @@ internal class StatsTabDetails : Panel
 
 		foreach( var ach in Achievement.Query( Global.GameName ) )
 		{
-			var btn = new Button("", "", () =>
-			{
-				ach.Set( Local.PlayerId );
-				RebuildAchievements();
-			} );
-
+			var btn = new Button();
 			btn.AddClass( "button icon" );
 			btn.Parent = AchievementCanvas;
 			btn.Style.SetBackgroundImage( ach.ImageThumb );
