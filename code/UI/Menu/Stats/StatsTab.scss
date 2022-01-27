@@ -216,7 +216,6 @@ StatsTabLeaderboardSingle {
 
             .name {
                 flex-grow: 1;
-                padding-top: 4px;
                 align-items: center;
             }
 
@@ -224,6 +223,26 @@ StatsTabLeaderboardSingle {
                 width: 200px;
                 text-align: right;
                 align-items: center;
+            }
+
+            &:not(.can-spectate) {
+                .spec-button {
+                    display: none;
+                }
+            }
+
+            .spec-button {
+                margin-right: 24px;
+                border-radius: $smallradius;
+                background-color: transparent;
+                text-shadow: 1px 1px 1px black;
+                padding: 4px;
+                font-size: 12px;
+                transition: all .15s linear;
+
+                &:hover {
+                    background-color: rgba( $primary 1 );
+                }
             }
         }
     }
