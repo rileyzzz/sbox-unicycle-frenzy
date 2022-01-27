@@ -51,6 +51,26 @@ internal class StatsTabLeaderboardSingle : NavigatorPanel
 		RebuildLeaderboard();
 	}
 
+	private int sessionhash;
+	public override void Tick()
+	{
+		base.Tick();
+
+		if ( scope != LeaderboardScope.Session ) return;
+
+		var newhash = 0;
+		foreach ( var pl in Entity.All.OfType<UnicyclePlayer>().Where( x => x.IsValid() ) )
+		{
+			newhash = HashCode.Combine( newhash, pl.BestTime );
+		}
+
+		if( newhash != sessionhash )
+		{
+			sessionhash = newhash;
+			RebuildLeaderboard();
+		}
+	}
+
 	private async void RebuildLeaderboard()
 	{
 		if ( scope == LeaderboardScope.None ) return;
