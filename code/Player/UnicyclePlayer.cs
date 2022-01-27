@@ -90,6 +90,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 	public override void Simulate( Client cl )
 	{
+		if ( SpectateTarget.IsValid() ) return;
+
 		if ( LifeState == LifeState.Alive )
 		{
 			var controller = GetActiveController();

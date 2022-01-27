@@ -13,12 +13,4 @@ internal partial class UnicyclePlayer
 			SpectateTarget = null;
 	}
 
-	public override PawnController GetActiveController()
-	{
-		if ( SpectateTarget.IsValid() )
-			return null;
-
-		return base.GetActiveController();
-	}
-
 }
