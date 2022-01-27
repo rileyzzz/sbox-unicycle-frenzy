@@ -156,6 +156,20 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		return a;
 	}
 
+	[ServerCmd]
+	public static void SetSpectateTargetOnServer( int entityId )
+	{
+		if ( !ConsoleSystem.Caller.IsValid() ) return;
+
+		var ent = Entity.FindByIndex( entityId ) as UnicyclePlayer;
+		if ( ent == null || !ent.IsValid() ) return;
+
+		var caller = ConsoleSystem.Caller.Pawn as UnicyclePlayer;
+		if ( !caller.IsValid() ) return;
+
+		caller.SpectateTarget = ent == caller ? null : ent;
+	}
+
 	[ClientRpc]
 	private void AddRespawnOnClient()
 	{

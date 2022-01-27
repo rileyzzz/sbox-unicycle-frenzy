@@ -4,12 +4,12 @@ using Sandbox.ScreenShake;
 internal partial class UnicyclePlayer
 {
 
-	private void RagdollModel( ModelEntity modelEnt, bool isCorpse )
+	private ModelEntity RagdollModel( ModelEntity modelEnt )
 	{
 		if ( !modelEnt.IsValid() )
 		{
 			Log.Error( "??" );
-			return;
+			return null;
 		}
 
 		var ent = new ModelEntity();
@@ -32,12 +32,6 @@ internal partial class UnicyclePlayer
 		ent.RenderColor = RenderColor;
 		ent.PhysicsGroup.Velocity = Velocity;
 
-		if ( Local.Pawn == this )
-		{
-			new Perlin( 2f, 2, 3 );
-			//ent.EnableDrawing = false; wtf
-		}
-
 		ent.SetInteractsAs( CollisionLayer.Debris );
 		ent.SetInteractsWith( CollisionLayer.WORLD_GEOMETRY );
 		ent.SetInteractsExclude( CollisionLayer.Player | CollisionLayer.Debris );
@@ -57,12 +51,9 @@ internal partial class UnicyclePlayer
 			clothing.CopyMaterialGroup( e );
 		}
 
-		if ( isCorpse && this is Player pl )
-		{
-			pl.Corpse = ent;
-		}
-
 		ent.DeleteAsync( 10.0f );
+
+		return ent;
 	}
 
 	[ClientRpc]
@@ -72,17 +63,27 @@ internal partial class UnicyclePlayer
 		//		 so we're not paranoid about an nre here
 		//		 maybe also predicted ragdolling to smooth out high ping deaths
 
+		ModelEntity corpse = null;
+
 		if ( Terry.IsValid() )
 		{
-			RagdollModel( Terry, true );
+			corpse = RagdollModel( Terry );
 		}
 
 		if ( Unicycle.IsValid() )
 		{
-			RagdollModel( Unicycle.FrameModel, false );
-			RagdollModel( Unicycle.WheelModel, false );
-			RagdollModel( Unicycle.SeatModel, false );
+			RagdollModel( Unicycle.FrameModel );
+			RagdollModel( Unicycle.WheelModel );
+			RagdollModel( Unicycle.SeatModel );
 		}
+
+		if ( Local.Pawn is not UnicyclePlayer pl ) return;
+
+		if( Local.Pawn == this || pl.SpectateTarget == this )
+			new Perlin( 2f, 2, 3 );
+
+		if ( corpse.IsValid() )
+			pl.Corpse = corpse;
 	}
 
 }
