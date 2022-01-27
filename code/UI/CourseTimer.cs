@@ -14,6 +14,9 @@ internal class CourseTimer : Panel
 
 			var target = pl.SpectateTarget ?? pl;
 
+			if ( target.TimerState != TimerState.Live )
+				return FormattedTimeMs( 0 );
+
 			return FormattedTimeMs( target.TimeSinceStart );
 		} 
 	}
