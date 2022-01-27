@@ -10,10 +10,11 @@ internal class CourseTimer : Panel
 	{ 
 		get
 		{
-			if ( Local.Pawn is not UnicyclePlayer pl || pl.TimerState != TimerState.Live )
-				return FormattedTimeMs( 0 );
+			if ( Local.Pawn is not UnicyclePlayer pl ) return "UNKNOWN";
 
-			return FormattedTimeMs( pl.TimeSinceStart );
+			var target = pl.SpectateTarget ?? pl;
+
+			return FormattedTimeMs( target.TimeSinceStart );
 		} 
 	}
 
