@@ -24,5 +24,20 @@ internal class GameMenu : NavigatorPanel
 		}
 	}
 
+	public override void Tick()
+	{
+		base.Tick();
+
+		if ( Local.Pawn is not UnicyclePlayer pl ) return;
+
+		SetClass( "is-spectating", pl.SpectateTarget != null );
+	}
+
+	public void StopSpectating()
+	{
+		UnicyclePlayer.SetSpectateTargetOnServer( -1 );
+		Close();
+	}
+
 }
 

@@ -34,7 +34,7 @@ GameMenu {
             cursor: pointer;
             transition: color .15s linear;
             width: 100%;
-            padding-top:3px;
+            padding-top: 3px;
 
             Label {
                 padding: 10px;
@@ -65,6 +65,12 @@ GameMenu {
             &:active .underline {
                 background-color: white;
             }
+        }
+    }
+
+    &:not(.is-spectating) {
+        .stop-spectating {
+            display: none;
         }
     }
 
