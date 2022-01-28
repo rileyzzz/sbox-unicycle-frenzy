@@ -52,6 +52,7 @@ CustomizeTab {
                 flex-grow: 1;
                 align-items: center;
                 justify-content: center;
+                cursor: move;
 
                 ScenePanel {
                     border-radius: $radius;
