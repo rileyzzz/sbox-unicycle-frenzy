@@ -14,6 +14,7 @@ internal class UnicycleCamera : Camera
 		if ( pawn == null ) return;
 		if ( pawn.SpectateTarget.IsValid() ) pawn = pawn.SpectateTarget;
 
+		ClearViewBlockers();
 		UpdateViewBlockers( pawn );
 
 		var center = pawn.Position + Vector3.Up * 80;
@@ -41,14 +42,24 @@ internal class UnicycleCamera : Camera
 		Viewer = null;
 	}
 
-	private void UpdateViewBlockers( UnicyclePlayer pawn )
+	public override void Deactivated()
 	{
-		foreach( var ent in viewblockers )
+		base.Deactivated();
+
+		ClearViewBlockers();
+	}
+
+	private void ClearViewBlockers()
+	{
+		foreach ( var ent in viewblockers )
 		{
 			ent.BlockingView = false;
 		}
 		viewblockers.Clear();
+	}
 
+	private void UpdateViewBlockers( UnicyclePlayer pawn )
+	{
 		var traces = Trace.Sphere( 3f, CurrentView.Position, pawn.Position ).RunAll();
 
 		if ( traces == null ) return;
