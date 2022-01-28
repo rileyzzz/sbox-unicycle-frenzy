@@ -107,8 +107,8 @@ StatsTabDetails {
                 margin: 0 45px 45px 0;
                 width: 110px;
                 height: 110px;
-                background-color: $bg;
-                border-radius: $radius;
+                background-color: transparent;
+                border-radius: $smallradius;
                 border: 8px solid $lightbg;
                 transition: all .08s linear;
                 cursor: pointer;
@@ -118,7 +118,7 @@ StatsTabDetails {
                 background-position: center center;
 
                 &.completed {
-                    background-color: $primary;
+                    background-color: #4cff00;
                 }
 
                 &:hover {
