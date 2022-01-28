@@ -37,9 +37,24 @@ internal class UnicycleCamera : Camera
 		Position = endpos;
 		Rotation = Input.Rotation;
 
-		FieldOfView = 80;
+		var rot = pawn.Rotation.Angles() * .015f;
+		rot.yaw = 0;
+
+		Rotation *= Rotation.From( rot );
+
+		var spd = pawn.Velocity.WithZ( 0 ).Length / 350f;
+		var fov = 82f.LerpTo( 92f, spd );
+
+		FieldOfView = FieldOfView.LerpTo( fov, Time.Delta );
 
 		Viewer = null;
+	}
+
+	public override void Activated()
+	{
+		base.Activated();
+
+		FieldOfView = 85;
 	}
 
 	public override void Deactivated()
