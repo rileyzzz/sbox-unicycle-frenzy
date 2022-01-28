@@ -31,15 +31,15 @@ internal class CustomizeRenderScene : Panel
 
 		if ( renderScene == null ) return;
 
-		if ( HasMouseCapture )
-		{
-			  renderSceneAngles.pitch += Mouse.Delta.y;
-			  renderSceneAngles.yaw -= Mouse.Delta.x;
-			  renderSceneAngles.pitch = renderSceneAngles.pitch.Clamp( 0, 90 );
-		}
+		//if ( HasMouseCapture )
+		//{
+		//	  renderSceneAngles.pitch += Mouse.Delta.y;
+		//	  renderSceneAngles.yaw -= Mouse.Delta.x;
+		//	  renderSceneAngles.pitch = renderSceneAngles.pitch.Clamp( 0, 90 );
+		//}
 
 		renderScene.CameraPosition = renderScene.CameraPosition.LerpTo( renderScenePos, 10f * Time.Delta );
-		renderScene.CameraRotation = Rotation.Lerp( renderScene.CameraRotation, Rotation.From( renderSceneAngles ), 15f * Time.Delta );
+		//renderScene.CameraRotation = Rotation.Lerp( renderScene.CameraRotation, Rotation.From( renderSceneAngles ), 15f * Time.Delta );
 	}
 
 	public override void OnMouseWheel( float value )
