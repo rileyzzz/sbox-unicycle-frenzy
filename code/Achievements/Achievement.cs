@@ -69,7 +69,7 @@ internal partial class Achievement
 				DisplayName = "Unicyclist",
 				ShortName = "uf_unicyclist",
 				GameName = Global.GameName,
-				ImageThumb = "https://files.facepunch.com/crayz/1b2611b1/icon-unicyclist.jpg"
+				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/unicyclist.png"
 			} );
 
 			result.Add( new Achievement()
@@ -79,7 +79,7 @@ internal partial class Achievement
 				DisplayName = "Bronze Medal",
 				ShortName = "uf_bronze",
 				GameName = Global.GameName,
-				ImageThumb = "",
+				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_bronze.png",
 				PerMap = true
 			} );
 
@@ -90,7 +90,7 @@ internal partial class Achievement
 				DisplayName = "Silver Medal",
 				ShortName = "uf_silver",
 				GameName = Global.GameName,
-				ImageThumb = "",
+				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_silver.png",
 				PerMap = true
 			} );
 
@@ -101,7 +101,7 @@ internal partial class Achievement
 				DisplayName = "Gold Medal",
 				ShortName = "uf_gold",
 				GameName = Global.GameName,
-				ImageThumb = "",
+				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_gold2.png",
 				PerMap = true
 			} );
 
