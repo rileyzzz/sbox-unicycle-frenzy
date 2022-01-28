@@ -15,31 +15,32 @@ internal class CustomizeRenderScene : Panel
 	private float renderSceneDistance = 135;
 	private Vector3 renderScenePos => Vector3.Up * 22 + renderSceneAngles.Direction * -renderSceneDistance;
 
+	private bool drag;
+
 	public override void OnButtonEvent( ButtonEvent e )
 	{
 		if ( e.Button == "mouseleft" )
 		{
-			SetMouseCapture( e.Pressed );
+			drag = e.Pressed;
 		}
 
 		base.OnButtonEvent( e );
 	}
 
-	public override void Tick()
+	[Event.Frame]
+	private void OnFrame()
 	{
-		base.Tick();
-
 		if ( renderScene == null ) return;
 
-		//if ( HasMouseCapture )
-		//{
-		//	  renderSceneAngles.pitch += Mouse.Delta.y;
-		//	  renderSceneAngles.yaw -= Mouse.Delta.x;
-		//	  renderSceneAngles.pitch = renderSceneAngles.pitch.Clamp( 0, 90 );
-		//}
+		if ( drag )
+		{
+			renderSceneAngles.pitch += Mouse.Delta.y * .5f;
+			renderSceneAngles.yaw -= Mouse.Delta.x * .5f;
+			renderSceneAngles.pitch = renderSceneAngles.pitch.Clamp( 0, 75 );
+		}
 
 		renderScene.CameraPosition = renderScene.CameraPosition.LerpTo( renderScenePos, 10f * Time.Delta );
-		//renderScene.CameraRotation = Rotation.Lerp( renderScene.CameraRotation, Rotation.From( renderSceneAngles ), 15f * Time.Delta );
+		renderScene.CameraRotation = Rotation.Lerp( renderScene.CameraRotation, Rotation.From( renderSceneAngles ), 15f * Time.Delta );
 	}
 
 	public override void OnMouseWheel( float value )
