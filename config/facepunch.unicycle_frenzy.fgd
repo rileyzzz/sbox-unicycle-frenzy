@@ -145,3 +145,18 @@ metadata
 	output OnEndTouchAll(void) : "Fired when all entities touching this trigger have stopped touching it."
 ]
 
+//
+// UfProp
+//
+@PointClass base(BaseProperties_facepunch_unicycle_frenzy) model() = uf_prop : ""
+[
+	model(resource:vmdl) { report = true hide_when_solid = true }: "World Model" : "" : "The model this entity should use."
+	skin(materialgroup) { group = "Rendering" hide_when_solid = true } : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 
+	bodygroups(bodygroupchoices) { group = "Rendering" hide_when_solid = true } : "Body Groups" : "" : "Some models have multiple variations of certain items, such as characters having different hair styles, etc."
+	no_camera_collide(boolean) : "No Camera Collide" : 0 : "The Unicycle camera will maintain its position when touching this prop"
+	camera_fade(boolean) : "Camera Fade" : 0 : "This prop will fade out when it's between the player and the camera"
+	enable_shadows(boolean) { group = "Rendering" } : "Shadow Casting" : 1 : "Whether this entity should cast shadows or not"
+
+	input SetColor(string) : "Sets the color of this entity. Format is '255 255 255 255'."
+]
+
