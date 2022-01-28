@@ -6,9 +6,13 @@ using System.Linq;
 internal class CustomizeRenderScene : Panel
 {
 
+	private string prevtrail;
+	private SceneObject unicycleObject;
+	private Particles trailParticle;
+	private SceneWorld sceneWorld;
 	private ScenePanel renderScene;
 	private Angles renderSceneAngles = new( 25.0f, 0.0f, 0.0f );
-	private float renderSceneDistance = 100;
+	private float renderSceneDistance = 135;
 	private Vector3 renderScenePos => Vector3.Up * 22 + renderSceneAngles.Direction * -renderSceneDistance;
 
 	public override void OnButtonEvent( ButtonEvent e )
@@ -29,9 +33,9 @@ internal class CustomizeRenderScene : Panel
 
 		if ( HasMouseCapture )
 		{
-			renderSceneAngles.pitch += Mouse.Delta.y;
-			renderSceneAngles.yaw -= Mouse.Delta.x;
-			renderSceneAngles.pitch = renderSceneAngles.pitch.Clamp( 0, 90 );
+			  renderSceneAngles.pitch += Mouse.Delta.y;
+			  renderSceneAngles.yaw -= Mouse.Delta.x;
+			  renderSceneAngles.pitch = renderSceneAngles.pitch.Clamp( 0, 90 );
 		}
 
 		renderScene.CameraPosition = renderScene.CameraPosition.LerpTo( renderScenePos, 10f * Time.Delta );
@@ -46,20 +50,14 @@ internal class CustomizeRenderScene : Panel
 		base.OnMouseWheel( value );
 	}
 
-	public void Build()
+	private void BuildSceneWorld()
 	{
-		renderScene?.Delete( true );
+		sceneWorld?.Delete();
+		sceneWorld = new SceneWorld();
 
-		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
-
-		// todo: parts override for previewing?
-
-		using ( SceneWorld.SetCurrent( new SceneWorld() ) )
+		using ( SceneWorld.SetCurrent( sceneWorld ) )
 		{
-			BuildUnicycleObject( ensemble );
-
-			//SceneObject.CreateModel("models/checkpoint_platform_wood.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ) );
-			SceneObject.CreateModel("models/sceneobject/scene_unicycle_ensemble_main.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ));
+			SceneObject.CreateModel( "models/sceneobject/scene_unicycle_ensemble_main.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ) );
 
 			var skycolor = Color.Orange;
 
@@ -83,6 +81,17 @@ internal class CustomizeRenderScene : Panel
 			renderScene.CameraRotation = Rotation.From( 10, -62, 0 );
 			renderSceneAngles = renderScene.CameraRotation.Angles();
 		}
+	}
+
+	public void Build()
+	{
+		if ( sceneWorld == null ) BuildSceneWorld();
+		using var _ = SceneWorld.SetCurrent( sceneWorld );
+
+		unicycleObject?.Delete();
+
+		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
+		unicycleObject = BuildUnicycleObject( ensemble );
 	}
 
 	private SceneObject BuildUnicycleObject( UnicycleEnsemble ensemble )
@@ -124,10 +133,15 @@ internal class CustomizeRenderScene : Panel
 		frameObj.AddChild( "pedalL", pedalObjL );
 		frameObj.AddChild( "pedalR", pedalObjR );
 
-		var trailParticle = Particles.Create(trail.Model, seatAttachment.Value.Position);
-		trailParticle.SetPosition(6, .75f);
-		trailParticle.SetPosition(7, 1);
-		trailParticle.SetPosition(8, 0);
+		if( prevtrail != trail.Model )
+		{
+			prevtrail = trail.Model;
+			trailParticle?.Destroy( true );
+			trailParticle = Particles.Create( trail.Model, seatAttachment.Value.Position );
+			trailParticle.SetPosition( 6, .75f );
+			trailParticle.SetPosition( 7, 1 );
+			trailParticle.SetPosition( 8, 0 );
+		}
 
 		return frameObj;
 	}
