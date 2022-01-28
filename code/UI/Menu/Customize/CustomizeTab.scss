@@ -85,12 +85,13 @@ CustomizeTab {
         .parts {
             flex-grow: 1;
             flex-wrap: wrap;
+            overflow: scroll;
 
             CustomizePartIcon {
-                width: 100px;
-                height: 100px;
-                background-color: rgba($primary .1);
-                border-radius: $radius;
+                width: 90px;
+                height: 90px;
+                background-color: rgba($primary .01);
+                border-radius: $smallradius;
                 transition: background-color .15s ease-out;
                 margin-right: 4px;
                 cursor: pointer;
@@ -104,7 +105,7 @@ CustomizeTab {
 
                 &:hover:not(.equipped), &.active {
                     border-color: rgba($primary 1);
-                    background-color: rgba($primary .5);
+                    //background-color: rgba($primary .5);
                 }
 
                 &.equipped {
