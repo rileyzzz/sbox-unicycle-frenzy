@@ -87,6 +87,7 @@ internal partial class UnicycleController : BasePlayerController
 		DoFriction();
 		DoSlope();
 		DoTilt();
+		DoGroundRotation();
 
 		// lerp pedals into place, adding velocity and lean
 		if ( pl.TimeSincePedalStart < pl.TimeToReachTarget + Time.Delta )
@@ -99,11 +100,6 @@ internal partial class UnicycleController : BasePlayerController
 
 		DoRotation();
 		Gravity();
-
-		if ( GroundEntity != null && !GroundEntity.AngularVelocity.Length.AlmostEqual( 0f ) )
-		{
-			Position = Position.RotateAroundPivot( GroundEntity.Position, Rotation.From( GroundEntity.AngularVelocity * Time.Delta ) );
-		}
 
 		// go
 		Velocity += BaseVelocity;
@@ -120,6 +116,23 @@ internal partial class UnicycleController : BasePlayerController
 		pl.TimeSincePedalStart += Time.Delta;
 		pl.PrevGrounded = beforeGrounded;
 		pl.PrevVelocity = beforeVelocity;
+	}
+
+	private Rotation prevRot;
+	private Entity prevGroundEntity;
+	private void DoGroundRotation()
+	{
+		if ( GroundEntity == null ) return;
+		if ( prevRot == GroundEntity.Rotation ) return;
+
+		if ( prevGroundEntity == GroundEntity )
+		{
+			var delta = Rotation.Difference( prevRot, GroundEntity.Rotation );
+			Position = Position.RotateAroundPivot( GroundEntity.Position, delta );
+		}
+
+		prevGroundEntity = GroundEntity;
+		prevRot = GroundEntity.Rotation;
 	}
 
 	private bool ShouldFall()
