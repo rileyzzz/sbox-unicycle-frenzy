@@ -192,6 +192,7 @@ StatsTabLeaderboardSingle {
             min-height: 32px;
             font-size: 16px;
             letter-spacing: 1px;
+            align-items: center;
 
             &:nth-child(odd) {
                 background-color: rgba( $bg .5 );
@@ -210,7 +211,7 @@ StatsTabLeaderboardSingle {
             }
 
             .rank {
-                width: 100px;
+                width: 35px;
                 align-items: center;
             }
 
@@ -225,20 +226,25 @@ StatsTabLeaderboardSingle {
                 align-items: center;
             }
 
+            .spec-button {
+                width: 50px;
+            }
+
             &:not(.can-spectate) {
-                .spec-button {
+                .spec-button button {
                     display: none;
                 }
             }
 
-            .spec-button {
-                margin-right: 24px;
+            .spec-button button {
+                width: 24px;
+                height: 24px;
                 border-radius: $smallradius;
                 background-color: transparent;
-                text-shadow: 1px 1px 1px black;
-                padding: 4px;
                 font-size: 12px;
                 transition: all .15s linear;
+                align-items: center;
+                justify-content: center;
 
                 &:hover {
                     background-color: rgba( $primary 1 );
