@@ -23,7 +23,6 @@ internal partial class UnicycleEntity : Entity
 
 	private Particles trailParticle;
 	private Entity localPawnPedals;
-	public Particles SpeedParticle;
 
 	public Vector3 GetAssPosition()
 	{
@@ -56,8 +55,6 @@ internal partial class UnicycleEntity : Entity
 		FrameModel = null;
 		trailParticle?.Destroy();
 		trailParticle = null;
-		SpeedParticle?.Destroy();
-		SpeedParticle = null;
 
 		var cfg = pl.Client.Components.Get<UnicycleEnsemble>();
 
@@ -89,8 +86,6 @@ internal partial class UnicycleEntity : Entity
 		PedalsPivot = pedalPivot;
 		LeftPedalModel = leftPedal;
 		RightPedalModel = rightPedal;
-
-		SpeedParticle = Particles.Create( "particles/player/speed_lines.vpcf" );
 
 		if ( trail != null )
 		{
@@ -176,12 +171,10 @@ internal partial class UnicycleEntity : Entity
 	{
 		if ( Parent is not UnicyclePlayer pl ) return;
 		if ( trailParticle == null ) return;
-		if ( SpeedParticle == null) return;
 
 		var a = Math.Min( pl.Velocity.Length / 500f, 1f );
 		trailParticle.SetPosition( 6, new Vector3( a, 0, 0 ) );
 		trailParticle.SetPosition(8, 1);
-		SpeedParticle.SetPosition( 1, new Vector3( a, 0, 0  ) );
 	}
 
 	[Event.Frame]

@@ -19,6 +19,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	private TimeSince timeSinceDied;
 	private Clothing.Container clothing;
 	private UfNametag nametag;
+	private Particles speedParticle;
 
 	public override void Respawn()
 	{
@@ -62,6 +63,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		base.ClientSpawn();
 
 		nametag = new( this );
+		speedParticle = Particles.Create( "particles/player/speed_lines.vpcf" );
 	}
 
 	public override void OnKilled()
@@ -146,6 +148,22 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		}
 
 		Unicycle.SetRenderAlphaOnAllParts( a );
+	}
+
+	private float targetSpeedParticle = 0;
+	private float currentSpeedParticle = 0;
+	[Event.Frame]
+	private void UpdateSpeedParticle()
+	{
+		if ( speedParticle == null ) return;
+
+		var spd = Math.Min( Velocity.Length, 800 );
+		targetSpeedParticle = spd < 400 || Fallen ? 0 : ( spd - 400 ) / 400f;
+
+		var lerpSpd = targetSpeedParticle == 0 ? 6 : 1;
+
+		currentSpeedParticle = currentSpeedParticle.LerpTo( targetSpeedParticle, Time.Delta * lerpSpd );
+		speedParticle.SetPosition( 1, new Vector3( currentSpeedParticle, 0, 0 ) );
 	}
 
 	public float GetRenderAlpha()
