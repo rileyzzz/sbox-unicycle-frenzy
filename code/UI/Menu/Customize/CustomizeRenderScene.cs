@@ -58,7 +58,7 @@ internal class CustomizeRenderScene : Panel
 
 		using ( SceneWorld.SetCurrent( sceneWorld ) )
 		{
-			SceneObject.CreateModel( "models/sceneobject/scene_unicycle_ensemble_main.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ) );
+			SceneObject.CreateModel( "models/scene/scene_unicycle_ensemble_main.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ) );
 
 			var skycolor = Color.Orange;
 
