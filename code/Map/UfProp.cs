@@ -2,6 +2,7 @@
 using System.Linq;
 
 [Hammer.Model]
+[Hammer.SupportsSolid]
 [Library("uf_prop")]
 internal partial class UfProp : ModelEntity
 {
