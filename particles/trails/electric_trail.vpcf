@@ -58,7 +58,7 @@
 				m_flNoiseImgPreviewScale = 1.0
 				m_bNoiseImgPreviewLive = true
 				m_nInputMode = "PF_INPUT_MODE_CLAMPED"
-				m_flMultFactor = 10.0
+				m_flMultFactor = 30.0
 				m_flInput0 = 0.0
 				m_flInput1 = 1.0
 				m_flOutput0 = 0.0
