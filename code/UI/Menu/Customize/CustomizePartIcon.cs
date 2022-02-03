@@ -9,7 +9,7 @@ internal class CustomizePartIcon : Button
 
 	public CustomizationPart Part { get; }
 
-	//public string PartName => Part.Name;
+	public string PartName => Part.DisplayName;
 
 	public CustomizePartIcon( CustomizationPart part )
 	{
