@@ -7,11 +7,11 @@ using System.Linq;
 internal class CustomizePartIcon : Button
 {
 
-	public UnicyclePart Part { get; }
+	public CustomizationPart Part { get; }
 
-	public string PartName => Part.Name;
+	//public string PartName => Part.Name;
 
-	public CustomizePartIcon( UnicyclePart part )
+	public CustomizePartIcon( CustomizationPart part )
 	{
 		Part = part;
 
@@ -24,7 +24,7 @@ internal class CustomizePartIcon : Button
 
 		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
 
-		ensemble.Equip( Part );
+		//ensemble.Equip( Part );
 
 		Ancestors.OfType<CustomizeTab>().FirstOrDefault()?.BuildRenderScene();
 	}
@@ -34,22 +34,22 @@ internal class CustomizePartIcon : Button
 		base.Tick();
 
 		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
-		SetClass( "equipped", ensemble.Parts.Contains( Part ) );
+		//SetClass( "equipped", ensemble.Parts.Contains( Part ) );
 	}
 
 	private void SetIcon()
 	{
 		SetClass( "missing-icon", true );
 
-		if ( Part.Type == PartType.Spray )
-		{
-			var texname = Path.GetFileNameWithoutExtension( Part.Model );
-			var texpath = $"textures/sprays/{texname}.png";
-			var tex = Texture.Load( FileSystem.Mounted, texpath, false );
-			if ( tex == null ) return;
-			Style.SetBackgroundImage( tex );
-			SetClass( "missing-icon", false );
-		}
+		//if ( Part.Type == PartType.Spray )
+		//{
+		//	var texname = Path.GetFileNameWithoutExtension( Part.Model );
+		//	var texpath = $"textures/sprays/{texname}.png";
+		//	var tex = Texture.Load( FileSystem.Mounted, texpath, false );
+		//	if ( tex == null ) return;
+		//	Style.SetBackgroundImage( tex );
+		//	SetClass( "missing-icon", false );
+		//}
 	}
 
 }
