@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-internal partial class UnicycleEnsemble : EntityComponent
+internal partial class UnicycleEnsemble_FUCKINGDELETE : EntityComponent
 {
 
 	//[ConVar.ClientData( "unicycle", Saved = true )]
@@ -139,7 +139,7 @@ internal partial class UnicycleEnsemble : EntityComponent
 		var caller = ConsoleSystem.Caller;
 		if ( caller == null ) return;
 
-		var cfg = caller.Components.Get<UnicycleEnsemble>();
+		var cfg = caller.Components.Get<UnicycleEnsemble_FUCKINGDELETE>();
 		if ( cfg == null ) return;
 
 		cfg.Equip( id );
@@ -151,7 +151,7 @@ internal partial class UnicycleEnsemble : EntityComponent
 		var caller = ConsoleSystem.Caller;
 		if ( caller == null ) return;
 
-		var cfg = caller.Components.Get<UnicycleEnsemble>();
+		var cfg = caller.Components.Get<UnicycleEnsemble_FUCKINGDELETE>();
 		if ( cfg == null ) return;
 
 		cfg.Unequip( id );

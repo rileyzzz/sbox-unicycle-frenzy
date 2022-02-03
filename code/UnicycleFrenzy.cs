@@ -56,7 +56,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 	{
 		base.ClientJoined( cl );
 
-		cl.Components.Add( new UnicycleEnsemble() );
+		cl.Components.Add( new CustomizationComponent() );
 
 		cl.Pawn = new UnicyclePlayer();
 		(cl.Pawn as Player).Respawn();

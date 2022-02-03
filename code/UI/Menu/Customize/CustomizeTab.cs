@@ -1,6 +1,5 @@
 ﻿using Sandbox.UI;
 using Sandbox.UI.Construct;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,12 +48,12 @@ internal class CustomizeTab : Panel
 	}
 
 	private Button activeBtn;
-	private async void BuildPartTypeButtons()
+	private void BuildPartTypeButtons()
 	{
 		PartsTypeList.DeleteChildren();
 		activeBtn = null;
 
-		var cfg = await Customization.LoadConfig();
+		var cfg = Customization.Config;
 
 		foreach( var category in cfg.Categories )
 		{
@@ -78,11 +77,19 @@ internal class CustomizeTab : Panel
 
 	}
 
+	private TimeSince timeSinceDirtyCheck;
+
 	[Event.Frame]
-	private void OnFrame()
+	private async void OnFrame()
 	{
-		if ( Customization.Dirty )
+		if ( timeSinceDirtyCheck < 1f ) return;
+		timeSinceDirtyCheck = 0;
+
+		//todo: FileSystem.Watcher so we can dodge this bs
+		if ( await Customization.IsDirty() )
 		{
+			await Customization.LoadConfig();
+
 			BuildRenderScene();
 			BuildPartTypeButtons();
 		}

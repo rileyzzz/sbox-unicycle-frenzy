@@ -24,9 +24,8 @@ internal class CustomizePartIcon : Button
 	{
 		base.OnClick( e );
 
-		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
-
-		//ensemble.Equip( Part );
+		var customization = Local.Client.Components.Get<CustomizationComponent>();
+		customization.Equip( Part );
 
 		Ancestors.OfType<CustomizeTab>().FirstOrDefault()?.BuildRenderScene();
 	}
@@ -35,8 +34,8 @@ internal class CustomizePartIcon : Button
 	{
 		base.Tick();
 
-		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
-		//SetClass( "equipped", ensemble.Parts.Contains( Part ) );
+		var customization = Local.Client.Components.Get<CustomizationComponent>();
+		SetClass( "equipped", customization.IsEquipped( Part ) );
 	}
 
 	private void SetIcon()
