@@ -1,9 +1,11 @@
 ﻿using Sandbox;
 using System.Linq;
+using Hammer;
 
 [Hammer.Model]
 [Hammer.SupportsSolid]
 [Library("uf_prop")]
+[EntityTool( "Unicycle Frenzy Prop", "Unicycle Frenzy", "A model or Mesh that can be set to pass the camera through it." )]
 internal partial class UfProp : ModelEntity
 {
 

@@ -4,7 +4,7 @@ using System.Linq;
 
 [Library("uf_checkpoint", Description = "Defines a checkpoint where the player will respawn after falling")]
 [EditorModel( "models/checkpoint_platform_hammer.vmdl", FixedBounds = true)]
-[EntityTool("Player Checkpoint", "Unicycle Frenzy", "Defines a checkpoint where the player will respawn after falling")]
+[EntityTool("Player Checkpoint", "Unicycle Frenzy", "Defines a checkpoint where the player will respawn after falling.")]
 internal partial class Checkpoint : ModelEntity
 {
 

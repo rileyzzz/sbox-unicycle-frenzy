@@ -1,6 +1,8 @@
 ﻿using Sandbox;
+using Hammer;
 
 [Library("uf_achievement_medals")]
+[EntityTool( "Unicycle Frenzy Medals", "Unicycle Frenzy", "Set the time for achievement medals." )]
 internal class AchievementMedals : Entity
 {
 
