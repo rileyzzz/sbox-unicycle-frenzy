@@ -3,31 +3,10 @@ using System;
 using System.Text.Json;
 using System.Collections.Generic;
 
-public class CustomizationConfig
+namespace Facepunch.Customization;
+
+public partial class CustomizationConfig
 {
-
-	public static CustomizationConfig Gamemode
-	{
-		get
-		{
-			var filepath = "config/customization.json";
-
-			if ( !FileSystem.Mounted.FileExists( filepath ) ) return new();
-
-			var json = FileSystem.Mounted.ReadAllText( filepath );
-
-			try
-			{
-				return JsonSerializer.Deserialize<CustomizationConfig>( json );
-			}
-			catch ( Exception e )
-			{
-				Log.Error( "Failed to deserialize Customization: " + e.Message );
-			}
-
-			return new();
-		}
-	}
 
 	//public int CategoryIdAccumulator { get; set; }
 	//public int PartIdAccumulator { get; set; }

@@ -3,6 +3,8 @@ using Sandbox.UI;
 using System.IO;
 using System.Linq;
 
+using Facepunch.Customization;
+
 [UseTemplate]
 internal class CustomizePartIcon : Button
 {

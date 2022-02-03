@@ -4,6 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Facepunch.Customization;
+using Sandbox;
+
 [UseTemplate]
 [NavigatorTarget( "menu/customize" )]
 internal class CustomizeTab : Panel
@@ -46,14 +49,14 @@ internal class CustomizeTab : Panel
 	}
 
 	private Button activeBtn;
-	private void BuildPartTypeButtons()
+	private async void BuildPartTypeButtons()
 	{
 		PartsTypeList.DeleteChildren();
 		activeBtn = null;
 
-		var cfg = CustomizationConfig.Gamemode;
+		var cfg = await Customization.LoadConfig();
 
-		foreach( var category in CustomizationConfig.Gamemode.Categories )
+		foreach( var category in cfg.Categories )
 		{
 			var btn = PartsTypeList.Add.Button( category.DisplayName );
 
@@ -73,6 +76,16 @@ internal class CustomizeTab : Panel
 			} );
 		}
 
+	}
+
+	[Event.Frame]
+	private void OnFrame()
+	{
+		if ( Customization.Dirty )
+		{
+			BuildRenderScene();
+			BuildPartTypeButtons();
+		}
 	}
 
 }
