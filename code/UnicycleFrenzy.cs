@@ -108,4 +108,21 @@ partial class UnicycleFrenzy : Sandbox.Game
 		}
 	}
 
+	public System.Action CustomizationChanged;
+	private TimeSince timeSinceDirtyCheck;
+
+	[Event.Tick]
+	private async void Tempcustmoziationhotload()
+	{
+		if ( timeSinceDirtyCheck < 1f ) return;
+		timeSinceDirtyCheck = 0;
+
+		//todo: FileSystem.Watcher so we can dodge this bs
+		if ( await Customization.IsDirty() )
+		{
+			await Customization.LoadConfig();
+			CustomizationChanged?.Invoke();
+		}
+	}
+
 }

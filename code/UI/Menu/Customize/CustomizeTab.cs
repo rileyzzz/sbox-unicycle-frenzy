@@ -15,6 +15,15 @@ internal class CustomizeTab : Panel
 	public Panel PartsTypeList { get; set; }
 	public Panel PartsList { get; set; }
 
+	public CustomizeTab()
+	{
+		UnicycleFrenzy.Game.CustomizationChanged += () =>
+		{
+			BuildRenderScene();
+			BuildPartTypeButtons();
+		};
+	}
+
 	public override void OnHotloaded()
 	{
 		base.OnHotloaded();
@@ -75,24 +84,6 @@ internal class CustomizeTab : Panel
 			} );
 		}
 
-	}
-
-	private TimeSince timeSinceDirtyCheck;
-
-	[Event.Frame]
-	private async void OnFrame()
-	{
-		if ( timeSinceDirtyCheck < 1f ) return;
-		timeSinceDirtyCheck = 0;
-
-		//todo: FileSystem.Watcher so we can dodge this bs
-		if ( await Customization.IsDirty() )
-		{
-			await Customization.LoadConfig();
-
-			BuildRenderScene();
-			BuildPartTypeButtons();
-		}
 	}
 
 }
