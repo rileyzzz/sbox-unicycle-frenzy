@@ -33,9 +33,9 @@ partial class UnicycleFrenzy : Sandbox.Game
 		{
 			InitMapCycle();
 
-			foreach( var part in UnicyclePart.All )
+			foreach( var part in Customization.Config.Parts )
 			{
-				Precache.Add( part.Model );
+				Precache.Add( part.AssetPath );
 			}
 
 			//GameServices.StartGame();
