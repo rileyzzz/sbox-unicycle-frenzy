@@ -2,6 +2,16 @@
 using Sandbox;
 using System;
 
+public enum PartType
+{
+	Frame,
+	Wheel,
+	Seat,
+	Pedal,
+	Trail,
+	Spray
+}
+
 internal partial class UnicycleEntity : Entity
 {
 
