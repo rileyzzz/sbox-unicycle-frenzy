@@ -21,5 +21,10 @@ public class PanelJuiceTarget : IJuiceTarget
 		panel.Style.Set( "transform", $"scale({scale})" );
 	}
 
+	public void SetAlpha( float a )
+	{
+		panel.Style.Opacity = a;
+	}
+
 }
 

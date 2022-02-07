@@ -21,5 +21,11 @@ public class EntityJuiceTarget : IJuiceTarget
 		entity.LocalScale = scale;
 	}
 
+	public void SetAlpha( float a )
+	{
+		if ( entity is not ModelEntity ent ) return;
+		ent.RenderColor = ent.RenderColor.WithAlpha( a );
+	}
+
 }
 

@@ -6,9 +6,20 @@ public static class Juice
 
 	private static List<BaseEffect> effects = new();
 
+	// todo: 3 lerp kinda sucks
+	// also probably can simplify, scale/alpha are basically doing same thing to different property
+
 	public static ScaleEffect Scale( float a, float b, float c )
 	{
 		var effect = new ScaleEffect( a, b, c );
+		effect.TimeSinceCreated = 0;
+		effects.Add( effect );
+		return effect;
+	}
+
+	public static AlphaEffect Alpha( float a, float b, float c )
+	{
+		var effect = new AlphaEffect( a, b, c );
 		effect.TimeSinceCreated = 0;
 		effects.Add( effect );
 		return effect;
