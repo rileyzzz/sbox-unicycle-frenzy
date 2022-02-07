@@ -27,14 +27,21 @@ internal partial class UnicycleFrenzy
 		NextMap = Global.MapName;
 
 		var pkg = await Package.Fetch( Global.GameName, true );
-		if( pkg == null )
+		if ( pkg == null )
 		{
 			Log.Error( "Failed to load map cycle" );
 			return;
 		}
 
-		foreach( var map in pkg.GameConfiguration.MapList )
-			MapCycle.Add( map );
+		var availablemaps = new List<string>( pkg.GameConfiguration.MapList );
+		availablemaps.RemoveAll( x => x == Global.MapName );
+
+		for ( int i = 0; i < 5; i++ )
+		{
+			var chosen = Rand.FromList( availablemaps );
+			availablemaps.Remove( chosen );
+			MapCycle.Add( chosen );
+		}
 
 		NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
 	}
