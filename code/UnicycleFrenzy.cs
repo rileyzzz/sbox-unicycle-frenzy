@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Facepunch.Customization;
+using Sandbox;
 using System.Collections.Generic;
 
 partial class UnicycleFrenzy : Sandbox.Game
@@ -32,9 +33,9 @@ partial class UnicycleFrenzy : Sandbox.Game
 		{
 			InitMapCycle();
 
-			foreach( var part in UnicyclePart.All )
+			foreach( var part in Customization.Config.Parts )
 			{
-				Precache.Add( part.Model );
+				Precache.Add( part.AssetPath );
 			}
 
 			//GameServices.StartGame();
@@ -55,7 +56,7 @@ partial class UnicycleFrenzy : Sandbox.Game
 	{
 		base.ClientJoined( cl );
 
-		cl.Components.Add( new UnicycleEnsemble() );
+		cl.Components.Add( new CustomizationComponent() );
 
 		cl.Pawn = new UnicyclePlayer();
 		(cl.Pawn as Player).Respawn();
@@ -104,6 +105,23 @@ partial class UnicycleFrenzy : Sandbox.Game
 		{
 			MapStats.Local.AddTimePlayed( secondCounter );
 			secondCounter = 0;
+		}
+	}
+
+	public System.Action CustomizationChanged;
+	private TimeSince timeSinceDirtyCheck;
+
+	[Event.Tick]
+	private async void Tempcustmoziationhotload()
+	{
+		if ( timeSinceDirtyCheck < 1f ) return;
+		timeSinceDirtyCheck = 0;
+
+		//todo: FileSystem.Watcher so we can dodge this bs
+		if ( await Customization.IsDirty() )
+		{
+			await Customization.LoadConfig();
+			CustomizationChanged?.Invoke();
 		}
 	}
 

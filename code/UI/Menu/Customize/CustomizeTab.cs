@@ -1,7 +1,10 @@
 ﻿using Sandbox.UI;
 using Sandbox.UI.Construct;
-using System;
+using System.Collections.Generic;
 using System.Linq;
+
+using Facepunch.Customization;
+using Sandbox;
 
 [UseTemplate]
 [NavigatorTarget( "menu/customize" )]
@@ -11,6 +14,15 @@ internal class CustomizeTab : Panel
 	public CustomizeRenderScene RenderScene { get; set; }
 	public Panel PartsTypeList { get; set; }
 	public Panel PartsList { get; set; }
+
+	public CustomizeTab()
+	{
+		UnicycleFrenzy.Game.CustomizationChanged += () =>
+		{
+			BuildRenderScene();
+			BuildPartTypeButtons();
+		};
+	}
 
 	public override void OnHotloaded()
 	{
@@ -33,11 +45,10 @@ internal class CustomizeTab : Panel
 		RenderScene?.Build();
 	}
 
-	public void LoadParts( PartType type )
+	public void BuildParts( IEnumerable<CustomizationPart> parts )
 	{
 		PartsList.DeleteChildren( true );
 
-		var parts = UnicyclePart.All.Where( x => x.Type == type );
 		foreach ( var part in parts )
 		{
 			var icon = new CustomizePartIcon( part );
@@ -51,25 +62,28 @@ internal class CustomizeTab : Panel
 		PartsTypeList.DeleteChildren();
 		activeBtn = null;
 
-		foreach ( PartType type in Enum.GetValues( typeof( PartType ) ) )
+		var cfg = Customization.Config;
+
+		foreach( var category in cfg.Categories )
 		{
-			var btn = PartsTypeList.Add.Button( type.ToString() );
+			var btn = PartsTypeList.Add.Button( category.DisplayName );
 
 			if ( activeBtn == null )
 			{
 				activeBtn = btn;
 				activeBtn.AddClass( "active" );
-				LoadParts( type );
+				BuildParts( cfg.Parts.Where( x => x.CategoryId == category.Id) );
 			}
 
 			btn.AddEventListener( "onclick", () =>
-			 {
-				 activeBtn?.RemoveClass( "active" );
-				 btn.AddClass( "active" );
-				 activeBtn = btn;
-				 LoadParts( type );
-			 } );
+			{
+				activeBtn?.RemoveClass( "active" );
+				btn.AddClass( "active" );
+				activeBtn = btn;
+				BuildParts( cfg.Parts.Where( x => x.CategoryId == category.Id ) );
+			} );
 		}
+
 	}
 
 }

@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Facepunch.Customization;
+using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 using System.Linq;
@@ -91,23 +92,23 @@ internal class CustomizeRenderScene : Panel
 
 		unicycleObject?.Delete();
 
-		var ensemble = Local.Client.Components.Get<UnicycleEnsemble>();
+		var ensemble = Local.Client.Components.Get<CustomizationComponent>();
 		unicycleObject = BuildUnicycleObject( ensemble );
 	}
 
-	private SceneObject BuildUnicycleObject( UnicycleEnsemble ensemble )
+	private SceneObject BuildUnicycleObject( CustomizationComponent ensemble )
 	{
-		var frame = ensemble.GetPart( PartType.Frame );
-		var trail = ensemble.GetPart( PartType.Trail);
-		var wheel = ensemble.GetPart( PartType.Wheel );
-		var seat = ensemble.GetPart( PartType.Seat );
-		var pedal = ensemble.GetPart( PartType.Pedal );
+		var frame = ensemble.GetEquippedPart( PartType.Frame.ToString() );
+		var trail = ensemble.GetEquippedPart( PartType.Trail.ToString() );
+		var wheel = ensemble.GetEquippedPart( PartType.Wheel.ToString() );
+		var seat = ensemble.GetEquippedPart( PartType.Seat.ToString() );
+		var pedal = ensemble.GetEquippedPart( PartType.Pedal.ToString() );
 
-		var frameObj = SceneObject.CreateModel( frame.Model, Transform.Zero );
-		var wheelObj = SceneObject.CreateModel( wheel.Model, Transform.Zero );
-		var seatObj = SceneObject.CreateModel( seat.Model, Transform.Zero );
-		var pedalObjL = SceneObject.CreateModel( pedal.Model, Transform.Zero );
-		var pedalObjR = SceneObject.CreateModel( pedal.Model, Transform.Zero );
+		var frameObj = SceneObject.CreateModel( frame.AssetPath, Transform.Zero );
+		var wheelObj = SceneObject.CreateModel( wheel.AssetPath, Transform.Zero );
+		var seatObj = SceneObject.CreateModel( seat.AssetPath, Transform.Zero );
+		var pedalObjL = SceneObject.CreateModel( pedal.AssetPath, Transform.Zero );
+		var pedalObjR = SceneObject.CreateModel( pedal.AssetPath, Transform.Zero );
 
 		var frameHub = frameObj.Model.GetAttachment( "hub" ) ?? Transform.Zero;
 		var wheelHub = wheelObj.Model.GetAttachment( "hub" ) ?? Transform.Zero;
@@ -134,11 +135,11 @@ internal class CustomizeRenderScene : Panel
 		frameObj.AddChild( "pedalL", pedalObjL );
 		frameObj.AddChild( "pedalR", pedalObjR );
 
-		if( prevtrail != trail.Model )
+		if( prevtrail != trail.AssetPath )
 		{
-			prevtrail = trail.Model;
+			prevtrail = trail.AssetPath;
 			trailParticle?.Destroy( true );
-			trailParticle = Particles.Create( trail.Model, seatAttachment.Value.Position );
+			trailParticle = Particles.Create( trail.AssetPath, seatAttachment.Value.Position );
 			trailParticle.SetPosition( 6, .75f );
 			trailParticle.SetPosition( 7, 1 );
 			trailParticle.SetPosition( 8, 0 );

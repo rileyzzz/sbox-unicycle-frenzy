@@ -16,7 +16,14 @@
 //
 // AchievementMedals
 //
-@PointClass base(BaseProperties_facepunch_unicycle_frenzy) = uf_achievement_medals : ""
+@PointClass base(BaseProperties_facepunch_unicycle_frenzy) iconsprite( "materials/editor/achievement_medals.vmat" ) 
+metadata
+{
+	entity_tool_name = "Unicycle Frenzy Medals"
+	entity_tool_group = "Unicycle Frenzy"
+	entity_tool_tip = "Set the time for achievement medals."
+}
+= uf_achievement_medals : ""
 [
 	gold_threshold(float) : "Gold" : 0 : "Time (in seconds) to achieve the gold medal for this map"
 	silver_threshold(float) : "Silver" : 0 : "Time (in seconds) to achieve the silver medal for this map"
@@ -31,7 +38,7 @@ metadata
 {
 	entity_tool_name = "Player Checkpoint"
 	entity_tool_group = "Unicycle Frenzy"
-	entity_tool_tip = "Defines a checkpoint where the player will respawn after falling"
+	entity_tool_tip = "Defines a checkpoint where the player will respawn after falling."
 }
 = uf_checkpoint : "Defines a checkpoint where the player will respawn after falling"
 [
@@ -57,6 +64,9 @@ metadata
 metadata
 {
 	auto_apply_material = "materials/editor/uf_trigger_fall.vmat"
+	entity_tool_name = "Trigger Fall"
+	entity_tool_group = "Unicycle Frenzy"
+	entity_tool_tip = "Makes the player fall."
 }
 = uf_trigger_fall : "Makes the player fall"
 [
@@ -116,6 +126,9 @@ metadata
 metadata
 {
 	auto_apply_material = "materials/editor/uf_trigger_reset_progress.vmat"
+	entity_tool_name = "Reset Progress"
+	entity_tool_group = "Unicycle Frenzy"
+	entity_tool_tip = ""
 }
 = uf_trigger_reset_progress : "Resets the player's progress by clearing checkpoints"
 [
@@ -148,7 +161,14 @@ metadata
 //
 // UfProp
 //
-@PointClass base(BaseProperties_facepunch_unicycle_frenzy) model() = uf_prop : ""
+@PointClass base(BaseProperties_facepunch_unicycle_frenzy) tags( SupportsSolids ) model() 
+metadata
+{
+	entity_tool_name = "Unicycle Frenzy Prop"
+	entity_tool_group = "Unicycle Frenzy"
+	entity_tool_tip = "A model or Mesh that can be set to pass the camera through it."
+}
+= uf_prop : ""
 [
 	model(resource:vmdl) { report = true hide_when_solid = true }: "World Model" : "" : "The model this entity should use."
 	skin(materialgroup) { group = "Rendering" hide_when_solid = true } : "Skin" : "default" : "Some models have multiple versions of their textures, called skins." 

@@ -1,5 +1,16 @@
-﻿using Sandbox;
+﻿using Facepunch.Customization;
+using Sandbox;
 using System;
+
+public enum PartType
+{
+	Frame,
+	Wheel,
+	Seat,
+	Pedal,
+	Trail,
+	Spray
+}
 
 internal partial class UnicycleEntity : Entity
 {
@@ -56,24 +67,24 @@ internal partial class UnicycleEntity : Entity
 		trailParticle?.Destroy();
 		trailParticle = null;
 
-		var cfg = pl.Client.Components.Get<UnicycleEnsemble>();
+		var cfg = pl.Client.Components.Get<CustomizationComponent>();
 
-		var frame = cfg.GetPart( PartType.Frame );
-		var seat = cfg.GetPart( PartType.Seat );
-		var wheel = cfg.GetPart( PartType.Wheel );
-		var pedal = cfg.GetPart( PartType.Pedal );
-		var trail = cfg.GetPart( PartType.Trail );
+		var frame = cfg.GetEquippedPart( PartType.Frame.ToString() );
+		var seat = cfg.GetEquippedPart( PartType.Seat.ToString() );
+		var wheel = cfg.GetEquippedPart( PartType.Wheel.ToString() );
+		var pedal = cfg.GetEquippedPart( PartType.Pedal.ToString() );
+		var trail = cfg.GetEquippedPart( PartType.Trail.ToString() );
 
-		FrameModel = new ModelEntity( frame.Model );
+		FrameModel = new ModelEntity( frame.AssetPath );
 		FrameModel.SetParent( this, null, Transform.Zero );
 
-		SeatModel = new ModelEntity( seat.Model );
+		SeatModel = new ModelEntity( seat.AssetPath );
 		SeatModel.SetParent( FrameModel, "seat", Transform.Zero );
 
 		WheelPivot = new Entity();
 		WheelPivot.SetParent( FrameModel, "hub", Transform.Zero );
 
-		WheelModel = new ModelEntity( wheel.Model );
+		WheelModel = new ModelEntity( wheel.AssetPath );
 		WheelModel.SetParent( WheelPivot, null, Transform.Zero );
 
 		var wheelHub = WheelModel.GetAttachment( "hub" ) ?? Transform.Zero;
@@ -89,19 +100,19 @@ internal partial class UnicycleEntity : Entity
 
 		if ( trail != null )
 		{
-			trailParticle = Particles.Create( trail.Model, this );
+			trailParticle = Particles.Create( trail.AssetPath, this );
 		}
 	}
 
-	private void AssemblePedals( UnicyclePart pedal, ModelEntity frame, out Entity pivot, out ModelEntity leftPedal, out ModelEntity rightPedal )
+	private void AssemblePedals( CustomizationPart pedal, ModelEntity frame, out Entity pivot, out ModelEntity leftPedal, out ModelEntity rightPedal )
 	{
 		pivot = new Entity();
 		pivot.SetParent( frame, "hub", Transform.Zero );
 
-		leftPedal = new ModelEntity( pedal.Model );
+		leftPedal = new ModelEntity( pedal.AssetPath );
 		leftPedal.SetParent( pivot, null, Transform.Zero );
 
-		rightPedal = new ModelEntity( pedal.Model );
+		rightPedal = new ModelEntity( pedal.AssetPath );
 		rightPedal.SetParent( pivot, null, Transform.Zero );
 
 		var pedalHub = leftPedal.GetAttachment( "hub", false ) ?? Transform.Zero;
@@ -124,7 +135,7 @@ internal partial class UnicycleEntity : Entity
 		if ( Parent is not UnicyclePlayer pl ) return;
 		if ( !pl.IsValid() || !pl.Client.IsValid() ) return;
 
-		var cfg = pl.Client.Components.Get<UnicycleEnsemble>();
+		var cfg = pl.Client.Components.Get<CustomizationComponent>();
 		var hash = cfg.GetPartsHash();
 
 		if ( hash == parthash ) return;
@@ -188,8 +199,8 @@ internal partial class UnicycleEntity : Entity
 		// todo: reassemble if local player equipped a different pedal part
 		if ( localPawnPedals.IsValid() ) return;
 
-		var cfg = pl.Client.Components.Get<UnicycleEnsemble>();
-		var pedal = cfg.GetPart( PartType.Pedal );
+		var cfg = pl.Client.Components.Get<CustomizationComponent>();
+		var pedal = cfg.GetEquippedPart( PartType.Pedal.ToString() );
 
 		AssemblePedals( pedal, FrameModel, out localPawnPedals, out ModelEntity leftPedal, out ModelEntity rightPedal );
 	}

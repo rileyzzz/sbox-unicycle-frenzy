@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using Facepunch.Customization;
+using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -210,8 +211,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		if ( timeSinceSpray < 3f ) return;
 		timeSinceSpray = 0;
 
-		var sprayPart = Client.Components.Get<UnicycleEnsemble>().GetPart( PartType.Spray );
-		var mat = Material.Load( sprayPart.Model );
+		var sprayPart = Client.Components.Get<CustomizationComponent>().GetEquippedPart( PartType.Spray.ToString() );
+		var mat = Material.Load( sprayPart.AssetPath );
 
 		Decals.Place( mat, Position, Vector3.One * 50, Rotation.LookAt( Vector3.Up ) );
 	}
