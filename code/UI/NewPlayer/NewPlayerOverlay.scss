@@ -1,0 +1,63 @@
+﻿
+@import "../Vars.scss";
+
+NewPlayerOverlay {
+    position: absolute;
+    top: 25%;
+    right: 15%;
+    width: 20%;
+    height: 35%;
+    background-color: rgba($bg .95);
+    border-radius: $radius;
+    pointer-events: all;
+    flex-direction: column;
+    padding: $padding;
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: all .15s ease-in;
+
+    .warning {
+        color: $secondary;
+        display: none;
+    }
+
+    .content {
+        flex-grow: 1;
+        flex-direction: column;
+    }
+
+    .footer {
+        min-height: 32px;
+        flex-direction: row;
+
+        button {
+            padding: 8px;
+            font-size: 20px;
+            font-family: $stylefont;
+            border-radius: $smallradius;
+            flex-grow: 2;
+            background-color: $bg;
+            margin-right: 4px;
+            justify-content: center;
+            cursor: pointer;
+            text-shadow: 1px 1px 1px black;
+
+            &:hover {
+                background-color: $primary;
+            }
+
+            &:active {
+                background-color: white;
+            }
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+
+    &.open {
+        pointer-events: all;
+        opacity: 1;
+    }
+}

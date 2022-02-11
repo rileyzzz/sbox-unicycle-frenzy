@@ -1,0 +1,22 @@
+﻿
+<link rel="stylesheet" href="NewPlayerOverlay.scss" />
+
+<root>
+
+    <div class="content">
+        <label>We've noticed this is your first time playing.
+
+Play through the tutorial map to prepare warm up your Unicycle skills and prepare for unpredictable terrains and challenging obstacles.
+        
+If you're the DIY type, close this dialog and pedal away
+        </label>
+
+        <label @ref="Warning" class="warning">We can't load the tutorial map here because you've joined another player's lobby.  Create your own game and select the tutorial map from the menu.</label>
+    </div>
+
+    <div class="footer">
+        <button onclick="Close()">close</button>
+        <button onclick="LoadTutorial()">play tutorial</button>
+    </div>
+
+</root>

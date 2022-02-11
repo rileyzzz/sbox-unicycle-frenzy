@@ -55,9 +55,22 @@ internal partial class UnicycleFrenzy
 
 			if ( TimeLeft <= 0 )
 			{
-				Global.ChangeLevel( NextMap );
+				ChangeMapInternal( NextMap );
 			}
 		}
+	}
+
+	public void ChangeMap( string mapident )
+	{
+		if ( !IsServer && !Global.IsListenServer ) return;
+
+		ChangeMapInternal( mapident );
+	}
+
+	[ServerCmd]
+	private static void ChangeMapInternal( string mapident )
+	{
+		Global.ChangeLevel( mapident );
 	}
 
 	[ServerCmd]
