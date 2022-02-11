@@ -535,12 +535,33 @@ internal partial class UnicycleController : BasePlayerController
 		Velocity = Velocity.LerpTo( Vector3.Zero, Time.Delta * BrakeStrength ).WithZ( Velocity.z );
 	}
 
+	public bool CanPedalBoost( out bool leftPedal, out bool rightPedal )
+	{
+		const float boostMinRange = .8f;
+		const float boostMaxRange = .99f;
+
+		leftPedal = false;
+		rightPedal = false;
+
+		if ( Pawn is not UnicyclePlayer player ) return false;
+
+		leftPedal = player.PedalPosition > boostMinRange
+			&& player.PedalPosition < boostMaxRange
+			&& player.PedalTargetPosition > player.PedalPosition;
+
+		rightPedal = player.PedalPosition < -boostMinRange
+			&& player.PedalPosition > -boostMaxRange
+			&& player.PedalTargetPosition < player.PedalPosition;
+
+		return leftPedal || rightPedal;
+	}
+
 	private void SetPedalTarget( float target, float timeToReach, bool tryBoost = false )
 	{
 		if ( pl.PedalTargetPosition.AlmostEqual( target, .1f ) ) return;
 
-		var prevStart = pl.PedalPosition;
-		var prevStartTime = pl.TimeSincePedalStart;
+		// check this before moving shit
+		var canboost = CanPedalBoost( out bool _, out bool _ );
 
 		pl.TimeSincePedalStart = 0;
 		pl.TimeToReachTarget = timeToReach;
@@ -549,10 +570,8 @@ internal partial class UnicycleController : BasePlayerController
 
 		AddEvent( "pedal" );
 
-		if ( !tryBoost ) return;
 		if ( GroundEntity == null ) return;
-		if ( Math.Abs( prevStart ) <= .95f ) return;
-		if ( prevStartTime > PedalTime ) return;
+		if ( !tryBoost || !canboost ) return;
 
 		if ( Pawn.IsLocalPawn )
 		{
