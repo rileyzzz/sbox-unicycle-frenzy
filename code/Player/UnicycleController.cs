@@ -25,7 +25,7 @@ internal partial class UnicycleController : BasePlayerController
 	public float LeanSafeZone => 8f;
 	public float LeanSpeed => 80f;
 	public float TipSpeed => 1.5f;
-	public float SlopeTipSpeed => 3.25f;
+	public float SlopeTipSpeed => 2f;
 	public float GroundTurnSpeed => 2f;
 	public float AirTurnSpeed => 2f;
 	public float SlopeSpeed => 800f;
