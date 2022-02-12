@@ -20,6 +20,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	private TimeSince timeSinceDied;
 	private Clothing.Container clothing;
 	private UfNametag nametag;
+	private JumpIndicator jumpindicator;
 	private Particles speedParticle;
 
 	public override void Respawn()
@@ -65,6 +66,9 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		nametag = new( this );
 		speedParticle = Particles.Create( "particles/player/speed_lines.vpcf" );
+
+		if ( IsLocalPawn )
+			jumpindicator = new( this );
 	}
 
 	public override void OnKilled()
@@ -89,6 +93,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		base.OnDestroy();
 
 		crown?.Destroy();
+		jumpindicator?.Delete();
 	}
 
 	public override void Simulate( Client cl )
