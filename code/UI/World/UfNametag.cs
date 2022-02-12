@@ -33,7 +33,7 @@ internal class UfNametag : WorldPanel
 		if ( !player.Client.IsValid() ) return;
 		if ( !player.Terry.IsValid() ) return;
 
-		var hat = player.Terry.GetAttachment( "hat" ) ?? new Transform( player.EyePos );
+		var hat = player.Terry.GetAttachment( "hat" ) ?? new Transform( player.EyePosition );
 		var crowned = player.SessionRank == 1;
 		var height = crowned ? 16 : 8;
 		Position = hat.Position + Vector3.Up * height;
