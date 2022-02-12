@@ -40,9 +40,9 @@ partial class UnicycleFrenzy : Sandbox.Game
 			{
 				Precache.Add( part.AssetPath );
 			}
-
-			ConsoleSystem.SetValue( "uf_tutorial_mode", Global.MapName == "facepunch.uf_tutorial" );
 		}
+
+		TutorialMode = Global.MapName.EndsWith( "uf_tutorial" );
 	}
 
 	public override void ClientJoined( Client cl )
