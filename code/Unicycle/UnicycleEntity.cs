@@ -34,6 +34,8 @@ internal partial class UnicycleEntity : Entity
 
 	private Particles trailParticle;
 	private Entity localPawnPedals;
+	private ModelEntity localLeftPedal;
+	private ModelEntity localRightPedal;
 
 	public Vector3 GetAssPosition()
 	{
@@ -166,6 +168,16 @@ internal partial class UnicycleEntity : Entity
 		{
 			var ang = targetRot.Angle() - localPawnPedals.LocalRotation.Angle();
 			localPawnPedals.LocalRotation = localPawnPedals.LocalRotation.RotateAroundAxis( Vector3.Left, Math.Abs( ang ) * Time.Delta * 10 );
+
+			if ( UnicycleFrenzy.TutorialMode )
+			{
+				if ( pl.Controller is UnicycleController c )
+				{
+					c.CanPedalBoost( out bool leftPedal, out bool rightPedal );
+					localLeftPedal.GlowActive = leftPedal;
+					localRightPedal.GlowActive = rightPedal;
+				}
+			}
 		}
 
 		if ( IsServer && WheelPivot.IsValid() )
@@ -202,7 +214,15 @@ internal partial class UnicycleEntity : Entity
 		var cfg = pl.Client.Components.Get<CustomizationComponent>();
 		var pedal = cfg.GetEquippedPart( PartType.Pedal.ToString() );
 
-		AssemblePedals( pedal, FrameModel, out localPawnPedals, out ModelEntity leftPedal, out ModelEntity rightPedal );
+		AssemblePedals( pedal, FrameModel, out localPawnPedals, out localLeftPedal, out localRightPedal );
+
+		localLeftPedal.GlowColor = Color.Green;
+		localLeftPedal.GlowState = GlowStates.On;
+		localLeftPedal.GlowActive = false;
+
+		localRightPedal.GlowColor = Color.Green;
+		localRightPedal.GlowState = GlowStates.On;
+		localRightPedal.GlowActive = false;
 	}
 
 	protected override void OnDestroy()
