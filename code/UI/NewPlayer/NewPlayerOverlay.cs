@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 
 [UseTemplate]
 internal class NewPlayerOverlay : Panel
@@ -14,9 +15,22 @@ internal class NewPlayerOverlay : Panel
 
 	public NewPlayerOverlay()
 	{
+		ShowOrNot();
+	}
+
+	private async void ShowOrNot()
+	{
+		// just wait til the tutorial map is up
+		var pkg = await Package.Fetch( "facepunch.uf_tutorial", false );
+		if ( pkg == null )
+		{
+			Open = false;
+			return;
+		}
+
 		var show = Cookie.Get( "uf.hasplayed", false );
 
-		if( show )
+		if ( show )
 		{
 			Open = false;
 			return;
