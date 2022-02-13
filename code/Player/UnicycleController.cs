@@ -193,7 +193,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void DoSlope()
 	{
 		if ( GroundEntity == null ) return;
-		if ( Input.Down( InputButton.Duck ) && Velocity.Length < StopSpeed * 4 ) return;
+		if ( Input.Down( InputButton.Walk ) && Velocity.Length < StopSpeed * 4 ) return;
 
 		var slopeAngle = Vector3.GetAngle( GroundNormal, Vector3.Up );
 		if ( slopeAngle == 0 ) return;
@@ -378,7 +378,7 @@ internal partial class UnicycleController : BasePlayerController
 		if ( !pl.JumpTilt.Length.AlmostEqual( 0f ) ) return false;
 		if ( pl.TimeSincePedalStart < PedalTime ) return false;
 		if ( pl.Tilt.Length >= LeanSafeZone ) return false;
-		if ( Input.Down( InputButton.Duck ) && Velocity.Length > StopSpeed ) return false;
+		if ( Input.Down( InputButton.Walk ) && Velocity.Length > StopSpeed ) return false;
 
 		return true;
 	}
@@ -525,7 +525,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void CheckBrake()
 	{
 		if ( GroundEntity == null ) return;
-		if ( !Input.Down( InputButton.Duck ) ) return;
+		if ( !Input.Down( InputButton.Walk ) ) return;
 
 		if ( !pl.PrevGrounded && Velocity.WithZ( 0 ).Length < 300 )
 		{
