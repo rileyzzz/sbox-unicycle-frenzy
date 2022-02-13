@@ -8,7 +8,7 @@ internal class ControlsTab : Panel
 
 	public Panel TutorialButton { get; set; }
 
-	public string BrakeBind => Input.GetButtonOrigin( InputButton.Duck ) ?? "UNSET";
+	public string BrakeBind => Input.GetButtonOrigin( InputButton.Run ) ?? "UNSET";
 	public string LeftPedalBind => Input.GetButtonOrigin( InputButton.Attack1 ) ?? "UNSET";
 	public string RightPedalBind => Input.GetButtonOrigin( InputButton.Attack2 ) ?? "UNSET";
 	public string JumpBind => Input.GetButtonOrigin( InputButton.Jump ) ?? "UNSET";
