@@ -5,9 +5,6 @@ using System.Collections.Generic;
 partial class UnicycleFrenzy : Sandbox.Game
 {
 
-	[ConVar.Replicated( "uf_tutorial_mode" )]
-	public static bool TutorialMode { get; set; } = false;
-
 	public static UnicycleFrenzy Game => Current as UnicycleFrenzy;
 
 	private List<string> fallMessages = new()
@@ -41,8 +38,6 @@ partial class UnicycleFrenzy : Sandbox.Game
 				Precache.Add( part.AssetPath );
 			}
 		}
-
-		TutorialMode = Global.MapName.EndsWith( "uf_tutorial" );
 	}
 
 	public override void ClientJoined( Client cl )

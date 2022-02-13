@@ -37,6 +37,9 @@ internal partial class UnicycleEntity : Entity
 	private ModelEntity localLeftPedal;
 	private ModelEntity localRightPedal;
 
+	public ModelEntity DisplayedLeftPedal => localLeftPedal ?? LeftPedalModel;
+	public ModelEntity DisplayedRightPedal => localRightPedal ?? RightPedalModel;
+
 	public Vector3 GetAssPosition()
 	{
 		var assAttachment = SeatModel.GetAttachment( "Ass" );
@@ -168,16 +171,6 @@ internal partial class UnicycleEntity : Entity
 		{
 			var ang = targetRot.Angle() - localPawnPedals.LocalRotation.Angle();
 			localPawnPedals.LocalRotation = localPawnPedals.LocalRotation.RotateAroundAxis( Vector3.Left, Math.Abs( ang ) * Time.Delta * 10 );
-
-			if ( UnicycleFrenzy.TutorialMode )
-			{
-				if ( pl.Controller is UnicycleController c )
-				{
-					c.CanPedalBoost( out bool leftPedal, out bool rightPedal );
-					localLeftPedal.GlowActive = leftPedal;
-					localRightPedal.GlowActive = rightPedal;
-				}
-			}
 		}
 
 		if ( IsServer && WheelPivot.IsValid() )

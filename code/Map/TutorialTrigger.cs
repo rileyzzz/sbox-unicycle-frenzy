@@ -10,25 +10,22 @@ internal partial class TutorialTrigger : BaseTrigger
 	[Property]
 	public bool PerfectPedalGlow { get; set; }
 
-	public override void Spawn()
-	{
-		base.Spawn();
-
-		Transmit = TransmitType.Always;
-	}
-
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
 
+		if ( other is not UnicyclePlayer pl ) return;
 
+		pl.PerfectPedalGlow = PerfectPedalGlow;
 	}
 
 	public override void EndTouch( Entity other )
 	{
 		base.EndTouch( other );
 
+		if ( other is not UnicyclePlayer pl ) return;
 
+		pl.PerfectPedalGlow = false;
 	}
 
 }
