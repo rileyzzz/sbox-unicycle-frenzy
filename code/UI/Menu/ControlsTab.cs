@@ -6,6 +6,8 @@ using Sandbox.UI;
 internal class ControlsTab : Panel
 {
 
+	public Panel TutorialButton { get; set; }
+
 	public string BrakeBind => Input.GetButtonOrigin( InputButton.Duck ) ?? "UNSET";
 	public string LeftPedalBind => Input.GetButtonOrigin( InputButton.Attack1 ) ?? "UNSET";
 	public string RightPedalBind => Input.GetButtonOrigin( InputButton.Attack2 ) ?? "UNSET";
@@ -15,6 +17,11 @@ internal class ControlsTab : Panel
 	public string GoBackBind => Input.GetButtonOrigin( InputButton.Reload ) ?? "UNSET";
 	public string SprayBind => Input.GetButtonOrigin( InputButton.Flashlight ) ?? "UNSET";
 
+	public ControlsTab()
+	{
+		TutorialButton.Style.Display = Global.IsListenServer ? DisplayMode.Flex : DisplayMode.None;
+	}
+
 	private string GetLeanBindString()
 	{
 		var fwd = Input.GetButtonOrigin( InputButton.Forward ) ?? "UNSET";
@@ -23,6 +30,11 @@ internal class ControlsTab : Panel
 		var right = Input.GetButtonOrigin( InputButton.Right ) ?? "UNSET";
 
 		return $"{fwd} {left} {back} {right}".ToUpper();
+	}
+
+	public void TryPlayTutorial()
+	{
+		UnicycleFrenzy.Game.ChangeMap( "facepunch.uf_tutorial" );
 	}
 
 }

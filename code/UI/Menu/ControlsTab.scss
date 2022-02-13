@@ -12,6 +12,23 @@ ControlsTab {
         flex-direction: column;
     }
 
+    .tutorial-button {
+        //position: absolute;
+        //bottom: 32px;
+        //right: 32px;
+        padding: 6px 12px;
+        border-radius: $smallradius;
+        background-color: $lighterbg;
+        font-size: 18px;
+        text-shadow: 1px 1px 1px black;
+        transition: all .08s ease-in;
+        margin-top: 16px;
+
+        &:hover {
+            background-color: $primary;
+        }
+    }
+
     .misc-binds {
         position: absolute;
         top: 32px;
