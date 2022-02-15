@@ -331,7 +331,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		// tilt while on uneven ground
 		var groundAngle = Vector3.GetAngle( GroundNormal, Vector3.Up );
-		if ( GroundEntity != null && groundAngle > 3f )
+		if ( GroundEntity != null && groundAngle > 3f && groundAngle < 75f )
 		{
 			var groundRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
 			groundRot *= pl.TargetForward;
