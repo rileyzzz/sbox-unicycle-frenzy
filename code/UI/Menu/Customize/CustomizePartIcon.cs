@@ -40,17 +40,34 @@ internal class CustomizePartIcon : Button
 
 	private void SetIcon()
 	{
-		SetClass( "missing-icon", true );
+		var category = Customization.Config.Categories.First( x => x.Id == Part.CategoryId );
 
-		//if ( Part.Type == PartType.Spray )
-		//{
-		//	var texname = Path.GetFileNameWithoutExtension( Part.Model );
-		//	var texpath = $"textures/sprays/{texname}.png";
-		//	var tex = Texture.Load( FileSystem.Mounted, texpath, false );
-		//	if ( tex == null ) return;
-		//	Style.SetBackgroundImage( tex );
-		//	SetClass( "missing-icon", false );
-		//}
+		switch ( category.DisplayName )
+		{
+			case "Wheel":
+			case "Frame":
+			case "Seat":
+			case "Pedal":
+			case "Trail":
+				var lookright = category.DisplayName == "Wheel" || category.DisplayName == "Seat";
+				new PartScenePanel( Part, lookright ).Parent = this;
+				break;
+			case "Spray":
+				var texname = Path.GetFileNameWithoutExtension( Part.AssetPath );
+				var texpath = $"textures/sprays/{texname}.png";
+				var tex = Texture.Load( FileSystem.Mounted, texpath, false );
+				if ( tex == null ) return;
+				Style.SetBackgroundImage( tex );
+				
+				break;
+			default:
+				SetClass( "missing-icon", false );
+				break;
+		}
+
+		var l = new Label();
+		l.Parent = this;
+		l.Text = Part.DisplayName;
 	}
 
 }
