@@ -1,7 +1,7 @@
 ﻿using Sandbox.UI;
 
 [UseTemplate]
-internal class TrailpassItemIcon : Panel
+internal class TrailPassItemIcon : Panel
 {
 
 	

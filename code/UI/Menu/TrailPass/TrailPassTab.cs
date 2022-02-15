@@ -4,7 +4,7 @@ using Sandbox.UI.Construct;
 
 [UseTemplate]
 [NavigatorTarget( "menu/trailpass" )]
-internal class TrailpassTab : Panel
+internal class TrailPassTab : Panel
 {
 
 	public Panel SceneCanvas { get; set; }
