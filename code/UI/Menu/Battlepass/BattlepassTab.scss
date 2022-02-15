@@ -1,0 +1,116 @@
+﻿
+@import "../../Vars.scss";
+
+BattlepassTab {
+    flex-direction: column;
+
+    .renderscene {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: black;
+        margin: $padding;
+        border-radius: $radius;
+    }
+
+    .scene {
+        height: 70%;
+
+        .buy {
+            position: absolute;
+            top: 50px;
+            right: 75px;
+            padding: 12px 30px;
+            background-color: rgba( $secondary .5 );
+            border-radius: $smallradius;
+            font-size: 20px;
+            text-shadow: 0px 0px 4px black;
+            transition: all .08s ease-in;
+
+            &:hover {
+                background-color: $secondary;
+            }
+        }
+    }
+
+    .unlocks {
+        flex-grow: 1;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 100px;
+    }
+}
+
+UnlockEntry {
+    width: 175px;
+    height: 235px;
+    border-radius: $radius;
+    margin-right: 24px;
+    flex-direction: column;
+    align-items: center;
+
+    &:last-child {
+        margin-right: 0;
+    }
+
+    .tag {
+        background-color: rgba( green .8 );
+        height: 32px;
+        width: 60%;
+        border-radius: $smallradius $smallradius 0 0;
+        font-size: 25px;
+        font-family: $stylefont;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cost {
+        background-color: rgba( $primary .8 );
+        height: 38px;
+        width: 60%;
+        margin-top: 8px;
+        border-radius: $smallradius;
+        font-size: 30px;
+        font-family: $stylefont;
+        align-items: center;
+        padding-left: 25px;
+        cursor: pointer;
+        text-shadow: 0px 0px 2px black;
+        transition: all .08s ease-in;
+
+        .nut {
+            background-image: url('textures/ui/nut.png');
+            width: 55px;
+            height: 55px;
+            position: absolute;
+            right: 0;
+            top: -7px;
+            background-size: cover;
+            transition: transform .08s ease-in;
+        }
+
+        &:hover {
+            background-color: $primary;
+
+            .nut {
+                transform: scale(1.25);
+            }
+        }
+    }
+
+    .thumbnail {
+        width: 100%;
+        flex-grow: 1;
+        background-color: black;
+        border-radius: $radius;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all .08s ease-in;
+
+        &:hover {
+            border-color: white;
+        }
+    }
+}
