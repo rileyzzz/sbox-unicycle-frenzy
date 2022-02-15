@@ -3,8 +3,8 @@ using Sandbox.UI;
 using Sandbox.UI.Construct;
 
 [UseTemplate]
-[NavigatorTarget( "menu/battlepass" )]
-internal class BattlepassTab : Panel
+[NavigatorTarget( "menu/trailpass" )]
+internal class TrailpassTab : Panel
 {
 
 	public Panel SceneCanvas { get; set; }
