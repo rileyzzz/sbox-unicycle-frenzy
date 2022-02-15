@@ -68,18 +68,35 @@ TrailPassItemIcon {
         font-family: $stylefont;
         align-items: center;
         justify-content: center;
+        display: none;
+    }
+
+    .cost-unlocked {
+        display: none;
+        background-color: rgba( green .8 );
+        height: 38px;
+        width: 65%;
+        margin-top: 8px;
+        border-radius: $smallradius;
+        font-size: 20px;
+        font-family: $stylefont;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        text-shadow: 0px 0px 2px black;
+        transition: all .08s ease-in;
     }
 
     .cost {
         background-color: rgba( $primary .8 );
         height: 38px;
-        width: 60%;
+        width: 65%;
         margin-top: 8px;
         border-radius: $smallradius;
-        font-size: 30px;
+        font-size: 20px;
         font-family: $stylefont;
         align-items: center;
-        padding-left: 25px;
+        padding-left: 10px;
         cursor: pointer;
         text-shadow: 0px 0px 2px black;
         transition: all .08s ease-in;
@@ -102,6 +119,14 @@ TrailPassItemIcon {
                 transform: scale(1.25);
             }
         }
+    }
+
+    &.unlocked .cost {
+        display: none;
+    }
+
+    &.unlocked .cost-unlocked {
+        display: flex;
     }
 
     .thumbnail {

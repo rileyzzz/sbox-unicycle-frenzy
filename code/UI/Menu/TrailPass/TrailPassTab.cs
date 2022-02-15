@@ -8,9 +8,29 @@ internal class TrailPassTab : Panel
 {
 
 	public Panel SceneCanvas { get; set; }
+	public Panel ItemCanvas { get; set; }
 
 	private SceneWorld sceneWorld;
 	private ScenePanel renderScene;
+
+	private void Rebuild()
+	{
+		BuildRenderScene();
+		BuildItemList();
+	}
+
+	private void BuildItemList()
+	{
+		ItemCanvas.DeleteChildren();
+
+		var trailpass = TrailPass.Current;
+
+		foreach( var item in trailpass.Items )
+		{
+			var itemicon = new TrailPassItemIcon( item );
+			itemicon.Parent = ItemCanvas;
+		}
+	}
 
 	private void BuildRenderScene()
 	{
@@ -43,7 +63,7 @@ internal class TrailPassTab : Panel
 		}
 	}
 
-	public override void OnHotloaded() => BuildRenderScene();
-	protected override void PostTemplateApplied() => BuildRenderScene();
+	public override void OnHotloaded() => Rebuild();
+	protected override void PostTemplateApplied() => Rebuild();
 
 }
