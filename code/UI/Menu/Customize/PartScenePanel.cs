@@ -17,7 +17,7 @@ internal class PartScenePanel : Panel
 		Build( part, lookRight );
 	}
 
-	private async void Build( CustomizationPart part, bool lookRight )
+	private void Build( CustomizationPart part, bool lookRight )
 	{
 		using var _ = SceneWorld.SetCurrent( new SceneWorld() );
 
@@ -25,7 +25,6 @@ internal class PartScenePanel : Panel
 		Style.Height = Length.Percent( 100 );
 
 		var renderPanel = Add.ScenePanel( SceneWorld.Current, Vector3.Zero, Rotation.Identity, 35 );
-		var waitForParticle = false;
 
 		if ( part.AssetPath.EndsWith( "vpcf" ) )
 		{
@@ -33,11 +32,12 @@ internal class PartScenePanel : Panel
 			p.SetPosition( 6, .75f );
 			p.SetPosition( 7, 1 );
 			p.SetPosition( 8, 0 );
+			p.TimeScale = 100;
 
-			renderPanel.CameraPosition = Vector3.Backward * 75 + Vector3.Down * 15;
+			renderPanel.CameraPosition = Vector3.Backward * 75 + Vector3.Down * 20;
 			renderPanel.CameraRotation = Rotation.From( 0, 0, 0 );
-			renderPanel.Style.Opacity = 0;
-			waitForParticle = true;
+			renderPanel.Style.Opacity = 1;
+			renderPanel.RenderOnce = true;
 		}
 		else if ( part.AssetPath.EndsWith( "vmdl" ) )
 		{
@@ -58,13 +58,6 @@ internal class PartScenePanel : Panel
 
 		renderPanel.Style.Width = Length.Percent( 100 );
 		renderPanel.Style.Height = Length.Percent( 100 );
-
-		if ( !waitForParticle ) return;
-
-		await Task.Delay( 850 );
-
-		renderPanel.RenderOnce = true;
-		renderPanel.Style.Opacity = 1;
 	}
 
 	private Vector3 GetFocusPosition( BBox bounds, Rotation cameraRot, float fov )
