@@ -4,7 +4,6 @@
 	m_nBehaviorVersion = 10
 	m_flConstantRadius = 0.8
 	m_nTopology = "PARTICLE_TOPOLOGY_POINTS"
-	m_hSnapshot = resource:"particles/particles/flag/flag_body_vsnap/flag_body_vsnap.vsnap"
 	m_controlPointConfigurations = 
 	[
 		{
