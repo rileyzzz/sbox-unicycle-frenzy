@@ -11,8 +11,12 @@ TrailpassTab {
         top: 0;
         left: 0;
         background-color: black;
-        margin: $padding;
         border-radius: $radius;
+
+        ScenePanel {
+            border-radius: $radius;
+            box-shadow: 2px 2px 4px black;
+        }
     }
 
     .scene {
