@@ -43,6 +43,7 @@ internal partial class UnicyclePlayer
 	{
 		TimeSinceStart = 0;
 		TimerState = TimerState.Live;
+		Velocity = Velocity.ClampLength( 240 );
 
 		AddAttempts();
 	}
