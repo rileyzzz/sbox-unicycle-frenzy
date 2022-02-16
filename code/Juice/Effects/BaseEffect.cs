@@ -51,6 +51,12 @@ public abstract class BaseEffect
 		return this;
 	}
 
+	public BaseEffect WithTarget( SceneObject obj )
+	{
+		Target = new SceneObjectJuiceTarget( obj );
+		return this;
+	}
+
 	public BaseEffect WithTarget( IJuiceTarget target )
 	{
 		Target = target;
