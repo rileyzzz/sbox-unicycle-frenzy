@@ -9,7 +9,7 @@ internal class TrailPassProgress
 	public List<int> UnlockedItems { get; set; } = new();
 
 
-	public static TrailPassProgress CurrentSeason => Deserialize( Cookie.Get( SeasonCookie, "" ) );
+	public static TrailPassProgress CurrentSeason => Deserialize( Cookie.Get( SeasonCookie, "{}" ) );
 	public bool Unlocked( int id ) => UnlockedItems.Contains( id );
 	public void Save() => Cookie.Set( SeasonCookie, Serialize( this ) );
 
