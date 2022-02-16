@@ -15,9 +15,10 @@ internal class TrailPassItemIcon : Panel
 	{
 		this.Item = item;
 
-		var ticket = TrailPassProgress.CurrentSeason;
+		var progress = TrailPassProgress.CurrentSeason;
 
-		SetClass( "unlocked", ticket.Unlocked( item.Id ) );
+		SetClass( "unlocked", progress.Unlocked( item.Id ) );
+		SetClass( "unlockable", progress.Experience >= item.RequiredExperience );
 
 		var part = Customization.Config.Parts.FirstOrDefault( x => x.Id == item.PartId );
 		if( part == null )

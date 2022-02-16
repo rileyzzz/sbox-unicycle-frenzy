@@ -9,6 +9,8 @@ internal class TrailPassTab : Panel
 
 	public Panel SceneCanvas { get; set; }
 	public Panel ItemCanvas { get; set; }
+	public Panel ExperienceFill { get; set; }
+	public Label ExperienceLabel { get; set; }
 
 	private SceneWorld sceneWorld;
 	private ScenePanel renderScene;
@@ -17,6 +19,27 @@ internal class TrailPassTab : Panel
 	{
 		BuildRenderScene();
 		BuildItemList();
+	}
+
+	private int setxp;
+	public override void Tick()
+	{
+		base.Tick();
+
+		var progress = TrailPassProgress.CurrentSeason;
+
+		if ( progress.Experience == setxp ) return;
+		setxp = progress.Experience;
+
+		var pass = TrailPass.Current;
+		UpdateExperienceBar( progress.Experience, pass.MaxExperience );
+	}
+
+	private void UpdateExperienceBar( int current, int max )
+	{
+		var fillPercent = ( (float)current / max) * 100;
+		ExperienceFill.Style.Width = Length.Percent( fillPercent );
+		ExperienceLabel.Text = $"{current} xp";
 	}
 
 	private void BuildItemList()

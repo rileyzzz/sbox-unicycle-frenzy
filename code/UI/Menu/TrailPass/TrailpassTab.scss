@@ -84,6 +84,7 @@ TrailpassTab {
             background-color: $secondary;
             border-radius: $radius;
             margin: 2px;
+            transition: width .35s ease-in;
         }
     }
 }
