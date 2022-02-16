@@ -36,9 +36,10 @@ internal class PartScenePanel : Panel
 
 		scenePanel = Add.ScenePanel( SceneWorld.Current, Vector3.Zero, Rotation.Identity, 35 );
 
+		Particles p = null;
 		if ( part.AssetPath.EndsWith( "vpcf" ) )
 		{
-			var p = Particles.Create( part.AssetPath, Vector3.Zero );
+			p = Particles.Create( part.AssetPath, Vector3.Zero );
 			p.SetPosition( 6, .75f );
 			p.SetPosition( 7, 1 );
 			p.SetPosition( 8, 0 );
@@ -48,9 +49,6 @@ internal class PartScenePanel : Panel
 			scenePanel.CameraRotation = Rotation.From( 0, 0, 0 );
 			scenePanel.Style.Opacity = 1;
 			scenePanel.RenderOnce = true;
-
-			await Task.Delay( 1500 );
-			p.TimeScale = 1;
 		}
 		else if ( part.AssetPath.EndsWith( "vmdl" ) )
 		{
@@ -71,6 +69,12 @@ internal class PartScenePanel : Panel
 
 		scenePanel.Style.Width = Length.Percent( 100 );
 		scenePanel.Style.Height = Length.Percent( 100 );
+
+		if( p != null )
+		{
+			await Task.Delay( 1500 );
+			p.TimeScale = 1;
+		}
 	}
 
 	private Vector3 GetFocusPosition( BBox bounds, Rotation cameraRot, float fov )
