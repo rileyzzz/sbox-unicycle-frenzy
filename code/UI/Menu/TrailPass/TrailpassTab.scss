@@ -43,7 +43,48 @@ TrailpassTab {
         flex-grow: 1;
         justify-content: center;
         align-items: center;
-        margin-bottom: 100px;
+        width: 95%;
+        margin: 0 auto;
+        margin-bottom: 50px;
+    }
+
+    .progress {
+        height: 32px;
+        background-color: black;
+        width: 95%;
+        margin: 0 auto;
+        margin-bottom: 48px;
+        border-radius: $radius;
+        padding: 2px;
+
+        .xp {
+            position: absolute;
+            font-family: $stylefont;
+            font-size: 18px;
+            text-shadow: 1px 1px 2px black;
+        }
+
+        .xp.min {
+            left: 5px;
+            bottom: -25px;
+        }
+
+        .xp.max {
+            right: 5px;
+            bottom: -25px;
+        }
+
+        .xp.current {
+            position: absolute;
+            right: 10px;
+        }
+
+        .fill {
+            width: 50%;
+            background-color: $secondary;
+            border-radius: $radius;
+            margin: 2px;
+        }
     }
 }
 
