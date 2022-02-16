@@ -8,6 +8,8 @@ internal class TrailPass
 	public int MaxExperience { get; set; } = 1000;
 	public List<TrailPassItem> Items { get; set; } = new();
 
+	public const int Season = 1;
+
 	public static TrailPass Current
 	{
 		get

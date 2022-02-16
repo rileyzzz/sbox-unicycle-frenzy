@@ -15,7 +15,7 @@ internal class TrailPassItemIcon : Panel
 	{
 		this.Item = item;
 
-		var ticket = TrailPassTicket.Current;
+		var ticket = TrailPassProgress.CurrentSeason;
 
 		SetClass( "unlocked", ticket.Unlocked( item.Id ) );
 
