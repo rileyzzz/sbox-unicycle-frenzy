@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 internal class TrailPass
 {
@@ -25,7 +24,7 @@ internal class TrailPass
 					new() { Id = 4,		RequiredExperience = 100,	DisplayName = "Item 4",		PartId = 59 },
 					new() { Id = 5,		RequiredExperience = 120,	DisplayName = "Item 5",		PartId = 68 },
 					new() { Id = 6,		RequiredExperience = 140,	DisplayName = "Item 6",		PartId = 70 },
-					new() { Id = 7,		RequiredExperience = 1000,	DisplayName = "Item 7",		PartId = 77 }
+					new() { Id = 7,		RequiredExperience = 1000,	DisplayName = "Item 7",		PartId = 72 }
 				}
 			};
 		}

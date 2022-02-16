@@ -12,42 +12,55 @@ internal class PartScenePanel : Panel
 	// todo: replace this with pngs, this is just a quick patch to hide missing part thumbs
 	//
 
+	public float RotationSpeed { get; set; }
+	public bool RenderOnce
+	{
+		get => scenePanel.RenderOnce;
+		set => scenePanel.RenderOnce = value;
+	}
+
+	private SceneObject sceneObj;
+	private ScenePanel scenePanel;
+
 	public PartScenePanel( CustomizationPart part, bool lookRight = false )
 	{
 		Build( part, lookRight );
 	}
 
-	private void Build( CustomizationPart part, bool lookRight )
+	private async void Build( CustomizationPart part, bool lookRight )
 	{
 		using var _ = SceneWorld.SetCurrent( new SceneWorld() );
 
 		Style.Width = Length.Percent( 100 );
 		Style.Height = Length.Percent( 100 );
 
-		var renderPanel = Add.ScenePanel( SceneWorld.Current, Vector3.Zero, Rotation.Identity, 35 );
+		scenePanel = Add.ScenePanel( SceneWorld.Current, Vector3.Zero, Rotation.Identity, 35 );
 
 		if ( part.AssetPath.EndsWith( "vpcf" ) )
 		{
-			var p = Particles.Create( part.AssetPath );
+			var p = Particles.Create( part.AssetPath, Vector3.Zero );
 			p.SetPosition( 6, .75f );
 			p.SetPosition( 7, 1 );
 			p.SetPosition( 8, 0 );
 			p.TimeScale = 100;
 
-			renderPanel.CameraPosition = Vector3.Backward * 75 + Vector3.Down * 20;
-			renderPanel.CameraRotation = Rotation.From( 0, 0, 0 );
-			renderPanel.Style.Opacity = 1;
-			renderPanel.RenderOnce = true;
+			scenePanel.CameraPosition = Vector3.Backward * 75 + Vector3.Down * 20;
+			scenePanel.CameraRotation = Rotation.From( 0, 0, 0 );
+			scenePanel.Style.Opacity = 1;
+			scenePanel.RenderOnce = true;
+
+			await Task.Delay( 1500 );
+			p.TimeScale = 1;
 		}
 		else if ( part.AssetPath.EndsWith( "vmdl" ) )
 		{
-			var model = SceneObject.CreateModel( part.AssetPath, Transform.Zero );
-			if ( lookRight ) model.Rotation = Rotation.LookAt( Vector3.Right );
-			var bounds = model.Model.RenderBounds;
+			sceneObj = SceneObject.CreateModel( part.AssetPath, Transform.Zero );
+			if ( lookRight ) sceneObj.Rotation = Rotation.LookAt( Vector3.Right );
+			var bounds = sceneObj.Model.RenderBounds;
 
-			renderPanel.CameraPosition = GetFocusPosition( bounds, Rotation.Identity, renderPanel.FieldOfView );
-			renderPanel.CameraRotation = Rotation.From( 0, 0, 0 );
-			renderPanel.RenderOnce = true;
+			scenePanel.CameraPosition = GetFocusPosition( bounds, Rotation.Identity, scenePanel.FieldOfView );
+			scenePanel.CameraRotation = Rotation.From( 0, 0, 0 );
+			scenePanel.RenderOnce = true;
 		}
 
 		Light.Point( Vector3.Up * 150.0f, 200.0f, Color.White * 100 );
@@ -56,8 +69,8 @@ internal class PartScenePanel : Panel
 		Light.Point( Vector3.Right * 150.0f, 200.0f, Color.White * 100 );
 		Light.Point( Vector3.Left * 150.0f, 200.0f, Color.White * 100 );
 
-		renderPanel.Style.Width = Length.Percent( 100 );
-		renderPanel.Style.Height = Length.Percent( 100 );
+		scenePanel.Style.Width = Length.Percent( 100 );
+		scenePanel.Style.Height = Length.Percent( 100 );
 	}
 
 	private Vector3 GetFocusPosition( BBox bounds, Rotation cameraRot, float fov )
@@ -68,6 +81,16 @@ internal class PartScenePanel : Panel
 		var distance = focusDist * maxSize / cameraView;
 		distance += 0.5f * maxSize;
 		return bounds.Center - distance * cameraRot.Forward;
+	}
+
+	[Event.Frame]
+	private void OnFrame()
+	{
+		if ( RotationSpeed == 0 ) return;
+		if ( !sceneObj.IsValid() ) return;
+		if ( RenderOnce ) return;
+
+		sceneObj.Rotation = sceneObj.Rotation.RotateAroundAxis( Vector3.Up, RotationSpeed * Time.Delta );
 	}
 
 }
