@@ -12,6 +12,12 @@ internal partial class UnicyclePlayer
 		progress.Save();
 	}
 
+	[Event("mapstats.firstcompletion")]
+	public void OnFirstCompletion()
+	{
+		AddTrailPassExperience( 50 );
+	}
+
 	[Event("achievement.set")]
 	public void OnAchievementSet( string shortname )
 	{

@@ -1,4 +1,6 @@
 ﻿
+using Sandbox;
+
 internal class MapStats
 {
 
@@ -29,6 +31,11 @@ internal class MapStats
 
 	public void AddCompletion()
 	{
+		if( Completions == 0 )
+		{
+			Event.Run( "mapstats.firstcompletion" );
+		}
+
 		Completions++;
 		LocalCookie = ToJson();
 	}
