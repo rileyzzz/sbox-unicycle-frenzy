@@ -18,6 +18,15 @@ internal partial class UnicyclePlayer
 		AddTrailPassExperience( 50 );
 	}
 
+	[Event("mapstats.ontimeplayed")]
+	public void OnTimePlayed( float timePlayed )
+	{
+		if( (int)timePlayed % 1800 == 0 )
+		{
+			AddTrailPassExperience( 5 );
+		}
+	}
+
 	[Event("achievement.set")]
 	public void OnAchievementSet( string shortname )
 	{

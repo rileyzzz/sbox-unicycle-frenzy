@@ -51,6 +51,8 @@ internal class MapStats
 	{
 		TimePlayed += seconds;
 		LocalCookie = ToJson();
+
+		Event.Run( "mapstats.ontimeplayed", TimePlayed );
 	}
 
 	private string ToJson()
