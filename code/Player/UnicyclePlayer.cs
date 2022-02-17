@@ -206,7 +206,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 	[ClientRpc]
 	private void SetAchievementOnClient( string shortname, string map = null )
 	{
-		Achievement.Set( Global.GameName, Client.PlayerId, shortname, map );
+		Achievement.Set( Global.GameIdent, Client.PlayerId, shortname, map );
 	}
 
 	private TimeSince timeSinceSpray;

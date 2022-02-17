@@ -55,8 +55,8 @@ internal class StatsTabDetails : Panel
 	{
 		AchievementCanvas.DeleteChildren( true );
 
-		var mapAchievements = Achievement.Query( Global.GameName, map: Global.MapName );
-		var globalAchievements = Achievement.Query( Global.GameName );
+		var mapAchievements = Achievement.Query( Global.GameIdent, map: Global.MapName );
+		var globalAchievements = Achievement.Query( Global.GameIdent );
 		var total = 0;
 		var achieved = 0;
 
@@ -69,7 +69,7 @@ internal class StatsTabDetails : Panel
 
 			var map = ach.PerMap ? Global.MapName : null;
 
-			if ( ach.IsCompleted( Local.PlayerId, Global.GameName, map ) )
+			if ( ach.IsCompleted( Local.PlayerId, Global.GameIdent, map ) )
 			{
 				achieved++;
 				btn.AddClass( "completed" );

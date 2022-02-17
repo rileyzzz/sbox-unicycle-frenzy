@@ -26,7 +26,7 @@ internal partial class UnicycleFrenzy
 		TimeLeft = 1800;
 		NextMap = Global.MapName;
 
-		var pkg = await Package.Fetch( Global.GameName, true );
+		var pkg = await Package.Fetch( Global.GameIdent, true );
 		if ( pkg == null )
 		{
 			Log.Error( "Failed to load map cycle" );

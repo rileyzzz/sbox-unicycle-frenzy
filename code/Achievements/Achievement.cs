@@ -68,7 +68,7 @@ internal partial class Achievement
 				Description = "Complete any map in Unicycle Frenzy",
 				DisplayName = "Unicyclist",
 				ShortName = "uf_unicyclist",
-				GameName = Global.GameName,
+				GameName = Global.GameIdent,
 				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/unicyclist.png"
 			} );
 
@@ -78,7 +78,7 @@ internal partial class Achievement
 				Description = "Complete the map in an ok amount of time",
 				DisplayName = "Bronze Medal",
 				ShortName = "uf_bronze",
-				GameName = Global.GameName,
+				GameName = Global.GameIdent,
 				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_bronze.png",
 				PerMap = true
 			} );
@@ -89,7 +89,7 @@ internal partial class Achievement
 				Description = "Complete the map in a decent amount of time",
 				DisplayName = "Silver Medal",
 				ShortName = "uf_silver",
-				GameName = Global.GameName,
+				GameName = Global.GameIdent,
 				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_silver.png",
 				PerMap = true
 			} );
@@ -100,7 +100,7 @@ internal partial class Achievement
 				Description = "Complete the map in a good amount of time",
 				DisplayName = "Gold Medal",
 				ShortName = "uf_gold",
-				GameName = Global.GameName,
+				GameName = Global.GameIdent,
 				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_gold2.png",
 				PerMap = true
 			} );
@@ -111,7 +111,7 @@ internal partial class Achievement
 				Description = "An achievement specifically for uf_playground",
 				DisplayName = "Playground",
 				ShortName = "uf_playground_test",
-				GameName = Global.GameName,
+				GameName = Global.GameIdent,
 				MapName = "uf_playground",
 				ImageThumb = ""
 			} );
