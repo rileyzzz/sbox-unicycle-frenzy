@@ -53,6 +53,8 @@ internal partial class Achievement
 		var mapToInsert = ach.PerMap ? map : ach.MapName;
 
 		AchievementCompletion.Insert( playerid, ach.AchievementId, mapToInsert );
+
+		Event.Run( "achievement.set", shortname );
 	}
 
 	public static List<Achievement> All
