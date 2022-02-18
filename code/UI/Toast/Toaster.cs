@@ -10,7 +10,8 @@ internal class Toaster : Panel
 		Simple,
 		Celebrate,
 		Affirm,
-		Award
+		Award,
+		Error
 	}
 
 	public override void Tick()

@@ -27,8 +27,8 @@ internal class CustomizePartIcon : Button
 
 		if( !TrailPassProgress.CurrentSeason.IsUnlockedByPartId( Part.Id ) )
 		{
+			Toaster.Toast( "You haven't unlocked that yet", Toaster.ToastTypes.Error );
 			return;
-			//Toaster.Toast( "You haven't unlocked that yet", Toaster.ToastTypes.Error );
 		}
 
 		var customization = Local.Client.Components.Get<CustomizationComponent>();

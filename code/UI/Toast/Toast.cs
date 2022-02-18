@@ -18,6 +18,7 @@ internal class Toast : Panel
 			Toaster.ToastTypes.Celebrate => "celebration",
 			Toaster.ToastTypes.Affirm => "check",
 			Toaster.ToastTypes.Award => "star",
+			Toaster.ToastTypes.Error => "error",
 			_ => "info"
 		};
 	}

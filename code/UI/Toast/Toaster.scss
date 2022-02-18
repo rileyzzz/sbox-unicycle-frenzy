@@ -42,7 +42,7 @@ Toaster {
         }
 
         &.affirm {
-            background-color: green;
+            background-color: $green;
         }
 
         &.celebrate {
@@ -51,6 +51,10 @@ Toaster {
 
         &.award {
             background-color: $secondary;
+        }
+
+        &.error {
+            background-color: $red;
         }
 
         &:last-child {
