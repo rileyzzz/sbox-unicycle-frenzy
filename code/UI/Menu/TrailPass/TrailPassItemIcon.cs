@@ -1,5 +1,6 @@
 ﻿using Facepunch.Customization;
 using Sandbox.UI;
+using System;
 using System.Linq;
 
 [UseTemplate]
@@ -35,10 +36,19 @@ internal class TrailPassItemIcon : Panel
 		Thumbnail.AddChild( partPanel );
 	}
 
+	public override void Tick()
+	{
+		base.Tick();
+
+		var progress = TrailPassProgress.CurrentSeason;
+		SetClass( "unlocked", progress.Unlocked( Item.Id ) );
+		SetClass( "unlockable", Item.RequiredExperience <= progress.Experience );
+	}
+
 	protected override void OnMouseOver( MousePanelEvent e )
 	{
 		base.OnMouseOver( e );
-
+		
 		partPanel.RenderOnce = false;
 	}
 
