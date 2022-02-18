@@ -171,6 +171,15 @@ metadata
 }
 = uf_trigger_tutorial : "Enable tutorial features in this trigger"
 [
+	displaybind(choices) : "Display Bind" : 0 : "" =
+	[
+		0 : "None"
+		1 : "Pedal"
+		2 : "Lean"
+		3 : "Brake"
+		4 : "Jump"
+		5 : "Look"
+	]
 	perfectpedalglow(boolean) : "Perfect Pedal Glow" : 0 : ""
 	startdisabled(boolean) : "Start Disabled" : 0 : "Should this entity start disabled?"
 	actvationtags(tags) : "Actvation Tags" :  : "Entities with these tags can activate this trigger."

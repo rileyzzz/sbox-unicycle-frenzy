@@ -8,6 +8,8 @@ internal partial class TutorialTrigger : BaseTrigger
 {
 
 	[Property]
+	public InputActions DisplayBind { get; set; }
+	[Property]
 	public bool PerfectPedalGlow { get; set; }
 
 	public override void StartTouch( Entity other )
@@ -24,8 +26,18 @@ internal partial class TutorialTrigger : BaseTrigger
 		base.EndTouch( other );
 
 		if ( other is not UnicyclePlayer pl ) return;
-
+		
 		pl.PerfectPedalGlow = false;
+	}
+
+	public enum InputActions
+	{ 
+		None,
+		Pedal,
+		Lean,
+		Brake,
+		Jump,
+		Look
 	}
 
 }
