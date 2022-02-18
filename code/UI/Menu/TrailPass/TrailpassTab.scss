@@ -138,7 +138,7 @@ TrailPassItemIcon {
         font-size: 20px;
         font-family: $stylefont;
         align-items: center;
-        padding-left: 10px;
+        justify-content: center;
         cursor: pointer;
         text-shadow: 0px 0px 2px black;
         transition: all .08s ease-in;
