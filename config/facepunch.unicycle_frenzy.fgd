@@ -180,6 +180,7 @@ metadata
 		4 : "Jump"
 		5 : "Look"
 		6 : "Brake And Lean"
+		7 : "Jump Higher"
 	]
 	perfectpedalglow(boolean) : "Perfect Pedal Glow" : 0 : ""
 	startdisabled(boolean) : "Start Disabled" : 0 : "Should this entity start disabled?"
