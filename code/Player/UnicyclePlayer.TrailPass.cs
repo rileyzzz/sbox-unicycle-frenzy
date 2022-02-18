@@ -10,6 +10,8 @@ internal partial class UnicyclePlayer
 		var progress = TrailPassProgress.CurrentSeason;
 		progress.Experience += amount;
 		progress.Save();
+
+		Toaster.Toast( $"+{amount} XP", Toaster.ToastTypes.Award );
 	}
 
 	[Event("mapstats.firstcompletion")]
