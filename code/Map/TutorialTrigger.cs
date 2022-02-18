@@ -37,7 +37,8 @@ internal partial class TutorialTrigger : BaseTrigger
 		Lean,
 		Brake,
 		Jump,
-		Look
+		Look,
+		BrakeAndLean
 	}
 
 }
