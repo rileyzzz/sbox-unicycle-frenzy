@@ -49,8 +49,17 @@ internal class TrailPassItemIcon : Panel
 	{
 		var progress = TrailPassProgress.CurrentSeason;
 
-		if ( progress.IsUnlocked( Item.Id ) ) return;
-		if ( Item.RequiredExperience > progress.Experience ) return;
+		if ( progress.IsUnlocked( Item.Id ) )
+		{
+			Toaster.Toast( "You already unlocked that", Toaster.ToastTypes.Simple );
+			return;
+		}
+
+		if ( Item.RequiredExperience > progress.Experience )
+		{
+			Toaster.Toast( $"You need {Item.RequiredExperience} xp!", Toaster.ToastTypes.Error );
+			return;
+		}
 
 		progress.Unlock( Item.Id );
 		progress.Save();
