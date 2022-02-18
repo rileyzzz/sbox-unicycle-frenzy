@@ -72,7 +72,8 @@ internal class CustomizeTab : Panel
 			{
 				activeBtn = btn;
 				activeBtn.AddClass( "active" );
-				BuildParts( cfg.Parts.Where( x => x.CategoryId == category.Id) );
+
+				BuildParts( cfg.Parts.Where( x => x.CategoryId == category.Id ) );
 			}
 
 			btn.AddEventListener( "onclick", () =>
@@ -80,6 +81,7 @@ internal class CustomizeTab : Panel
 				activeBtn?.RemoveClass( "active" );
 				btn.AddClass( "active" );
 				activeBtn = btn;
+
 				BuildParts( cfg.Parts.Where( x => x.CategoryId == category.Id ) );
 			} );
 		}

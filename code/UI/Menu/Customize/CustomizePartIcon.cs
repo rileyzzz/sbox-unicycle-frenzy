@@ -18,11 +18,18 @@ internal class CustomizePartIcon : Button
 		Part = part;
 
 		SetIcon();
+		SetClass( "locked", !TrailPassProgress.CurrentSeason.IsUnlockedByPartId( part.Id ) );
 	}
 
 	protected override void OnClick( MousePanelEvent e )
 	{
 		base.OnClick( e );
+
+		if( !TrailPassProgress.CurrentSeason.IsUnlockedByPartId( Part.Id ) )
+		{
+			return;
+			//Toaster.Toast( "You haven't unlocked that yet", Toaster.ToastTypes.Error );
+		}
 
 		var customization = Local.Client.Components.Get<CustomizationComponent>();
 		customization.Equip( Part );

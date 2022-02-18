@@ -126,6 +126,10 @@ CustomizeTab {
                 &.missing-icon .partname {
                     display: flex;
                 }
+
+                &.locked {
+                    opacity: .05;
+                }
             }
         }
     }
