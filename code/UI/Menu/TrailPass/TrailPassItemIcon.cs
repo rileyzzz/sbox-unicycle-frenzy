@@ -18,7 +18,7 @@ internal class TrailPassItemIcon : Panel
 
 		var progress = TrailPassProgress.CurrentSeason;
 
-		SetClass( "unlocked", progress.Unlocked( item.Id ) );
+		SetClass( "unlocked", progress.IsUnlocked( item.Id ) );
 		SetClass( "unlockable", progress.Experience >= item.RequiredExperience );
 
 		var part = Customization.Config.Parts.FirstOrDefault( x => x.Id == item.PartId );
@@ -41,8 +41,19 @@ internal class TrailPassItemIcon : Panel
 		base.Tick();
 
 		var progress = TrailPassProgress.CurrentSeason;
-		SetClass( "unlocked", progress.Unlocked( Item.Id ) );
+		SetClass( "unlocked", progress.IsUnlocked( Item.Id ) );
 		SetClass( "unlockable", Item.RequiredExperience <= progress.Experience );
+	}
+
+	public void TryUnlock()
+	{
+		var progress = TrailPassProgress.CurrentSeason;
+
+		if ( progress.IsUnlocked( Item.Id ) ) return;
+		if ( Item.RequiredExperience > progress.Experience ) return;
+
+		progress.Unlock( Item.Id );
+		progress.Save();
 	}
 
 	protected override void OnMouseOver( MousePanelEvent e )

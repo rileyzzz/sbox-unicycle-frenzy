@@ -10,7 +10,12 @@ internal class TrailPassProgress
 
 
 	public static TrailPassProgress CurrentSeason => Deserialize( Cookie.Get( SeasonCookie, "{}" ) );
-	public bool Unlocked( int id ) => UnlockedItems.Contains( id );
+	public bool IsUnlocked( int id ) => UnlockedItems.Contains( id );
+	public void Unlock( int id ) 
+	{ 
+		if ( IsUnlocked( id ) ) return;
+		UnlockedItems.Add( id );
+	}
 	public void Save() => Cookie.Set( SeasonCookie, Serialize( this ) );
 
 	private static string SeasonCookie => "uf.trailpass." + TrailPass.Season;
