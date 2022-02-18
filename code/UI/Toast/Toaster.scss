@@ -8,6 +8,7 @@ Toaster {
     color: white;
     flex-direction: column;
     align-items: flex-end;
+    z-index: 5;
 
     Toast {
         border-radius: $radius;
