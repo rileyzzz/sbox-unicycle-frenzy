@@ -63,6 +63,8 @@ internal class TrailPassItemIcon : Panel
 
 		progress.Unlock( Item.Id );
 		progress.Save();
+
+		Toaster.Toast( $"Item unlocked!", Toaster.ToastTypes.Celebrate );
 	}
 
 	protected override void OnMouseOver( MousePanelEvent e )
