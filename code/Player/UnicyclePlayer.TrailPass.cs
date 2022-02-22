@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System.Linq;
 
 internal partial class UnicyclePlayer
 {
@@ -34,18 +35,10 @@ internal partial class UnicyclePlayer
 	{
 		Host.AssertClient();
 
-		switch ( shortname )
-		{
-			case "uf_bronze":
-				AddTrailPassExperience( 30 );
-				break;
-			case "uf_silver":
-				AddTrailPassExperience( 40 );
-				break;
-			case "uf_gold":
-				AddTrailPassExperience( 50 );
-				break;
-		}
+		var tpAchievement = TrailPass.Current.Achievements.FirstOrDefault( x => x.AchievementShortName == shortname );
+		if ( tpAchievement == null ) return;
+
+		AddTrailPassExperience( tpAchievement.ExperienceGranted );
 	}
 
 }
