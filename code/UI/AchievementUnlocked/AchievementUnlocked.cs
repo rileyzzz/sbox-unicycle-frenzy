@@ -32,7 +32,8 @@ internal class AchievementUnlocked : Panel
 	{
 		base.Tick();
 
-		SetClass( "open", timeSinceDisplayed < 6f );
+		if ( HasClass( "open" ) && timeSinceDisplayed > 6f )
+			RemoveClass( "open" );
 	}
 
 	[Event("achievement.set")]
