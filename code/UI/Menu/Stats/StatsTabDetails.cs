@@ -3,7 +3,7 @@ using Sandbox.UI;
 using System.Linq;
 
 [UseTemplate]
-[NavigatorTarget("menu/stats/details")]
+[NavigatorTarget( "menu/stats/details" )]
 internal class StatsTabDetails : Panel
 {
 
@@ -46,8 +46,10 @@ internal class StatsTabDetails : Panel
 
 			var btn = new Button();
 			btn.AddClass( "button icon" );
-			btn.Parent = AchievementCanvas;
+			btn.SetClass( "grants-xp", GrantsXp( ach ) );
+			btn.Add.Panel( "grayscale" );
 			btn.Style.SetBackgroundImage( ach.ImageThumb );
+			btn.Parent = AchievementCanvas;
 
 			var map = ach.PerMap ? Global.MapName : null;
 
@@ -58,10 +60,10 @@ internal class StatsTabDetails : Panel
 			}
 
 			btn.AddEventListener( "onmouseover", () =>
-			 {
-				 AchievementName = GetAchievementTitle( ach );
-				 AchievementDescription = IsMedal( ach ) ? GetMedalDescription( ach ) : ach.Description;
-			 } );
+			{
+				AchievementName = GetAchievementTitle( ach );
+				AchievementDescription = IsMedal( ach ) ? GetMedalDescription( ach ) : ach.Description;
+			} );
 
 			total++;
 		}
@@ -75,7 +77,7 @@ internal class StatsTabDetails : Panel
 
 	private bool ShowAchievement( Achievement ach )
 	{
-		if ( IsMedal( ach ) && !Entity.All.Any( x => x is AchievementMedals ) ) 
+		if ( IsMedal( ach ) && !Entity.All.Any( x => x is AchievementMedals ) )
 			return false;
 
 		return true;
@@ -83,12 +85,17 @@ internal class StatsTabDetails : Panel
 
 	private static bool IsMedal( Achievement ach )
 	{
-		return new string[] 
+		return new string[]
 		{
 			"uf_bronze",
 			"uf_silver",
 			"uf_gold"
 		}.Contains( ach.ShortName );
+	}
+
+	private static bool GrantsXp( Achievement ach )
+	{
+		return TrailPass.Current.Achievements.Any( x => x.AchievementShortName == ach.ShortName );
 	}
 
 	private static string GetAchievementTitle( Achievement ach )
@@ -114,7 +121,7 @@ internal class StatsTabDetails : Panel
 			_ => 0
 		};
 
-		return $"Complete the map in {CourseTimer.FormattedTimeMs(time)}s or better";
+		return $"Complete the map in {CourseTimer.FormattedTimeMs( time )}s or better";
 	}
 
 }

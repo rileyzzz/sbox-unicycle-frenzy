@@ -101,28 +101,37 @@ StatsTabDetails {
 
         .achievement-icons {
             flex-wrap: wrap;
-            justify-content: center;
+            margin-bottom: 40px;
 
             .icon {
-                margin: 0 45px 45px 0;
                 width: 110px;
                 height: 110px;
+                margin-right: $padding;
                 background-color: transparent;
                 border-radius: $smallradius;
-                border: 8px solid $lightbg;
-                transition: all .08s linear;
                 cursor: pointer;
                 background-image: url("https://files.facepunch.com/crayz/1b0311b1/msedge_2022-01-03_21-39-33.png");
-                background-size: 80px 80px;
+                background-size: 95%;
                 background-repeat: no-repeat;
                 background-position: center center;
+                opacity: .1;
 
-                &.completed {
-                    background-color: #4cff00;
+                .grayscale {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    backdrop-filter: grayscale(8);
                 }
 
-                &:hover {
-                    border-color: $lighterbg;
+                &:hover, &.completed {
+                    background-color: $green;
+                    opacity: 1;
+
+                    .grayscale {
+                        display: none;
+                    }
                 }
             }
         }
@@ -131,7 +140,7 @@ StatsTabDetails {
             border-top: 4px solid $lighterbg;
             font-size: 20px;
             padding: $padding;
-            flex-direction:column;
+            flex-direction: column;
 
             .name {
                 font-size: 28px;
