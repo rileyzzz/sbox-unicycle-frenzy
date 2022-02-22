@@ -51,9 +51,21 @@ internal class CustomizeTab : Panel
 
 		foreach ( var part in parts )
 		{
+			if ( !CanShowPart( part ) ) continue;
+
 			var icon = new CustomizePartIcon( part );
 			icon.Parent = PartsList;
 		}
+	}
+
+	private bool CanShowPart( CustomizationPart part )
+	{
+		var cat = Customization.Config.Categories.FirstOrDefault( x => x.Id == part.CategoryId );
+
+		if ( cat.DefaultPartId == part.Id ) return true;
+		if ( TrailPassProgress.CurrentSeason.IsUnlockedByPartId( part.Id ) ) return true;
+
+		return false;
 	}
 
 	private Button activeBtn;
