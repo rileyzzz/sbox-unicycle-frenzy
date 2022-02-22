@@ -30,6 +30,7 @@ internal class StatsTabDetails : Panel
 		Thumbnail.Style.SetBackgroundImage( pgk.Thumb );
 	}
 
+	[Event.Entity.PostSpawn]
 	private void RebuildAchievements()
 	{
 		AchievementCanvas.DeleteChildren( true );
@@ -59,7 +60,7 @@ internal class StatsTabDetails : Panel
 			btn.AddEventListener( "onmouseover", () =>
 			 {
 				 AchievementName = ach.DisplayName;
-				 AchievementDescription = ach.Description;
+				 AchievementDescription = IsMedal( ach ) ? GetMedalDescription( ach ) : ach.Description;
 			 } );
 
 			total++;
@@ -74,17 +75,36 @@ internal class StatsTabDetails : Panel
 
 	private bool ShowAchievement( Achievement ach )
 	{
-		var ismedal = new string[] 
+		if ( IsMedal( ach ) && !Entity.All.Any( x => x is AchievementMedals ) ) 
+			return false;
+
+		return true;
+	}
+
+	private static bool IsMedal( Achievement ach )
+	{
+		return new string[] 
 		{
 			"uf_bronze",
 			"uf_silver",
 			"uf_gold"
 		}.Contains( ach.ShortName );
+	}
 
-		if ( ismedal && !Entity.All.Any( x => x is AchievementMedals ) ) return false;
+	private static string GetMedalDescription( Achievement ach )
+	{
+		var achMedals = Entity.All.FirstOrDefault( x => x is AchievementMedals ) as AchievementMedals;
+		if ( !achMedals.IsValid() ) return ach.Description;
 
-		return true;
+		var time = ach.ShortName switch
+		{
+			"uf_bronze" => achMedals.Bronze,
+			"uf_silver" => achMedals.Silver,
+			"uf_gold" => achMedals.Gold,
+			_ => 0
+		};
+
+		return $"Complete the map in {CourseTimer.FormattedTimeMs(time)}s or better";
 	}
 
 }
-
