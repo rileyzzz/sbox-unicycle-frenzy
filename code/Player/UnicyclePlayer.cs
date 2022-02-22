@@ -2,7 +2,6 @@
 using Sandbox;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 internal partial class UnicyclePlayer : Sandbox.Player
 {
@@ -38,9 +37,9 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 		Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
 		Terry.SetParent( this, null, Transform.Zero );
-		Terry.SetAnimBool( "b_sit", true );
+		Terry.SetAnimParameter( "b_sit", true );
 
-		Camera = new UnicycleCamera();
+		CameraMode = new UnicycleCamera();
 		Controller = new UnicycleController();
 		Animator = new UnicycleAnimator();
 
@@ -80,7 +79,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		EnableAllCollisions = false;
 		EnableDrawing = false;
 
-		Camera = new SpectateRagdollCamera();
+		//CameraMode = new SpectateRagdollCamera();
 
 		Unicycle?.Delete();
 		Terry?.Delete();

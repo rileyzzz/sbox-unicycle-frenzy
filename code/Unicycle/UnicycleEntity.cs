@@ -208,14 +208,6 @@ internal partial class UnicycleEntity : Entity
 		var pedal = cfg.GetEquippedPart( PartType.Pedal.ToString() );
 
 		AssemblePedals( pedal, FrameModel, out localPawnPedals, out localLeftPedal, out localRightPedal );
-
-		localLeftPedal.GlowColor = Color.Green;
-		localLeftPedal.GlowState = GlowStates.On;
-		localLeftPedal.GlowActive = false;
-
-		localRightPedal.GlowColor = Color.Green;
-		localRightPedal.GlowState = GlowStates.On;
-		localRightPedal.GlowActive = false;
 	}
 
 	protected override void OnDestroy()

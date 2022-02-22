@@ -27,23 +27,23 @@ internal class PartScenePanel : Panel
 		Build( part, lookRight );
 	}
 
-	private async void Build( CustomizationPart part, bool lookRight )
+	private void Build( CustomizationPart part, bool lookRight )
 	{
-		using var _ = SceneWorld.SetCurrent( new SceneWorld() );
+		var sceneWorld = new SceneWorld();
 
 		Style.Width = Length.Percent( 100 );
 		Style.Height = Length.Percent( 100 );
 
-		scenePanel = Add.ScenePanel( SceneWorld.Current, Vector3.Zero, Rotation.Identity, 35 );
+		scenePanel = Add.ScenePanel( sceneWorld, Vector3.Zero, Rotation.Identity, 35 );
 
-		Particles p = null;
+		SceneParticles p = null;
 		if ( part.AssetPath.EndsWith( "vpcf" ) )
 		{
-			p = Particles.Create( part.AssetPath, Vector3.Zero );
-			p.SetPosition( 6, .75f );
-			p.SetPosition( 7, 1 );
-			p.SetPosition( 8, 0 );
-			p.TimeScale = 100;
+			p = new SceneParticles( sceneWorld, part.AssetPath );
+			p.SetControlPoint( 6, .75f );
+			p.SetControlPoint( 7, 1 );
+			p.SetControlPoint( 8, 0 );
+			p.Simulate( 100f );
 
 			scenePanel.CameraPosition = Vector3.Backward * 75 + Vector3.Down * 20;
 			scenePanel.CameraRotation = Rotation.From( 0, 0, 0 );
@@ -52,7 +52,7 @@ internal class PartScenePanel : Panel
 		}
 		else if ( part.AssetPath.EndsWith( "vmdl" ) )
 		{
-			sceneObj = SceneObject.CreateModel( part.AssetPath, Transform.Zero );
+			sceneObj = new SceneModel( sceneWorld, part.AssetPath, Transform.Zero );
 			if ( lookRight ) sceneObj.Rotation = Rotation.LookAt( Vector3.Right );
 			var bounds = sceneObj.Model.RenderBounds;
 
@@ -61,20 +61,14 @@ internal class PartScenePanel : Panel
 			scenePanel.RenderOnce = true;
 		}
 
-		Light.Point( Vector3.Up * 150.0f, 200.0f, Color.White * 100 );
-		Light.Point( Vector3.Forward * 150.0f, 200.0f, Color.White * 100 );
-		Light.Point( Vector3.Backward * 150.0f, 200.0f, Color.White * 100 );
-		Light.Point( Vector3.Right * 150.0f, 200.0f, Color.White * 100 );
-		Light.Point( Vector3.Left * 150.0f, 200.0f, Color.White * 100 );
+		new SceneLight( sceneWorld, Vector3.Up * 150.0f, 200.0f, Color.White * 100 );
+		new SceneLight( sceneWorld, Vector3.Forward * 150.0f, 200.0f, Color.White * 100 );
+		new SceneLight( sceneWorld, Vector3.Backward * 150.0f, 200.0f, Color.White * 100 );
+		new SceneLight( sceneWorld, Vector3.Right * 150.0f, 200.0f, Color.White * 100 );
+		new SceneLight( sceneWorld, Vector3.Left * 150.0f, 200.0f, Color.White * 100 );
 
 		scenePanel.Style.Width = Length.Percent( 100 );
 		scenePanel.Style.Height = Length.Percent( 100 );
-
-		if( p != null )
-		{
-			await Task.Delay( 1500 );
-			p.TimeScale = 1;
-		}
 	}
 
 	private Vector3 GetFocusPosition( BBox bounds, Rotation cameraRot, float fov )

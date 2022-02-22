@@ -9,7 +9,7 @@ internal class CustomizeRenderScene : Panel
 
 	private string prevtrail;
 	private SceneObject unicycleObject;
-	private Particles trailParticle;
+	private SceneParticles trailParticle;
 	private SceneWorld sceneWorld;
 	private ScenePanel renderScene;
 	private Angles renderSceneAngles = new( 25.0f, 0.0f, 0.0f );
@@ -57,38 +57,34 @@ internal class CustomizeRenderScene : Panel
 		sceneWorld?.Delete();
 		sceneWorld = new SceneWorld();
 
-		using ( SceneWorld.SetCurrent( sceneWorld ) )
+		new SceneModel( sceneWorld, "models/scene/scene_unicycle_ensemble_main.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ) );
+
+		var skycolor = Color.Orange;
+
+		var sceneLight = Entity.All.FirstOrDefault( x => x is EnvironmentLightEntity ) as EnvironmentLightEntity;
+		if ( sceneLight.IsValid() )
 		{
-			SceneObject.CreateModel( "models/scene/scene_unicycle_ensemble_main.vmdl", Transform.Zero.WithScale( 1 ).WithPosition( Vector3.Down * 4 ) );
-
-			var skycolor = Color.Orange;
-
-			var sceneLight = Entity.All.FirstOrDefault( x => x is EnvironmentLightEntity ) as EnvironmentLightEntity;
-			if ( sceneLight.IsValid() )
-			{
-				skycolor = sceneLight.SkyColor;
-			}
-
-			Light.Point( Vector3.Up * 150.0f, 200.0f, Color.White * 5.0f );
-			Light.Point( Vector3.Up * 75.0f + Vector3.Forward * 100.0f, 200, Color.White * 15.0f );
-			Light.Point( Vector3.Up * 75.0f + Vector3.Backward * 100.0f, 200, Color.White * 15f );
-			Light.Point( Vector3.Up * 75.0f + Vector3.Left * 100.0f, 200, skycolor * 20.0f );
-			Light.Point( Vector3.Up * 75.0f + Vector3.Right * 100.0f, 200, Color.White * 15.0f );
-			Light.Point( Vector3.Up * 100.0f + Vector3.Up, 200, Color.Yellow * 15.0f );
-
-			renderScene = Add.ScenePanel( SceneWorld.Current, renderScenePos, Rotation.From( renderSceneAngles ), 75 );
-			renderScene.Style.Width = Length.Percent( 100 );
-			renderScene.Style.Height = Length.Percent( 100 );
-			renderScene.CameraPosition = new Vector3( -53, 100, 42 );
-			renderScene.CameraRotation = Rotation.From( 10, -62, 0 );
-			renderSceneAngles = renderScene.CameraRotation.Angles();
+			skycolor = sceneLight.SkyColor;
 		}
+
+		new SceneLight( sceneWorld, Vector3.Up * 150.0f, 200.0f, Color.White * 5.0f );
+		new SceneLight( sceneWorld, Vector3.Up * 75.0f + Vector3.Forward * 100.0f, 200, Color.White * 15.0f );
+		new SceneLight( sceneWorld, Vector3.Up * 75.0f + Vector3.Backward * 100.0f, 200, Color.White * 15f );
+		new SceneLight( sceneWorld, Vector3.Up * 75.0f + Vector3.Left * 100.0f, 200, skycolor * 20.0f );
+		new SceneLight( sceneWorld, Vector3.Up * 75.0f + Vector3.Right * 100.0f, 200, Color.White * 15.0f );
+		new SceneLight( sceneWorld, Vector3.Up * 100.0f + Vector3.Up, 200, Color.Yellow * 15.0f );
+
+		renderScene = Add.ScenePanel( sceneWorld, renderScenePos, Rotation.From( renderSceneAngles ), 75 );
+		renderScene.Style.Width = Length.Percent( 100 );
+		renderScene.Style.Height = Length.Percent( 100 );
+		renderScene.CameraPosition = new Vector3( -53, 100, 42 );
+		renderScene.CameraRotation = Rotation.From( 10, -62, 0 );
+		renderSceneAngles = renderScene.CameraRotation.Angles();
 	}
 
 	public void Build()
 	{
 		if ( sceneWorld == null ) BuildSceneWorld();
-		using var _ = SceneWorld.SetCurrent( sceneWorld );
 
 		unicycleObject?.Delete();
 
@@ -104,11 +100,11 @@ internal class CustomizeRenderScene : Panel
 		var seat = ensemble.GetEquippedPart( PartType.Seat.ToString() );
 		var pedal = ensemble.GetEquippedPart( PartType.Pedal.ToString() );
 
-		var frameObj = SceneObject.CreateModel( frame.AssetPath, Transform.Zero );
-		var wheelObj = SceneObject.CreateModel( wheel.AssetPath, Transform.Zero );
-		var seatObj = SceneObject.CreateModel( seat.AssetPath, Transform.Zero );
-		var pedalObjL = SceneObject.CreateModel( pedal.AssetPath, Transform.Zero );
-		var pedalObjR = SceneObject.CreateModel( pedal.AssetPath, Transform.Zero );
+		var frameObj = new SceneModel( sceneWorld, frame.AssetPath, Transform.Zero );
+		var wheelObj = new SceneModel( sceneWorld, wheel.AssetPath, Transform.Zero );
+		var seatObj = new SceneModel( sceneWorld, seat.AssetPath, Transform.Zero );
+		var pedalObjL = new SceneModel( sceneWorld, pedal.AssetPath, Transform.Zero );
+		var pedalObjR = new SceneModel( sceneWorld, pedal.AssetPath, Transform.Zero );
 
 		var frameHub = frameObj.Model.GetAttachment( "hub" ) ?? Transform.Zero;
 		var wheelHub = wheelObj.Model.GetAttachment( "hub" ) ?? Transform.Zero;
@@ -135,15 +131,17 @@ internal class CustomizeRenderScene : Panel
 		frameObj.AddChild( "pedalL", pedalObjL );
 		frameObj.AddChild( "pedalR", pedalObjR );
 
-		if( prevtrail != trail.AssetPath )
-		{
+		//if( prevtrail != trail.AssetPath )
+		//{
 			prevtrail = trail.AssetPath;
-			trailParticle?.Destroy( true );
-			trailParticle = Particles.Create( trail.AssetPath, seatAttachment.Value.Position );
-			trailParticle.SetPosition( 6, .75f );
-			trailParticle.SetPosition( 7, 1 );
-			trailParticle.SetPosition( 8, 0 );
-		}
+			trailParticle?.Delete();
+			trailParticle = new SceneParticles( sceneWorld, trail.AssetPath );
+			trailParticle.Position = seatAttachment.Value.Position;
+			trailParticle.SetControlPoint( 6, .75f );
+			trailParticle.SetControlPoint( 7, 1 );
+			trailParticle.SetControlPoint( 8, 0 );
+			trailParticle.Simulate( 100f );
+		//}
 
 		Juice.Scale( 1, 1.15f, 1 )
 			.WithDuration( .75f )

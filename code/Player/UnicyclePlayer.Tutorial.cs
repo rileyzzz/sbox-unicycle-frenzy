@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using Sandbox.Component;
 
 partial class UnicyclePlayer
 {
@@ -24,8 +25,8 @@ partial class UnicyclePlayer
 
 		if( Unicycle.DisplayedLeftPedal.IsValid() && Unicycle.DisplayedRightPedal.IsValid() )
 		{
-			Unicycle.DisplayedLeftPedal.GlowActive = glowLeftPedal;
-			Unicycle.DisplayedRightPedal.GlowActive = glowRightPedal;
+			Unicycle.DisplayedLeftPedal.Components.GetOrCreate<Glow>().Active = glowLeftPedal;
+			Unicycle.DisplayedRightPedal.Components.GetOrCreate<Glow>().Active = glowRightPedal;
 		}
 	}
 

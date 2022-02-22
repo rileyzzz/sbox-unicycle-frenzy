@@ -53,7 +53,7 @@ internal partial class UnicycleController : BasePlayerController
 	{
 		base.FrameSimulate();
 
-		EyeRot = Rotation.Identity;
+		EyeRotation = Rotation.Identity;
 
 		if ( Debug )
 		{
@@ -63,7 +63,7 @@ internal partial class UnicycleController : BasePlayerController
 			DebugOverlay.Text( Position + Vector3.Down * 6, "Grounded: " + (GroundEntity != null) );
 			DebugOverlay.Text( Position + Vector3.Down * 9, "GroundNormal: " + GroundNormal );
 			DebugOverlay.Text( Position + Vector3.Down * 12, "Surface: " + GroundSurface );
-			DebugOverlay.Text( Position + Vector3.Down * 15, "Water Level: " + Pawn.WaterLevel.Fraction );
+			DebugOverlay.Text( Position + Vector3.Down * 15, "Water Level: " + Pawn.WaterLevel );
 			DebugOverlay.Text( Position + Vector3.Down * 18, "Tilt: " + pl.Tilt );
 
 			DebugOverlay.Line( Position, Position + Velocity, Color.Yellow );
@@ -233,7 +233,7 @@ internal partial class UnicycleController : BasePlayerController
 		{
 			AddEvent( "land" );
 			pl.Tilt = Rotation.Angles().WithYaw( 0 );
-			Position = Position.WithZ( tr.EndPos.z );
+			Position = Position.WithZ( tr.EndPosition.z );
 
 			if ( !pl.JumpTilt.Length.AlmostEqual( 0, .1f ) )
 			{

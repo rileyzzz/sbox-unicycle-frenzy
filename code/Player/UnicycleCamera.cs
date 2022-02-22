@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-internal class UnicycleCamera : Camera
+internal class UnicycleCamera : CameraMode
 {
 
 	private List<UfProp> viewblockers = new();
@@ -26,7 +26,7 @@ internal class UnicycleCamera : Camera
 			.Radius( 8 )
 			.Run();
 
-		var endpos = tr.EndPos;
+		var endpos = tr.EndPosition;
 
 		if ( tr.Entity is UfProp ufp )
 		{
