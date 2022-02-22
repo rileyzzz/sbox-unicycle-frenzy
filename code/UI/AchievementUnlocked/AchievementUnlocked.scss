@@ -1,0 +1,46 @@
+﻿
+@import "../Vars.scss";
+
+AchievementUnlocked {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 20px 30px;
+    border-radius: $radius;
+    opacity: 0;
+    transition: all .15s ease-in;
+    flex-direction: column;
+    transform: scale(0) translateX(-50%);
+    text-shadow: 1px 1px 1px black;
+
+    .heading {
+        font-family: $stylefont;
+        color: $secondary;
+        font-size: 24px;
+        margin-bottom: $padding;
+    }
+
+    .icon {
+        width: 80px;
+        height: 80px;
+        border-radius: $radius;
+        margin-right: $padding;
+        background-size: 100%;
+    }
+
+    .details {
+        flex-direction: column;
+        font-weight: heavy;
+        font-size: 16px;
+
+        .xp {
+            color: $secondary;
+        }
+    }
+
+    &.open {
+        opacity: 1;
+        transform: scale(1) translateX(-50%);
+    }
+}
