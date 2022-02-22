@@ -32,8 +32,8 @@ internal class TrailPass
 				Achievements = new()
 				{
 					new() { Id = 1, AchievementShortName = "uf_bronze", ExperienceGranted = 30 },
-					new() { Id = 2, AchievementShortName = "uf_silver", ExperienceGranted = 30 },
-					new() { Id = 3, AchievementShortName = "uf_gold", ExperienceGranted = 30 },
+					new() { Id = 2, AchievementShortName = "uf_silver", ExperienceGranted = 40 },
+					new() { Id = 3, AchievementShortName = "uf_gold", ExperienceGranted = 50 },
 				}
 			};
 		}

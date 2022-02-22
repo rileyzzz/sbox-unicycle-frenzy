@@ -59,7 +59,7 @@ internal class StatsTabDetails : Panel
 
 			btn.AddEventListener( "onmouseover", () =>
 			 {
-				 AchievementName = ach.DisplayName;
+				 AchievementName = GetAchievementTitle( ach );
 				 AchievementDescription = IsMedal( ach ) ? GetMedalDescription( ach ) : ach.Description;
 			 } );
 
@@ -89,6 +89,16 @@ internal class StatsTabDetails : Panel
 			"uf_silver",
 			"uf_gold"
 		}.Contains( ach.ShortName );
+	}
+
+	private static string GetAchievementTitle( Achievement ach )
+	{
+		var pass = TrailPass.Current;
+
+		var tpAchi = pass.Achievements.FirstOrDefault( x => x.AchievementShortName == ach.ShortName );
+		if ( tpAchi == null ) return ach.DisplayName;
+
+		return $"{ach.DisplayName} (+{tpAchi.ExperienceGranted}xp)";
 	}
 
 	private static string GetMedalDescription( Achievement ach )
