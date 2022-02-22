@@ -30,28 +30,7 @@ internal class StatsTabDetails : Panel
 		Thumbnail.Style.SetBackgroundImage( pgk.Thumb );
 	}
 
-	public override void Tick()
-	{
-		base.Tick();
-
-		SetClass( "incomplete", Stats.BestTime == 0 );
-	}
-
-	public override void OnHotloaded()
-	{
-		base.OnHotloaded();
-
-		RebuildAchievements();
-	}
-
-	protected override void PostTemplateApplied()
-	{
-		base.PostTemplateApplied();
-
-		RebuildAchievements();
-	}
-
-	public void RebuildAchievements()
+	private void RebuildAchievements()
 	{
 		AchievementCanvas.DeleteChildren( true );
 
@@ -62,6 +41,8 @@ internal class StatsTabDetails : Panel
 
 		foreach ( var ach in mapAchievements.Concat( globalAchievements ) )
 		{
+			if ( !ShowAchievement( ach ) ) continue;
+
 			var btn = new Button();
 			btn.AddClass( "button icon" );
 			btn.Parent = AchievementCanvas;
@@ -85,6 +66,24 @@ internal class StatsTabDetails : Panel
 		}
 
 		AchievementCount = $"({achieved}/{total})";
+	}
+
+	public override void Tick() => SetClass( "incomplete", Stats.BestTime == 0 );
+	public override void OnHotloaded() => RebuildAchievements();
+	protected override void PostTemplateApplied() => RebuildAchievements();
+
+	private bool ShowAchievement( Achievement ach )
+	{
+		var ismedal = new string[] 
+		{
+			"uf_bronze",
+			"uf_silver",
+			"uf_gold"
+		}.Contains( ach.ShortName );
+
+		if ( ismedal && !Entity.All.Any( x => x is AchievementMedals ) ) return false;
+
+		return true;
 	}
 
 }
