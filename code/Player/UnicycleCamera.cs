@@ -74,7 +74,7 @@ internal class UnicycleCamera : CameraMode
 
 	private void UpdateViewBlockers( UnicyclePlayer pawn )
 	{
-		var traces = Trace.Sphere( 3f, CurrentView.Position, pawn.Position ).RunAll();
+		var traces = Trace.Sphere( 3f, CurrentView.Position, pawn.Position + Vector3.Up * 16 ).RunAll();
 
 		if ( traces == null ) return;
 
