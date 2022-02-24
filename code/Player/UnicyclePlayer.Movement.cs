@@ -34,6 +34,8 @@ internal partial class UnicyclePlayer
 	public bool PrevGrounded { get; set; }
 	[Net, Predicted]
 	public bool Fallen { get; set; }
+	[Net, Predicted]
+	public float SurfaceFriction { get; set; }
 
 	private bool overrideRot;
 	private Rotation rotOverride;

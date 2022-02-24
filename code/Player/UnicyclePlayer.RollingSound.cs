@@ -48,7 +48,7 @@ internal partial class UnicyclePlayer
 		var surface = "default";
 		if( Controller is UnicycleController ctrl )
 		{
-			surface = ctrl.GroundSurface;
+			//surface = ctrl.GroundSurface;
 		}
 
 		return surface switch

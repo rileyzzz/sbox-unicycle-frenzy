@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using Sandbox;
 using Sandbox.ScreenShake;
@@ -36,8 +37,6 @@ internal partial class UnicycleController : BasePlayerController
 	public float HowFastYouPitchWhenForwardVelocityChanges => 3f;
 	public float HowFastYouRollWhenRightVelocityChanges => 1.5f;
 
-	public string GroundSurface { get; private set; }
-
 	private UnicyclePlayer pl => Pawn as UnicyclePlayer;
 	public Vector3 Mins => new( -1, -1, 0 );
 	public Vector3 Maxs => new( 1, 1, 16 );
@@ -62,7 +61,7 @@ internal partial class UnicycleController : BasePlayerController
 			DebugOverlay.Text( Position + Vector3.Down * 3, "Position: " + intpos );
 			DebugOverlay.Text( Position + Vector3.Down * 6, "Grounded: " + (GroundEntity != null) );
 			DebugOverlay.Text( Position + Vector3.Down * 9, "GroundNormal: " + GroundNormal );
-			DebugOverlay.Text( Position + Vector3.Down * 12, "Surface: " + GroundSurface );
+			DebugOverlay.Text( Position + Vector3.Down * 12, "Surface: " + pl.SurfaceFriction );
 			DebugOverlay.Text( Position + Vector3.Down * 15, "Water Level: " + Pawn.WaterLevel );
 			DebugOverlay.Text( Position + Vector3.Down * 18, "Tilt: " + pl.Tilt );
 
@@ -254,7 +253,6 @@ internal partial class UnicycleController : BasePlayerController
 		BaseVelocity = tr.Entity.Velocity; 
 		GroundEntity = tr.Entity;
 		GroundNormal = tr.Normal;
-		GroundSurface = tr.Surface.Name;
 	}
 
 	private void Gravity()
@@ -278,7 +276,7 @@ internal partial class UnicycleController : BasePlayerController
 		var speed = Velocity.Length;
 		if ( speed < 0.1f ) return;
 
-		var drop = speed * Time.Delta * .1f * GetSurfaceFriction();
+		var drop = speed * Time.Delta * .1f * pl.SurfaceFriction;
 		var newspeed = Math.Max( speed - drop, 0 );
 
 		if ( newspeed != speed )
@@ -602,18 +600,6 @@ internal partial class UnicycleController : BasePlayerController
 		{
 			Velocity *= StopSpeed / Velocity.Length;
 		}
-	}
-
-	private float GetSurfaceFriction()
-	{
-		// todo: snow, gravel
-		return GroundSurface switch
-		{
-			"mud" => 5.0f,
-			"sand" => 20.0f,
-			"dirt" => 2.0f,
-			_ => 1.0f,
-		};
 	}
 
 	static Rotation FromToRotation( Vector3 aFrom, Vector3 aTo )
