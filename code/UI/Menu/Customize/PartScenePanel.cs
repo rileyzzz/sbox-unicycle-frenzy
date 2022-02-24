@@ -36,10 +36,9 @@ internal class PartScenePanel : Panel
 
 		scenePanel = Add.ScenePanel( sceneWorld, Vector3.Zero, Rotation.Identity, 35 );
 
-		SceneParticles p = null;
 		if ( part.AssetPath.EndsWith( "vpcf" ) )
 		{
-			p = new SceneParticles( sceneWorld, part.AssetPath );
+			var p = new SceneParticles( sceneWorld, part.AssetPath );
 			p.SetControlPoint( 6, .75f );
 			p.SetControlPoint( 7, 1 );
 			p.SetControlPoint( 8, 0 );
