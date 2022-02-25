@@ -27,8 +27,12 @@ partial class UnicyclePlayer
 
 		if( Unicycle.DisplayedLeftPedal.IsValid() && Unicycle.DisplayedRightPedal.IsValid() )
 		{
-			Unicycle.DisplayedLeftPedal.Components.GetOrCreate<Glow>().Active = glowLeftPedal;
-			Unicycle.DisplayedRightPedal.Components.GetOrCreate<Glow>().Active = glowRightPedal;
+			var leftGlow = Unicycle.DisplayedLeftPedal.Components.GetOrCreate<Glow>();
+			var rightGlow = Unicycle.DisplayedRightPedal.Components.GetOrCreate<Glow>();
+			leftGlow.Active = glowLeftPedal;
+			leftGlow.Color = Color.Green;
+			rightGlow.Active = glowRightPedal;
+			rightGlow.Color = Color.Green;
 		}
 	}
 
