@@ -79,7 +79,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		EnableAllCollisions = false;
 		EnableDrawing = false;
 
-		//CameraMode = new SpectateRagdollCamera();
+		CameraMode = new SpectateRagdollCamera();
 
 		Unicycle?.Delete();
 		Terry?.Delete();
