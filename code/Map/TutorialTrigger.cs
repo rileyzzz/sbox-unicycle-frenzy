@@ -12,13 +12,21 @@ internal partial class TutorialTrigger : BaseTrigger
 	[Property]
 	public bool PerfectPedalGlow { get; set; }
 
-	public override void StartTouch( Entity other )
+	public override void Spawn()
 	{
-		base.StartTouch( other );
+		base.Spawn();
+
+		EnableTouchPersists = true;
+	}
+
+	public override void Touch( Entity other )
+	{
+		base.Touch( other );
 
 		if ( other is not UnicyclePlayer pl ) return;
 
 		pl.PerfectPedalGlow = PerfectPedalGlow;
+		pl.DisplayedAction = DisplayBind;
 	}
 
 	public override void EndTouch( Entity other )
@@ -28,6 +36,7 @@ internal partial class TutorialTrigger : BaseTrigger
 		if ( other is not UnicyclePlayer pl ) return;
 		
 		pl.PerfectPedalGlow = false;
+		pl.DisplayedAction = InputActions.None;
 	}
 
 	public enum InputActions
