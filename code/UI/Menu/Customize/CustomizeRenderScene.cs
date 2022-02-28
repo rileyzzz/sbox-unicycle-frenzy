@@ -42,6 +42,8 @@ internal class CustomizeRenderScene : Panel
 
 		renderScene.CameraPosition = renderScene.CameraPosition.LerpTo( renderScenePos, 10f * Time.Delta );
 		renderScene.CameraRotation = Rotation.Lerp( renderScene.CameraRotation, Rotation.From( renderSceneAngles ), 15f * Time.Delta );
+
+		trailParticle?.Simulate( RealTime.Delta );
 	}
 
 	public override void OnMouseWheel( float value )
@@ -136,11 +138,10 @@ internal class CustomizeRenderScene : Panel
 			prevtrail = trail.AssetPath;
 			trailParticle?.Delete();
 			trailParticle = new SceneParticles( sceneWorld, trail.AssetPath );
-			trailParticle.Position = seatAttachment.Value.Position;
 			trailParticle.SetControlPoint( 6, .75f );
 			trailParticle.SetControlPoint( 7, 1 );
 			trailParticle.SetControlPoint( 8, 0 );
-			trailParticle.Simulate( 100f );
+			trailParticle.SetControlPoint( 0, seatAttachment.Value.Position );
 		}
 
 		Juice.Scale( 1, 1.15f, 1 )
