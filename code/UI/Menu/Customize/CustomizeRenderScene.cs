@@ -131,8 +131,8 @@ internal class CustomizeRenderScene : Panel
 		frameObj.AddChild( "pedalL", pedalObjL );
 		frameObj.AddChild( "pedalR", pedalObjR );
 
-		//if( prevtrail != trail.AssetPath )
-		//{
+		if( prevtrail != trail.AssetPath )
+		{
 			prevtrail = trail.AssetPath;
 			trailParticle?.Delete();
 			trailParticle = new SceneParticles( sceneWorld, trail.AssetPath );
@@ -141,7 +141,7 @@ internal class CustomizeRenderScene : Panel
 			trailParticle.SetControlPoint( 7, 1 );
 			trailParticle.SetControlPoint( 8, 0 );
 			trailParticle.Simulate( 100f );
-		//}
+		}
 
 		Juice.Scale( 1, 1.15f, 1 )
 			.WithDuration( .75f )
