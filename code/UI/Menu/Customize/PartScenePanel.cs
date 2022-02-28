@@ -44,6 +44,8 @@ internal class PartScenePanel : Panel
 			p.SetControlPoint( 8, 0 );
 			p.Simulate( 100f );
 
+			sceneObj = p;
+
 			scenePanel.CameraPosition = Vector3.Backward * 75 + Vector3.Down * 20;
 			scenePanel.CameraRotation = Rotation.From( 0, 0, 0 );
 			scenePanel.Style.Opacity = 1;
@@ -88,6 +90,11 @@ internal class PartScenePanel : Panel
 		if ( RenderOnce ) return;
 
 		sceneObj.Rotation = sceneObj.Rotation.RotateAroundAxis( Vector3.Up, RotationSpeed * Time.Delta );
+
+		if( sceneObj is SceneParticles p )
+		{
+			p.Simulate( RealTime.Delta );
+		}
 	}
 
 }
