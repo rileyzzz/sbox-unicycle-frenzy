@@ -48,7 +48,7 @@ internal partial class UnicyclePlayer
 		AddAttempts();
 	}
 
-	public void CompleteCourse()
+	public async void CompleteCourse()
 	{
 		TimerState = TimerState.Finished;
 
@@ -85,9 +85,9 @@ internal partial class UnicyclePlayer
 
 				BestTime = TimeSinceStart;
 
-				GameServices.StartGame();
-				GameServices.RecordScore( Client.PlayerId, false, GameplayResult.None, BestTime );
-				GameServices.EndGame();
+				var scoreResult = await GameServices.SubmitScore( Client.PlayerId, BestTime );
+
+				// we can print new rank, old rank, improvement, etc from score result
 			}
 
 			Celebrate();
