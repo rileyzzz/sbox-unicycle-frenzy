@@ -23,6 +23,31 @@ internal partial class Collectible : UfProp
 		CollisionGroup = CollisionGroup.Trigger;
 	}
 
+	public void SetTouched( bool touched )
+	{
+		Host.AssertServer();
+
+		Touched = touched;
+
+		if( touched )
+		{
+			// TODO! BUG! Setting final scale to 0 causes
+			// the player to longer collide with the world and fall through map
+			// seems... weird?  this ent has nothing to do with player like that
+			Juice.Scale( 1, 1.5f, 0.01f )
+				.WithTarget( this )
+				.WithDuration( .5f );
+
+			Sound.FromEntity( "collect", this );
+		}
+		else
+		{
+			Juice.Scale( 0, 1.5f, 1f )
+				.WithTarget( this )
+				.WithDuration( .5f );
+		}
+	}
+
 	public override void StartTouch( Entity other )
 	{
 		base.StartTouch( other );
@@ -30,8 +55,9 @@ internal partial class Collectible : UfProp
 		if ( Touched ) return;
 		if ( IsClient ) return;
 		if ( other is not UnicyclePlayer pl ) return;
+		if ( pl.Fallen ) return;
 
-		Touched = true;
+		SetTouched( true );
 
 		Event.Run( "collection.collected", this );
 
@@ -60,7 +86,7 @@ internal partial class Collectible : UfProp
 
 		foreach( var ent in ents )
 		{
-			ent.Touched = false;
+			ent.SetTouched( false );
 		}
 
 		Event.Run( "collection.reset", collection );
