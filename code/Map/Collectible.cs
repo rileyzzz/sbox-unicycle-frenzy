@@ -1,5 +1,7 @@
 ﻿using Hammer;
 using Sandbox;
+using System;
+using System.Linq;
 
 [Library( "uf_collectible" )]
 [EntityTool( "Unicycle Frenzy Collectible", "Unicycle Frenzy", "A prop that can be collected." )]
@@ -8,7 +10,60 @@ internal partial class Collectible : UfProp
 
 	[Net, Property( "Collection", "Discretionary name of the collection group this collectible belongs to." )]
 	public string Collection { get; set; }
-	[Net, Property( "Solid" )]
-	public new bool Solid { get; set; } = false;
+	[Net]
+	public bool Touched { get; set; }
+
+	public override void Spawn()
+	{
+		base.Spawn();
+
+		EnableAllCollisions = true;
+		EnableSolidCollisions = false;
+
+		CollisionGroup = CollisionGroup.Trigger;
+	}
+
+	public override void StartTouch( Entity other )
+	{
+		base.StartTouch( other );
+
+		if ( Touched ) return;
+		if ( IsClient ) return;
+		if ( other is not UnicyclePlayer pl ) return;
+
+		Touched = true;
+
+		Event.Run( "collection.collected", this );
+
+		if ( IsCollected( Collection ) )
+		{
+			Event.Run( "collection.complete", Collection );
+		}
+	}
+
+	public static bool IsCollected( string collection )
+	{
+		var ents = All
+			.OfType<Collectible>()
+			.Where( x => x.IsValid() && x.Collection.Equals( collection, StringComparison.InvariantCultureIgnoreCase ) );
+
+		if ( !ents.Any() ) return false;
+
+		return ents.All( x => x.Touched );
+	}
+
+	public static void ResetCollection( string collection )
+	{
+		var ents = All
+			.OfType<Collectible>()
+			.Where( x => x.IsValid() && x.Collection.Equals( collection, StringComparison.InvariantCultureIgnoreCase ) );
+
+		foreach( var ent in ents )
+		{
+			ent.Touched = false;
+		}
+
+		Event.Run( "collection.reset", collection );
+	}
 
 }

@@ -1,5 +1,6 @@
 ﻿using Sandbox;
 using Sandbox.Component;
+using System.Linq;
 
 partial class UnicyclePlayer
 {
@@ -34,6 +35,30 @@ partial class UnicyclePlayer
 			rightGlow.Active = glowRightPedal;
 			rightGlow.Color = Color.Green;
 		}
+	}
+
+	[Event("collection.complete")]
+	public void OnCollectionComplete( string collection )
+	{
+		if ( !Host.IsServer ) return;
+		if ( !string.Equals( collection, "collection_tutorial" ) ) return;
+
+		var ent = Entity.All.FirstOrDefault( x => x is DoorEntity && x.Name == "tut_door" ) as DoorEntity;
+		if ( !ent.IsValid() ) return;
+
+		ent.Open();
+	}
+
+	[Event("collection.reset")]
+	public void OnCollectionReset( string collection )
+	{
+		if ( !Host.IsServer ) return;
+		if ( !string.Equals( collection, "collection_tutorial" ) ) return;
+
+		var ent = Entity.All.FirstOrDefault( x => x is DoorEntity && x.Name == "tut_door" ) as DoorEntity;
+		if ( !ent.IsValid() ) return;
+
+		ent.Close();
 	}
 
 }

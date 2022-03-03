@@ -99,7 +99,12 @@ internal partial class UnicyclePlayer
 		TimerState = TimerState.InStartZone;
 		TimeSinceStart = 0;
 
-		if ( IsServer ) ClearCheckpoints();
+		if ( IsServer )
+		{
+			ClearCheckpoints();
+
+			Collectible.ResetCollection( "collection_tutorial" );
+		}
 	}
 
 	public void ClearCheckpoints()
