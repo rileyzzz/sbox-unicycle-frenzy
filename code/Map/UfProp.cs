@@ -1,9 +1,10 @@
 ﻿using Sandbox;
 using System.Linq;
 using Hammer;
+using Sandbox.Internal;
 
-[Hammer.Model]
-[Hammer.SupportsSolid]
+[Model]
+[SupportsSolid]
 [Library("uf_prop")]
 [EntityTool( "Unicycle Frenzy Prop", "Unicycle Frenzy", "A model or Mesh that can be set to pass the camera through it." )]
 internal partial class UfProp : ModelEntity
@@ -13,6 +14,8 @@ internal partial class UfProp : ModelEntity
 	public bool NoCameraCollide { get; set; }
 	[Net, Property( "Camera fade", "This prop will fade out when it's between the player and the camera" )]
 	public bool CameraFade { get; set; }
+	[Net, Property( "Solid" )]
+	public bool Solid { get; set; } = true;
 
 	public bool BlockingView = false;
 
@@ -21,7 +24,7 @@ internal partial class UfProp : ModelEntity
 		base.Spawn();
 
 		SetupPhysicsFromModel( PhysicsMotionType.Static );
-		EnableAllCollisions = true;
+		EnableAllCollisions = Solid;
 	}
 
 	[Event.Frame]
