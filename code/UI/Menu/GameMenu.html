@@ -2,43 +2,55 @@
 <link rel="stylesheet" href="GameMenu.scss" />
 
 <root>
-
-    <div class="sidebar gamepanel">
-        <navlink icon="leaderboard" href="menu/leaderboards" style="display:none;">
-            <label>Leadeboards</label>
-            <div class="underline"></div>
-        </navlink>
-        <navlink icon="star" href="menu/stats">
+    <div class="header">
+        <div class="header-logo">Logo</div>
+        <div class="header-navigation">
             <label>Stats</label>
-            <div class="underline"></div>
-        </navlink>
-        <navlink icon="confirmation_number" href="menu/trailpass">
-            <label>Trail Pass</label>
-            <div class="underline"></div>
-        </navlink>
-        <navlink icon="category" href="menu/customize">
+            <label>Achievements</label>
+            <label>Trial Pass</label>
             <label>Customize</label>
-            <div class="underline"></div>
-        </navlink>
-        <navlink icon="gamepad" href="menu/controls">
             <label>Controls</label>
-            <div class="underline"></div>
-        </navlink>
-        <navlink icon="settings" href="menu/settings" style="display:none;">
-            <label>Settings</label>
-            <div class="underline"></div>
-        </navlink>
-        <div class="spacer"></div>
-        <button class="stop-spectating" icon="cancel" onclick="StopSpectating()">
-            <label>Stop Spectating</label>
-            <div class="underline"></div>
-        </button>
-        <button icon="close" onclick="Close()">
-            <label>Close</label>
-            <div class="underline"></div>
-        </button>
+        </div>
     </div>
-
-    <div @ref="NavigatorCanvas" class="content"></div>
+    <div class="body">
+        <div class="sidebar gamepanel">
+            <navlink icon="leaderboard" href="menu/leaderboards" style="display:none;">
+                <label>Leadeboards</label>
+                <div class="underline"></div>
+            </navlink>
+            <navlink icon="star" href="menu/stats">
+                <label>Stats</label>
+                <div class="underline"></div>
+            </navlink>
+            <navlink icon="confirmation_number" href="menu/trailpass">
+                <label>Trail Pass</label>
+                <div class="underline"></div>
+            </navlink>
+            <navlink icon="category" href="menu/customize">
+                <label>Customize</label>
+                <div class="underline"></div>
+            </navlink>
+            <navlink icon="gamepad" href="menu/controls">
+                <label>Controls</label>
+                <div class="underline"></div>
+            </navlink>
+            <navlink icon="settings" href="menu/settings" style="display:none;">
+                <label>Settings</label>
+                <div class="underline"></div>
+            </navlink>
+            <div class="spacer"></div>
+            <button class="stop-spectating" icon="cancel" onclick="StopSpectating()">
+                <label>Stop Spectating</label>
+                <div class="underline"></div>
+            </button>
+            <button icon="close" onclick="Close()">
+                <label>Close</label>
+                <div class="underline"></div>
+            </button>
+        </div>
+    
+        <div @ref="NavigatorCanvas" class="content"></div>
+    </div>
+    
 
 </root>
