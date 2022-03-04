@@ -7,7 +7,7 @@
         <div class="header-navigation">
 
             <navlink href="menu/stats" class="nav-link">
-                <label>Stats</label>
+                <label>Map</label>
                 <div class="stroke"></div>
             </navlink>
 
@@ -41,10 +41,10 @@
                 <div class="stroke"></div>
             </navlink>
 
-            <button class="stop-spectating" icon="cancel" onclick="StopSpectating()">
+            <navlink class="stop-spectating" icon="cancel" onclick="StopSpectating()">
                 <label>Stop Spectating</label>
-                <div class="underline"></div>
-            </button>
+                <div class="stroke"></div>
+            </navlink>
 
             <navlink onclick="Close()" class="nav-link">
                 <label>X</label>
@@ -53,42 +53,6 @@
         </div>
     </div>
     <div class="body">
-        <div class="sidebar gamepanel">
-            <navlink icon="leaderboard" href="menu/leaderboards" style="display:none;">
-                <label>Leadeboards</label>
-                <div class="underline"></div>
-            </navlink>
-            <navlink icon="star" href="menu/stats">
-                <label>Stats</label>
-                <div class="underline"></div>
-            </navlink>
-            <navlink icon="confirmation_number" href="menu/trailpass">
-                <label>Trail Pass</label>
-                <div class="underline"></div>
-            </navlink>
-            <navlink icon="category" href="menu/customize">
-                <label>Customize</label>
-                <div class="underline"></div>
-            </navlink>
-            <navlink icon="gamepad" href="menu/controls">
-                <label>Controls</label>
-                <div class="underline"></div>
-            </navlink>
-            <navlink icon="settings" href="menu/settings" style="display:none;">
-                <label>Settings</label>
-                <div class="underline"></div>
-            </navlink>
-            <div class="spacer"></div>
-            <button class="stop-spectating" icon="cancel" onclick="StopSpectating()">
-                <label>Stop Spectating</label>
-                <div class="underline"></div>
-            </button>
-            <button icon="close" onclick="Close()">
-                <label>Close</label>
-                <div class="underline"></div>
-            </button>
-        </div>
-    
         <div @ref="NavigatorCanvas" class="content"></div>
     </div>
     

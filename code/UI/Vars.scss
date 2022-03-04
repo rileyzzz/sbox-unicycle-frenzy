@@ -1,13 +1,12 @@
-﻿
-$fontcolor: #FFF;
+﻿$fontcolor: #fff;
 $fontcolorfaded: #b1b1b1;
-$primary: #55CCD9;
-$secondary: #F2BC1B;
+$primary: #55ccd9;
+$secondary: #f2bc1b;
 $bg: #1f202a;
 $innerbg: #1a1a23;
 $lightbg: #313344;
 $lighterbg: #3f4155;
-$blue: #2C3673;
+$blue: #2c3673;
 $radius: 12px;
 $smallradius: 4px;
 $padding: 15px;
@@ -15,36 +14,46 @@ $stylefont: LuckiestGuy;
 $readingfont: Poppins;
 $red: #ba2828;
 
-
 // Default Fonts
 $title-font: Knewave;
-$body-font: LondrinaSolid-Regular;
-$body-bold: LondrinaSolid-Bold;
+$body-font-bold: LondrinaSolid-Black;
+$body-font-light: LondrinaSolid-Light;
+$body-font-regular: LondrinaSolid-Regular;
+$body-font: $body-font-light;
 
 // Base Colours
-$pink: #FB1149;
-$green: #00FF47;
-$blue: #00A3FF;
-$orange-light: #F7B742;
-$orange-dark: #EF654D;
+$pink: #fb1149;
+$green: #00ff47;
+$blue: #00a3ff;
+$orange-light: #f7b742;
+$orange-dark: #ef654d;
 
 // UI Block Elements Colours
-$light-purple: #30273A;
-$dark-purple: #130E26;
-$grey: #31313D;
+$light-purple: #30273a;
+$dark-purple: #130e26;
+$grey: #31313d;
 
 // Gradient Colours
-$orange-gradient: linear-gradient(#F17848,#FAC636);
-$pink-gradient: linear-gradient(#EB3769, #EE5258);
-$grey-gradient: linear-gradient(#4B5364,#71818E);
-$purple-gradient: linear-gradient(to bottom, #372B44,#5E3E82);
-$bg-gradient: linear-gradient(to bottom, $dark-purple,rgba($dark-purple,0.95));
+$orange-gradient: linear-gradient(#f17848, #fac636);
+$pink-gradient: linear-gradient(#eb3769, #ee5258);
+$grey-gradient: linear-gradient(#4b5364, #71818e);
+$purple-gradient: linear-gradient(to bottom, #372b44, #5e3e82);
+$bg-gradient: linear-gradient(
+  to bottom,
+  $dark-purple,
+  rgba($dark-purple, 0.95)
+);
+$achievement-gradient: linear-gradient($light-purple, rgba($green, 0.1));
 
 // Award Colours
-$gold: #FFF500;
-$silver: #D8D8D8;
-$bronze: #CA6D2A;
+$gold: #fff500;
+$silver: #d8d8d8;
+$bronze: #ca6d2a;
 
 // Box Shadows
-$box-shadow-soft: 0 0 30px rgba(#000,0.5);
+$box-shadow-soft: 0 0 30px rgba(#000, 0.5);
 $box-shadow-hard-dark-purple: 4px 4px 0 $dark-purple;
+
+// Text Shadows
+$text-shadow-dark-purple: 2px 2px 0 $dark-purple;
+$text-shadow-black: 2px 2px 0 #000;
