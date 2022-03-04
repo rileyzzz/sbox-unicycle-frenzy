@@ -8,14 +8,7 @@ internal class StatsAchievements : NavigatorPanel
 
     public Panel AchievementCanvas { get; set; }
     public string AchievementCount { get; set; }
-    public string AchievementName { get; set; }
-    public string AchievementDescription { get; set; }
-    public StatsAchievements()
-    {
 
-    }
-
-    [Event.Entity.PostSpawn]
     private void RebuildAchievements()
     {
         AchievementCanvas.DeleteChildren(true);
@@ -26,19 +19,24 @@ internal class StatsAchievements : NavigatorPanel
 
         foreach (var ach in mapAchievements)
         {
-            if (!ShowAchievement(ach)) continue;
-
-			if ( IsMedal( ach ) )
+ 			if ( IsMedal( ach ) )
 			{
+				// let's hide medals if the map hasn't defined time thresholds
+				if ( !Entity.All.Any( x => x is AchievementMedals ) ) 
+					continue;
+
+				// hard-coding medal times into the description
 				ach.Description = GetMedalDescription( ach );
 			}
 
 			var entry = new StatsAchievementsEntry( ach );
 			entry.Parent = AchievementCanvas;
 
-			if( GrantsXp(ach) )
+			// we can add +30xp or whatever to the icon if desired
+			var xpGranted = ExperienceGranted( ach );
+			if ( xpGranted > 0 )
 			{
-				// this achievement is tied to trail pass and will reward xp on completion
+
 			}
 
             if ( ach.IsCompleted() )
@@ -52,17 +50,6 @@ internal class StatsAchievements : NavigatorPanel
         AchievementCount = $"({achieved}/{total})";
     }
 
-	public override void OnHotloaded() => RebuildAchievements();
-	protected override void PostTemplateApplied() => RebuildAchievements();
-
-    private bool ShowAchievement(Achievement ach)
-    {
-        if (IsMedal(ach) && !Entity.All.Any(x => x is AchievementMedals))
-            return false;
-
-        return true;
-    }
-
     private static bool IsMedal(Achievement ach)
     {
         return new string[]
@@ -73,10 +60,14 @@ internal class StatsAchievements : NavigatorPanel
         }.Contains(ach.ShortName);
     }
 
-    private static bool GrantsXp(Achievement ach)
-    {
-        return TrailPass.Current.Achievements.Any(x => x.AchievementShortName == ach.ShortName);
-    }
+	private static int ExperienceGranted( Achievement ach )
+	{
+		var pass = TrailPass.Current;
+		var tpAchi = pass.Achievements.FirstOrDefault( x => x.AchievementShortName == ach.ShortName );
+		if ( tpAchi == null ) return 0;
+
+		return tpAchi.ExperienceGranted;
+	}
 
     private static string GetMedalDescription(Achievement ach)
     {
@@ -93,6 +84,11 @@ internal class StatsAchievements : NavigatorPanel
 
         return $"Complete the map in {CourseTimer.FormattedTimeMs(time)}s or better";
     }
+
+	[Event.Entity.PostSpawn]
+	private void PostEntitiesSpawned() => RebuildAchievements();
+	public override void OnHotloaded() => RebuildAchievements();
+	protected override void PostTemplateApplied() => RebuildAchievements();
 
 }
 
