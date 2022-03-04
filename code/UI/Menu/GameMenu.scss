@@ -1,8 +1,8 @@
 ﻿@import "../vars.scss";
 
 GameMenu {
-    background-color: rgba(darkblue,0.9);
-    backdrop-filter: blur(5);
+    background-color: rgba($dark-purple,0.99);
+    backdrop-filter-blur: 20px;
     flex-direction: column;
     flex-grow: 1;
     transition: opacity .18s ease-out;
@@ -15,30 +15,79 @@ GameMenu {
     }
 
     .header {
-        background-color: orange;
+        background: $purple-gradient;
+        box-shadow: $box-shadow-soft;
         flex-direction: row;
         width: 100%;
         height: 100px;
 
         .header-logo {
-            background-color: green;
-            width: 200px;
-            height: 100px;
+            background-image: url("textures/ui/unicycle-frenzy-logo.png");
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            width: 222px;
+            height: 158px;
         }
+
         .header-navigation {
             align-items: center;
             flex-grow: 1;
             justify-content: center;
-            
-            
+        }
+
+        .header-right {
+            margin-right: 64px;
+        }
+
+        .nav-link {
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            height: 100%;
+            transition: all 0.15s ease;
+            opacity: 0.6;
+
+            &.hidden {
+                display: none;
+            }
 
             label {
-                color: linear-gradient(red,green);
+                color: $orange-dark;
                 font-family: $title-font;
                 font-size: 30px;
                 padding: 16px;
                 text-shadow: 3px 3px 0 rgba(#000,1);
                 text-stroke: 5px #000;
+                transition: all 0.15s ease;
+            }
+
+            .stroke {
+                background-color: $pink;
+                box-shadow: $box-shadow-hard-dark-purple;
+                border: 3px solid $dark-purple;
+                border-style: inset;
+                position: absolute;
+                left:50%;
+                right: 50%;
+                bottom: -4px;
+                height: 12px;
+                opacity: 0;
+                transform-origin: 20% 40%;
+                transition: all 0.15s ease;
+            }
+
+            &:hover, &.active {
+                opacity: 1;
+                label {
+                    color: $pink;
+                    transform: scale(1.1) rotate(-3deg);
+                }
+                .stroke {
+                    opacity: 1;
+                    left: 0;
+                    right: 0;
+                }
             }
         }
     }

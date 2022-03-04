@@ -28,17 +28,23 @@ $blue: #00A3FF;
 $orange-light: #F7B742;
 $orange-dark: #EF654D;
 
+// UI Block Elements Colours
+$light-purple: #30273A;
+$dark-purple: #130E26;
+$grey: #31313D;
+
 // Gradient Colours
 $orange-gradient: linear-gradient(#F17848,#FAC636);
-$pink-gradient: linear-gradient (#EB3769, #EE5258);
+$pink-gradient: linear-gradient(#EB3769, #EE5258);
 $grey-gradient: linear-gradient(#4B5364,#71818E);
-
-// UI Block Elements
-$light-purple: #30273A;
-$dark-purple: #0A0714;
-$grey: #31313D;
+$purple-gradient: linear-gradient(to bottom, #372B44,#5E3E82);
+$bg-gradient: linear-gradient(to bottom, $dark-purple,rgba($dark-purple,0.95));
 
 // Award Colours
 $gold: #FFF500;
 $silver: #D8D8D8;
 $bronze: #CA6D2A;
+
+// Box Shadows
+$box-shadow-soft: 0 0 30px rgba(#000,0.5);
+$box-shadow-hard-dark-purple: 4px 4px 0 $dark-purple;
