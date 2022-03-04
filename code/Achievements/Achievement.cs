@@ -21,18 +21,48 @@ internal partial class Achievement
 	public string ShortName { get; set; }
 	public string DisplayName { get; set; }
 	public string Description { get; set; }
-	public string ImageThumb { get; set; }
+	public string Thumbnail { get; set; }
 	public bool PerMap { get; set; }
 
-	public bool IsCompleted( long playerid, string game, string map = null )
+	public bool IsCompleted()
 	{
-		return AchievementCompletion.Query( playerid, game, map ).Any( x => x.AchievementId == AchievementId );
+		var map = PerMap ? Global.MapName : MapName;
+		var playerid = Local.PlayerId;
+		return AchievementCompletion.Query( playerid, GameName, map ).Any( x => x.AchievementId == AchievementId );
 	}
 
-	public static IEnumerable<Achievement> Query( string game, string shortname = null, string map = null )
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="mapName">Leaving null will fetch for the current map</param>
+	/// <returns></returns>
+	public static IEnumerable<Achievement> FetchForMap( string mapName = null )
 	{
+		mapName ??= Global.MapName;
+
+		// hack to make shit work if its ident.map, map, or local.map
+		var map = mapName;
+		if ( map.Contains( '.' ) )
+			map = map.Split( '.' )[1];
+
+		return All.Where( x => ( x.MapName != null && x.MapName.EndsWith( map ) ) || x.PerMap );
+	}
+
+	public static IEnumerable<Achievement> FetchGlobal()
+	{
+		return All.Where( x => x.MapName == null && !x.PerMap );
+	}
+
+	public static IEnumerable<Achievement> Fetch( string shortname = null, string map = null )
+	{
+		if ( !string.IsNullOrEmpty( map ) && map.Contains( '.' ) )
+			map = map.Split( '.' )[1];
+
 		// later: fetch from api
-		var result = All.Where( x => x.GameName == game && x.MapName == map );
+		var result = All.Where( x => x.GameName == Global.GameIdent );
+
+		if ( !string.IsNullOrEmpty( map ) )
+			result = result.Where( x => x.MapName == map || x.PerMap );
 
 		if ( !string.IsNullOrEmpty( shortname ) ) 
 			result = result.Where( x => x.ShortName == shortname );
@@ -40,15 +70,15 @@ internal partial class Achievement
 		return result;
 	}
 
-	public static void Set( string game, long playerid, string shortname, string map = null )
+	public static void Set( long playerid, string shortname, string map = null )
 	{
 		Host.AssertClient();
 
-		var ach = Query( game, shortname ).FirstOrDefault();
+		var ach = Fetch( shortname, map ).FirstOrDefault();
 
 		if ( ach == null ) return;
-		if ( ach.MapName != null && ach.MapName != map && !ach.PerMap ) return;
-		if ( ach.IsCompleted( playerid, game, map ) ) return;
+		//if ( ach.MapName != null && ach.MapName != map && !ach.PerMap ) return;
+		if ( ach.IsCompleted() ) return;
 
 		var mapToInsert = ach.PerMap ? map : ach.MapName;
 
@@ -71,7 +101,7 @@ internal partial class Achievement
 				DisplayName = "Unicyclist",
 				ShortName = "uf_unicyclist",
 				GameName = Global.GameIdent,
-				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/unicyclist.png"
+				Thumbnail = "https://files.facepunch.com/crayz/1b2711b1/unicyclist.png"
 			} );
 
 			result.Add( new Achievement()
@@ -81,7 +111,7 @@ internal partial class Achievement
 				DisplayName = "Bronze Medal",
 				ShortName = "uf_bronze",
 				GameName = Global.GameIdent,
-				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_bronze.png",
+				Thumbnail = "https://files.facepunch.com/crayz/1b2711b1/medal_bronze.png",
 				PerMap = true
 			} );
 
@@ -92,7 +122,7 @@ internal partial class Achievement
 				DisplayName = "Silver Medal",
 				ShortName = "uf_silver",
 				GameName = Global.GameIdent,
-				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_silver.png",
+				Thumbnail = "https://files.facepunch.com/crayz/1b2711b1/medal_silver.png",
 				PerMap = true
 			} );
 
@@ -103,7 +133,7 @@ internal partial class Achievement
 				DisplayName = "Gold Medal",
 				ShortName = "uf_gold",
 				GameName = Global.GameIdent,
-				ImageThumb = "https://files.facepunch.com/crayz/1b2711b1/medal_gold2.png",
+				Thumbnail = "https://files.facepunch.com/crayz/1b2711b1/medal_gold2.png",
 				PerMap = true
 			} );
 
@@ -115,7 +145,18 @@ internal partial class Achievement
 				ShortName = "uf_playground_test",
 				GameName = Global.GameIdent,
 				MapName = "uf_playground",
-				ImageThumb = ""
+				Thumbnail = ""
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 7,
+				Description = "Complete the tutorial",
+				DisplayName = "Tutorial",
+				ShortName = "uf_complete_tutorial",
+				GameName = Global.GameIdent,
+				MapName = "uf_tutorial",
+				Thumbnail = ""
 			} );
 
 			return result;

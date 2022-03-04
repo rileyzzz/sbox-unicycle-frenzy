@@ -20,35 +20,31 @@ internal class StatsAchievements : NavigatorPanel
     {
         AchievementCanvas.DeleteChildren(true);
 
-        var mapAchievements = Achievement.Query(Global.GameIdent, map: Global.MapName);
-        var globalAchievements = Achievement.Query(Global.GameIdent);
+        var mapAchievements = Achievement.FetchForMap();
         var total = 0;
         var achieved = 0;
 
-        foreach (var ach in mapAchievements.Concat(globalAchievements))
+        foreach (var ach in mapAchievements)
         {
             if (!ShowAchievement(ach)) continue;
 
-            var btn = new Button();
-            btn.AddClass("button icon");
-            btn.SetClass("grants-xp", GrantsXp(ach));
-            btn.Add.Panel("grayscale");
-            btn.Style.SetBackgroundImage(ach.ImageThumb);
-            btn.Parent = AchievementCanvas;
+			if ( IsMedal( ach ) )
+			{
+				ach.Description = GetMedalDescription( ach );
+			}
 
-            var map = ach.PerMap ? Global.MapName : null;
+			var entry = new StatsAchievementsEntry( ach );
+			entry.Parent = AchievementCanvas;
 
-            if (ach.IsCompleted(Local.PlayerId, Global.GameIdent, map))
+			if( GrantsXp(ach) )
+			{
+				// this achievement is tied to trail pass and will reward xp on completion
+			}
+
+            if ( ach.IsCompleted() )
             {
                 achieved++;
-                btn.AddClass("completed");
             }
-
-            btn.AddEventListener("onmouseover", () =>
-           {
-               AchievementName = GetAchievementTitle(ach);
-               AchievementDescription = IsMedal(ach) ? GetMedalDescription(ach) : ach.Description;
-           });
 
             total++;
         }
@@ -56,8 +52,8 @@ internal class StatsAchievements : NavigatorPanel
         AchievementCount = $"({achieved}/{total})";
     }
 
-    public override void OnHotloaded() => RebuildAchievements();
-    protected override void PostTemplateApplied() => RebuildAchievements();
+	public override void OnHotloaded() => RebuildAchievements();
+	protected override void PostTemplateApplied() => RebuildAchievements();
 
     private bool ShowAchievement(Achievement ach)
     {
@@ -80,16 +76,6 @@ internal class StatsAchievements : NavigatorPanel
     private static bool GrantsXp(Achievement ach)
     {
         return TrailPass.Current.Achievements.Any(x => x.AchievementShortName == ach.ShortName);
-    }
-
-    private static string GetAchievementTitle(Achievement ach)
-    {
-        var pass = TrailPass.Current;
-
-        var tpAchi = pass.Achievements.FirstOrDefault(x => x.AchievementShortName == ach.ShortName);
-        if (tpAchi == null) return ach.DisplayName;
-
-        return $"{ach.DisplayName} (+{tpAchi.ExperienceGranted}xp)";
     }
 
     private static string GetMedalDescription(Achievement ach)
