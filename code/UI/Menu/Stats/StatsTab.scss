@@ -5,6 +5,7 @@ StatsTab {
   height: 100%;
 
   .achievements {
+    margin: 64px 64px 64px 0;
     width: 420px;
   }
 
@@ -123,33 +124,6 @@ StatsTabDetails {
 
 StatsTabLeaderboard {
   flex-grow: 1;
-
-  .mapname {
-    font-family: $stylefont;
-    font-color: $secondary;
-    font-size: 24px;
-    margin-right: 8px;
-    margin-top: 4px;
-    letter-spacing: 1px;
-  }
-
-  .tab-container .tabs navlink {
-    background-color: $bg;
-    padding: 11px 20px;
-    font-size: 18px;
-
-    &:hover {
-      background-color: $lightbg;
-    }
-
-    &.active {
-      background-color: $lighterbg;
-    }
-  }
-
-  .tab-container .content {
-    padding: 0;
-  }
 }
 
 StatsTabLeaderboardSingle {
@@ -178,7 +152,13 @@ StatsTabLeaderboardSingle {
       }
 
       &.friend {
-        background-color: rgba($primary 0.05);
+        background-color: rgba($green, 0.05);
+        label {
+          color: $green;
+        }
+        &:nth-child(odd) {
+          background-color: rgba($green, 0.05);
+        }
       }
 
       .spec-button {
