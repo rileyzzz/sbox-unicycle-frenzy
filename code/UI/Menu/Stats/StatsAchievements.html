@@ -1,9 +1,17 @@
+<link rel="stylesheet" href="StatsAchievements.scss" />
+
 <div class="achievements">
     <label class="section-title title">Achievements</label>
     <label @Text="AchievementCount"></label>
+    <div class="achievement completed">
+        <div class="achievement-icon"></div>
+        <div class="achievement-body">
+            <label class="title" @text="AchievementName">Achievement Name</label>
+            <label class="subtitle" @text="AchievementDescription">Achievement Description</label>
+        </div>
+    </div>
     <div class="achievement">
-        <!-- <div class="achievement-icon"></div> -->
-        <div @ref="AchievementCanvas" class="achievement-icons"></div>
+        <div class="achievement-icon"></div>
         <div class="achievement-body">
             <label class="title" @text="AchievementName">Achievement Name</label>
             <label class="subtitle" @text="AchievementDescription">Achievement Description</label>
