@@ -61,4 +61,22 @@ partial class UnicyclePlayer
 		ent.Close();
 	}
 
+	[Event.Tick]
+	private void CheckStopDoorTrigger()
+	{
+		if ( Velocity.WithZ( 0 ).Length > 35 ) return;
+
+		var trigger = All.FirstOrDefault( x => x.Name.Equals( "tut_trigger_top" ) ) as BaseTrigger;
+		if ( !trigger.IsValid() ) return;
+		if ( !trigger.TouchingEntities.Contains( this ) ) return;
+
+		var stopdoor = All.FirstOrDefault( x => x.Name == "tut_door_stop" ) as DoorEntity;
+		if ( !stopdoor.IsValid() ) return;
+		if ( stopdoor.State != DoorEntity.DoorState.Closed ) return;
+
+		Sound.FromEntity( "collect", this );
+
+		stopdoor.Open();
+	}
+
 }
