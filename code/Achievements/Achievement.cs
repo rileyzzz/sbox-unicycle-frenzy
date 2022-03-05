@@ -62,7 +62,7 @@ internal partial class Achievement
 		var result = All.Where( x => x.GameName == Global.GameIdent );
 
 		if ( !string.IsNullOrEmpty( map ) )
-			result = result.Where( x => x.MapName == map || x.PerMap );
+			result = result.Where( x => ( x.MapName != null && x.MapName.EndsWith( map ) ) || x.PerMap );
 
 		if ( !string.IsNullOrEmpty( shortname ) ) 
 			result = result.Where( x => x.ShortName == shortname );
@@ -74,7 +74,11 @@ internal partial class Achievement
 	{
 		Host.AssertClient();
 
-		var ach = Fetch( shortname, map ).FirstOrDefault();
+		var achievements = !string.IsNullOrEmpty( map )
+			? FetchForMap( map )
+			: FetchGlobal();
+
+		var ach = achievements.FirstOrDefault( x => x.ShortName == shortname );
 
 		if ( ach == null ) return;
 		//if ( ach.MapName != null && ach.MapName != map && !ach.PerMap ) return;
@@ -157,6 +161,48 @@ internal partial class Achievement
 				GameName = Global.GameIdent,
 				MapName = "uf_tutorial",
 				Thumbnail = ""
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 8,
+				Description = "Dummy incomplete achievement",
+				DisplayName = "Dummy Incomplete",
+				ShortName = "uf_dummy_incomplete",
+				GameName = Global.GameIdent,
+				Thumbnail = "https://files.facepunch.com/crayz/1b0411b1/msedge_2022-03-04_17-10-40.png"
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 9,
+				Description = "Dummy complete achievement",
+				DisplayName = "Dummy Complete",
+				ShortName = "uf_dummy_complete",
+				GameName = Global.GameIdent,
+				Thumbnail = "https://files.facepunch.com/crayz/1b0411b1/msedge_2022-03-04_17-10-13.png"
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 10,
+				Description = "Dummy complete willow.uf_climb achievement",
+				DisplayName = "Dummy Climb Complete",
+				ShortName = "uf_dummy_climb_complete",
+				GameName = Global.GameIdent,
+				MapName = "willow.uf_climb",
+				Thumbnail = "https://files.facepunch.com/crayz/1b0411b1/msedge_2022-03-04_17-10-13.png"
+			} );
+
+			result.Add( new Achievement()
+			{
+				AchievementId = 11,
+				Description = "Dummy incomplete willow.uf_climb achievement",
+				DisplayName = "Dummy Climb Incomplete",
+				ShortName = "uf_dummy_climb_incomplete",
+				GameName = Global.GameIdent,
+				MapName = "willow.uf_climb",
+				Thumbnail = "https://files.facepunch.com/crayz/1b0411b1/msedge_2022-03-04_17-10-40.png"
 			} );
 
 			return result;

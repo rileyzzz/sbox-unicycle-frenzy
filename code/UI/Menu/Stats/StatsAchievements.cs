@@ -11,7 +11,11 @@ internal class StatsAchievements : NavigatorPanel
 
     private void RebuildAchievements()
     {
-        AchievementCanvas.DeleteChildren(true);
+		// setting dummy achievements to debug/preview
+		Achievement.Set( Local.PlayerId, "uf_dummy_complete" );
+		Achievement.Set( Local.PlayerId, "uf_dummy_climb_complete", "willow.uf_climb" );
+
+		AchievementCanvas.DeleteChildren(true);
 
         var mapAchievements = Achievement.FetchForMap();
         var total = 0;
