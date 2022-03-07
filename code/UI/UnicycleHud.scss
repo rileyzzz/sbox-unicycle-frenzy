@@ -1,4 +1,6 @@
 ﻿@import "vars.scss";
+@import "_achievements.scss";
+@import "_progress-bar.scss";
 
 button,
 navlink,
@@ -95,48 +97,6 @@ IconPanel {
         &.error {
           color: $pink;
         }
-      }
-    }
-  }
-}
-
-.achievements {
-  flex-direction: column;
-
-  .achievement {
-    align-self: flex-start;
-    margin-bottom: 16px;
-    width: 100%;
-    opacity: 0.5;
-
-    &.completed {
-      opacity: 1;
-      .achievement-icon {
-        border: 4px solid $green;
-        background: $achievement-gradient;
-      }
-    }
-
-    .achievement-icon {
-      background-color: $light-purple;
-      width: 100px;
-      height: 100px;
-      margin-right: 16px;
-      background-size: 100%;
-    }
-
-    .achievement-body {
-      flex-direction: column;
-      justify-content: center;
-
-      .title {
-        text-stroke: 2px #000;
-        text-shadow: 3px 3px 0 rgba(#000, 1);
-        font-size: 30px;
-        color: $pink;
-      }
-      .subtitle {
-        font-size: 20px;
       }
     }
   }

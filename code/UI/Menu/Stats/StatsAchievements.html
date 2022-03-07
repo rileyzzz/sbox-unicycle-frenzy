@@ -2,7 +2,10 @@
 
 <div class="achievements">
     <label class="section-title title">Achievements</label>
-    <label @Text="AchievementCount"></label>
+    <div class="progress-bar">
+        <div class="bar"></div>
+        <label class="progress-title" @Text="AchievementCount"></label>
+    </div>
     <div class="achievement-list" @ref="AchievementCanvas">
         <div class="achievement completed">
             <div class="achievement-icon"></div>
@@ -21,12 +24,3 @@
     </div>
   
 </div>
-
-<!-- <div class="achievements">
-    <div class="heading"><label>Achievements </label><label @Text="AchievementCount"></label></div>
-    <div @ref="AchievementCanvas" class="achievement-icons"></div>
-    <div class="achievement-description">
-        <label class="name" @text="AchievementName"></label>
-        <label class="description" @text="AchievementDescription"></label>
-    </div>
-</div> -->
