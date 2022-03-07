@@ -1,0 +1,43 @@
+.box {
+  background-color: $light-purple;
+  box-shadow: $box-shadow-hard-dark-purple;
+  flex-direction: column;
+
+  .box-header-image {
+    box-shadow: $box-shadow-hard-dark-purple;
+    height: 300px;
+    margin-bottom: 8px;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .list {
+    flex-direction: column;
+    width: 100%;
+    .row {
+      padding: 8px 16px;
+
+      &:nth-child(even) {
+        background-color: rgba($dark-purple, 0.8);
+      }
+
+      label {
+        font-size: 20px;
+      }
+
+      .title {
+        font-family: $body-font-light;
+        width: 40%;
+      }
+      .subtitle {
+        font-weight: bold;
+        width: 60%;
+
+        &.error {
+          color: $pink;
+        }
+      }
+    }
+  }
+}

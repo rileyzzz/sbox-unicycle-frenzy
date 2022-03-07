@@ -11,11 +11,11 @@ internal class StatsAchievements : NavigatorPanel
 
     private void RebuildAchievements()
     {
-		// setting dummy achievements to debug/preview
-		Achievement.Set( Local.PlayerId, "uf_dummy_complete" );
-		Achievement.Set( Local.PlayerId, "uf_dummy_climb_complete", "willow.uf_climb" );
+        // setting dummy achievements to debug/preview
+        Achievement.Set(Local.PlayerId, "uf_dummy_complete");
+        Achievement.Set(Local.PlayerId, "uf_dummy_climb_complete", "willow.uf_climb");
 
-		AchievementCanvas.DeleteChildren(true);
+        AchievementCanvas.DeleteChildren(true);
 
         var mapAchievements = Achievement.FetchForMap();
         var total = 0;
@@ -23,27 +23,27 @@ internal class StatsAchievements : NavigatorPanel
 
         foreach (var ach in mapAchievements)
         {
- 			if ( IsMedal( ach ) )
-			{
-				// let's hide medals if the map hasn't defined time thresholds
-				if ( !Entity.All.Any( x => x is AchievementMedals ) ) 
-					continue;
+            if (IsMedal(ach))
+            {
+                // let's hide medals if the map hasn't defined time thresholds
+                if (!Entity.All.Any(x => x is AchievementMedals))
+                    continue;
 
-				// hard-coding medal times into the description
-				ach.Description = GetMedalDescription( ach );
-			}
+                // hard-coding medal times into the description
+                ach.Description = GetMedalDescription(ach);
+            }
 
-			var entry = new StatsAchievementsEntry( ach );
-			entry.Parent = AchievementCanvas;
+            var entry = new StatsAchievementsEntry(ach);
+            entry.Parent = AchievementCanvas;
 
-			// we can add +30xp or whatever to the icon if desired
-			var xpGranted = ExperienceGranted( ach );
-			if ( xpGranted > 0 )
-			{
+            // we can add +30xp or whatever to the icon if desired
+            var xpGranted = ExperienceGranted(ach);
+            if (xpGranted > 0)
+            {
 
-			}
+            }
 
-            if ( ach.IsCompleted() )
+            if (ach.IsCompleted())
             {
                 achieved++;
             }
@@ -51,7 +51,7 @@ internal class StatsAchievements : NavigatorPanel
             total++;
         }
 
-        AchievementCount = $"({achieved}/{total})";
+        AchievementCount = $"{achieved}/{total} Earned";
     }
 
     private static bool IsMedal(Achievement ach)
@@ -64,14 +64,14 @@ internal class StatsAchievements : NavigatorPanel
         }.Contains(ach.ShortName);
     }
 
-	private static int ExperienceGranted( Achievement ach )
-	{
-		var pass = TrailPass.Current;
-		var tpAchi = pass.Achievements.FirstOrDefault( x => x.AchievementShortName == ach.ShortName );
-		if ( tpAchi == null ) return 0;
+    private static int ExperienceGranted(Achievement ach)
+    {
+        var pass = TrailPass.Current;
+        var tpAchi = pass.Achievements.FirstOrDefault(x => x.AchievementShortName == ach.ShortName);
+        if (tpAchi == null) return 0;
 
-		return tpAchi.ExperienceGranted;
-	}
+        return tpAchi.ExperienceGranted;
+    }
 
     private static string GetMedalDescription(Achievement ach)
     {
@@ -89,10 +89,10 @@ internal class StatsAchievements : NavigatorPanel
         return $"Complete the map in {CourseTimer.FormattedTimeMs(time)}s or better";
     }
 
-	[Event.Entity.PostSpawn]
-	private void PostEntitiesSpawned() => RebuildAchievements();
-	public override void OnHotloaded() => RebuildAchievements();
-	protected override void PostTemplateApplied() => RebuildAchievements();
+    [Event.Entity.PostSpawn]
+    private void PostEntitiesSpawned() => RebuildAchievements();
+    public override void OnHotloaded() => RebuildAchievements();
+    protected override void PostTemplateApplied() => RebuildAchievements();
 
 }
 

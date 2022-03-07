@@ -9,13 +9,15 @@
 
   .bar {
     background-color: $pink;
-    width: 100px;
+    width: 50%;
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
   }
   .progress-title {
+    text-stroke: 3px #000;
+    text-shadow: $text-shadow-black;
     position: absolute;
     left: 0;
     right: 0;
