@@ -2,6 +2,14 @@
 
 .title {
   font-family: $title-font;
+
+  &.section-title {
+    color: $orange-light;
+    font-size: 40px;
+    margin-bottom: 16px;
+    text-stroke: 2px #000;
+    text-shadow: 3px 3px 0 rgba(#000, 1);
+  }
 }
 
 .subtitle {
@@ -20,12 +28,4 @@
   .section-title {
     flex-grow: 1;
   }
-}
-
-.section-title {
-  color: $orange-light;
-  font-size: 40px;
-  margin-bottom: 16px;
-  text-stroke: 2px #000;
-  text-shadow: 3px 3px 0 rgba(#000, 1);
 }
