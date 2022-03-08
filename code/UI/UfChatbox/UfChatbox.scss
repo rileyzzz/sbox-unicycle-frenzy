@@ -54,6 +54,7 @@ UfChatbox {
 }
 
 UfChatboxEntry {
+  padding-top: 8px;
   flex-shrink: 0;
   flex-grow: 0;
   width: 100%;
@@ -78,7 +79,7 @@ UfChatboxEntry {
     text-stroke: 4px #000;
     letter-spacing: 1px;
     position: absolute;
-    top: -10px;
+    top: -3px;
     left: 8px;
     z-index: 1;
   }
