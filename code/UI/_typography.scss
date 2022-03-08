@@ -4,6 +4,15 @@
   font-family: $title-font;
 }
 
+.subtitle {
+  font-family: $body-font-light;
+}
+
+.is-styled {
+  text-stroke: 4px #000;
+  text-shadow: 2px 2px 0 rgba(#000, 1);
+}
+
 .section-header {
   flex-direction: row;
   margin-bottom: 16px;

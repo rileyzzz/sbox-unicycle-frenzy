@@ -9,16 +9,23 @@ CourseTimer {
   left: 0;
 
   .game-timer {
-    top: 64px;
+    top: 48px;
     align-self: flex-start;
-    min-width: 100px;
+    flex-direction: column;
+    min-width: 160px;
     text-align: center;
     align-items: center;
     justify-content: center;
 
-    label {
+    .subtitle {
+      width: 100%;
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: -10px;
+    }
+
+    .title {
       color: $pink;
-      font-family: $title-font;
       font-size: 40px;
       text-stroke: 6px #000;
       text-shadow: $text-shadow-black-4;
@@ -40,7 +47,7 @@ CourseTimer {
 
   .menu-info {
     position: absolute;
-    bottom: 64px;
+    top: 64px;
     left: 125px;
     font-size: 16px;
     text-stroke: 4px #000;

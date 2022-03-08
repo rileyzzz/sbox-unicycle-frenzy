@@ -20,8 +20,8 @@ UfKillfeedEntry {
   margin-bottom: 6px;
   transform: scale(1);
   font-family: $body-font-regular;
-  transition: transform 0.15s linear;
-  transition: margin 0.15s linear;
+  opacity: 1;
+  transition: all 0.15s ease;
   font-size: 16px;
   height: 32px;
   text-transform: uppercase;
@@ -42,11 +42,12 @@ UfKillfeedEntry {
   }
 
   &:intro {
-    transform: scale(0);
+    opacity: 0;
+    margin-right: -38px;
   }
 
   &:outro {
-    transform: scale(0);
-    margin-top: -38px;
+    opacity: 0;
+    margin-right: -38px;
   }
 }
