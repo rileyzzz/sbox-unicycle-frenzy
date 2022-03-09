@@ -1,4 +1,4 @@
-$column-gap: 16px;
+@import "./Vars.scss";
 
 .container {
   width: 100%;
@@ -12,6 +12,10 @@ $column-gap: 16px;
 
   &.is-multiline {
     flex-wrap: wrap;
+  }
+
+  &.scroll {
+    overflow: scroll;
   }
 }
 

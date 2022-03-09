@@ -1,6 +1,14 @@
 .tabs {
   flex-direction: row;
-  height: 100%;
+  flex-shrink: 1;
+
+  &.is-large {
+    .tab {
+      label {
+        font-size: 28px;
+      }
+    }
+  }
 
   .tab {
     align-items: center;
@@ -11,7 +19,7 @@
     opacity: 0.6;
 
     label {
-      color: $grey;
+      color: $light-grey;
       font-family: $title-font;
       font-size: 20px;
       padding: 16px;

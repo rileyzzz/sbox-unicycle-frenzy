@@ -14,6 +14,9 @@ $stylefont: LuckiestGuy;
 $readingfont: Poppins;
 $red: #ba2828;
 
+// Spacing
+$column-gap: 16px;
+
 // Default Fonts
 $title-font: Knewave;
 $body-font-bold: LondrinaSolid-Black;
@@ -30,9 +33,11 @@ $orange-dark: #ef654d;
 $light-green: #d2ffdf;
 
 // UI Block Elements Colours
+$lightest-purple: #bebed3;
 $light-purple: #30273a;
 $dark-purple: #130e26;
 $grey: #31313d;
+$light-grey: #8297a3;
 
 // Gradient Colours
 $orange-gradient: linear-gradient(#f17848, #fac636);
@@ -54,6 +59,9 @@ $bronze: #ca6d2a;
 // Box Shadows
 $box-shadow-soft: 0 0 30px rgba(#000, 0.5);
 $box-shadow-hard-dark-purple: 4px 4px 0 $dark-purple;
+$box-shadow-black: 4px 4px 0 #000;
+$box-shadow-blue: 4px 4px 0 $blue;
+$box-shadow-pink: 4px 4px 0 $pink;
 $box-shadow-hard-green: 4px 4px 0 $green;
 
 // Text Shadows
