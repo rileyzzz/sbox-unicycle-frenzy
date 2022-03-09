@@ -415,7 +415,8 @@ internal partial class UnicycleController : BasePlayerController
 			var turnSpeed = grounded ? GroundTurnSpeed : AirTurnSpeed;
 			pl.TargetForward = Rotation.Slerp( pl.TargetForward, inputRot, turnSpeed * Time.Delta );
 
-			Velocity = ClipVelocity( Velocity, pl.TargetForward.Right );
+			if( grounded ) 
+				Velocity = ClipVelocity( Velocity, pl.TargetForward.Right );
 		}
 
 		//var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
