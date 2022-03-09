@@ -36,10 +36,12 @@ $light-green: #d2ffdf;
 $lightest-purple: #bebed3;
 $light-purple: #30273a;
 $dark-purple: #130e26;
+$darker-purple: #0a0714;
 $grey: #31313d;
 $light-grey: #8297a3;
 
 // Gradient Colours
+$gradient-pink-bg: linear-gradient(rgba($pink, 0), rgba($pink, 0.02));
 $orange-gradient: linear-gradient(#f17848, #fac636);
 $pink-gradient: linear-gradient(#eb3769, #ee5258);
 $grey-gradient: linear-gradient(#4b5364, #71818e);
@@ -68,3 +70,45 @@ $box-shadow-hard-green: 4px 4px 0 $green;
 $text-shadow-dark-purple: 2px 2px 0 $dark-purple;
 $text-shadow-black: 2px 2px 0 #000;
 $text-shadow-black-4: 4px 4px 0 #000;
+
+// Padding
+.p64 {
+  padding: 64px;
+}
+
+.pl-64 {
+  padding-left: 64px;
+}
+
+.pr-64 {
+  padding-right: 64px;
+}
+
+.pb-64 {
+  padding-bottom: 64px;
+}
+
+.pt-64 {
+  padding-top: 64px;
+}
+
+.pl-32 {
+  padding-left: 32px;
+}
+.pr-32 {
+  padding-right: 32px;
+}
+.pb-32 {
+  padding-bottom: 32px;
+}
+.pt-32 {
+  padding-top: 32px;
+}
+
+.mr-64 {
+  margin-right: 64px;
+}
+
+.ml-64 {
+  margin-left: 64px;
+}

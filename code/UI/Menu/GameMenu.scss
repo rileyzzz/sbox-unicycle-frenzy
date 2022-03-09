@@ -46,14 +46,14 @@ GameMenu {
       width: auto;
       height: 100%;
       transition: all 0.15s ease;
-      opacity: 0.6;
+      opacity: 0.4;
 
       &.hidden {
         display: none;
       }
 
       label {
-        color: $orange-dark;
+        color: $orange-light;
         font-family: $title-font;
         font-size: 30px;
         padding: 16px;

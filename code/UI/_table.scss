@@ -22,8 +22,8 @@
       font-family: $body-font-regular;
     }
 
-    &:nth-child(odd) {
-      background-color: $dark-purple;
+    &:nth-child(even) {
+      background-color: $darker-purple;
     }
   }
   .table-td {

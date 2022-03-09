@@ -47,7 +47,6 @@ CustomizeTab {
       .tag {
         color: $green;
         font-family: $title-font;
-        left: none;
         right: 8px;
         text-align: right;
       }
@@ -56,7 +55,6 @@ CustomizeTab {
     &.is-locked {
       .tag {
         font-family: $title-font;
-        left: none;
         right: 8px;
         text-align: right;
       }

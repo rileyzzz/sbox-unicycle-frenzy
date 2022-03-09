@@ -2,6 +2,16 @@
 
 .container {
   width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.spaced {
+  padding: 64px;
+
+  &.top {
+    padding: 64px 0 0 0;
+  }
 }
 
 .columns {
@@ -9,6 +19,15 @@
   width: 100%;
   margin-left: -$column-gap;
   margin-right: -$column-gap;
+
+  &.is-vcentered {
+    align-items: center;
+  }
+
+  &.is-gapless {
+    margin-right: 0;
+    margin-left: 0;
+  }
 
   &.is-multiline {
     flex-wrap: wrap;
@@ -25,6 +44,14 @@
   flex-shrink: 1;
   padding-left: $column-gap;
   padding-right: $column-gap;
+
+  &.gradient {
+    background: $gradient-pink-bg;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
 
   > .box {
     width: 100%;

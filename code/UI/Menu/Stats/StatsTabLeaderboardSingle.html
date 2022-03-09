@@ -4,8 +4,16 @@
         <div class="leaderboard-canvas" @ref="Canvas"></div>
         
         <div class="leaderboard-sorting">
-            <button onclick="Rebuild()">Top Times</button>
-            <button onclick="Rebuild()">My Time</button>
+             <div class="button-row">
+                <button class="button is-primary is-large" onclick="Rebuild()">
+                    <div class="button-bg"></div>
+                    <label>Top Times</label>
+                </button>
+                <button class="button is-secondary is-large" onclick="Rebuild()">
+                    <div class="button-bg"></div>
+                    <label>My Time</label>
+                </button>
+             </div>
         </div>
     </div>
 </div>

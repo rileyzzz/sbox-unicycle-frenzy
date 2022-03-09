@@ -1,8 +1,8 @@
-.achievements {
-  margin: 64px 64px 64px 0;
-  width: 420px;
+.achievements-container {
+  flex-direction: column;
+  width: 100%;
 
-  .achievement-list {
-    flex-direction: column;
+  .progress-bar {
+    margin-bottom: 32px;
   }
 }

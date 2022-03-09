@@ -19,7 +19,7 @@
       padding: 8px 16px;
 
       &:nth-child(even) {
-        background-color: rgba($dark-purple, 0.8);
+        background-color: $darker-purple;
       }
 
       label {
