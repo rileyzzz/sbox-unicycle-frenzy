@@ -64,19 +64,19 @@ partial class UnicyclePlayer
 	[Event.Tick]
 	private void CheckStopDoorTrigger()
 	{
-		if ( Velocity.WithZ( 0 ).Length > 35 ) return;
+		if ( !StopDoorTrigger.IsValid() || !StopDoor.IsValid() ) return;
 
-		var trigger = All.FirstOrDefault( x => x.Name.Equals( "tut_trigger_top" ) ) as BaseTrigger;
-		if ( !trigger.IsValid() ) return;
-		if ( !trigger.TouchingEntities.Contains( this ) ) return;
+		StopDoor.TimeBeforeReset = 4;
 
-		var stopdoor = All.FirstOrDefault( x => x.Name == "tut_door_stop" ) as DoorEntity;
-		if ( !stopdoor.IsValid() ) return;
-		if ( stopdoor.State != DoorEntity.DoorState.Closed ) return;
+		var openit = Velocity.WithZ( 0 ).Length <= 35 
+			&& StopDoorTrigger.TouchingEntities.Contains( this )
+			&& StopDoor.State != DoorEntity.DoorState.Opening;
 
-		Sound.FromEntity( "collect", this );
-
-		stopdoor.Open();
+		if ( openit )
+			StopDoor.Open();
 	}
+
+	private static BaseTrigger StopDoorTrigger => All.FirstOrDefault( x => x.Name.Equals( "tut_trigger_top" ) ) as BaseTrigger;
+	private static DoorEntity StopDoor => All.FirstOrDefault( x => x.Name == "tut_door_stop" ) as DoorEntity;
 
 }
