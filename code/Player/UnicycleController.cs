@@ -192,7 +192,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void DoSlope()
 	{
 		if ( GroundEntity == null ) return;
-		if ( Input.Down( InputButton.Run ) && Velocity.Length < StopSpeed * 4 ) return;
+		if ( InputActions.Brake.Down() && Velocity.Length < StopSpeed * 4 ) return;
 
 		var slopeAngle = Vector3.GetAngle( GroundNormal, Vector3.Up );
 		if ( slopeAngle == 0 ) return;
@@ -376,7 +376,7 @@ internal partial class UnicycleController : BasePlayerController
 		if ( !pl.JumpTilt.Length.AlmostEqual( 0f ) ) return false;
 		if ( pl.TimeSincePedalStart < PedalTime ) return false;
 		if ( pl.Tilt.Length >= LeanSafeZone ) return false;
-		if ( Input.Down( InputButton.Run ) && Velocity.Length > StopSpeed ) return false;
+		if ( InputActions.Brake.Down() && Velocity.Length > StopSpeed ) return false;
 
 		return true;
 	}
@@ -431,24 +431,9 @@ internal partial class UnicycleController : BasePlayerController
 		}
 	}
 
-	private bool JumpReleased()
-	{
-		if ( Input.Released( InputButton.Jump ) ) return true;
-		if ( Input.UsingController && Input.Released( InputButton.SlotNext ) ) return true;
-		return false;
-	}
-
-	private bool JumpDown()
-	{
-		if ( Input.Down( InputButton.Jump ) ) return true;
-		if ( Input.UsingController && Input.Down( InputButton.SlotNext ) ) return true;
-		return false;
-	}
-
 	private void CheckJump()
 	{
-		if ( JumpReleased() && 
-			(GroundEntity != null || pl.TimeSinceNotGrounded < .1f) )
+		if ( InputActions.Jump.Released() && (GroundEntity != null || pl.TimeSinceNotGrounded < .1f) )
 		{
 			var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
 			t = Easing.EaseOut( t );
@@ -471,7 +456,7 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		if ( JumpDown() )
+		if ( InputActions.Jump.Down() )
 		{
 			pl.TimeSinceJumpDown += Time.Delta;
 		}
@@ -479,7 +464,7 @@ internal partial class UnicycleController : BasePlayerController
 
 	private bool CanIncrementJump()
 	{
-		if ( !JumpDown() ) return false;
+		if ( !InputActions.Jump.Down() ) return false;
 		if ( GroundEntity != null ) return true;
 		if ( pl.TimeSinceNotGrounded < .75f ) return true;
 
@@ -498,7 +483,7 @@ internal partial class UnicycleController : BasePlayerController
 			return;
 		}
 
-		if ( JumpDown() ) return;
+		if ( InputActions.Jump.Down() ) return;
 
 		if ( Input.UsingController )
 		{
@@ -506,17 +491,17 @@ internal partial class UnicycleController : BasePlayerController
 			var la = Input.GetAnalog( InputAnalog.LeftTrigger ).x;
 
 			if ( ra > 0 && pl.PedalPosition <= .4f && ra > pl.PedalTargetPosition )
-				SetPedalTarget( ra, PedalTime * ra, Input.Pressed( InputButton.Attack1 ) );
+				SetPedalTarget( ra, PedalTime * ra, InputActions.LeftPedal.Pressed() );
 
 			if ( la > 0 && pl.PedalPosition >= -.4f && -la < pl.PedalTargetPosition )
-				SetPedalTarget( -la, PedalTime * la, Input.Pressed( InputButton.Attack2 ) );
+				SetPedalTarget( -la, PedalTime * la, InputActions.RightPedal.Pressed() );
 		}
 		else
 		{
-			if ( Input.Pressed( InputButton.Attack1 ) && pl.PedalPosition >= -.4f )
+			if ( InputActions.LeftPedal.Pressed() && pl.PedalPosition >= -.4f )
 				SetPedalTarget( -1f, PedalTime, true );
 
-			if ( Input.Pressed( InputButton.Attack2 ) && pl.PedalPosition <= .4f )
+			if ( InputActions.RightPedal.Pressed() && pl.PedalPosition <= .4f )
 				SetPedalTarget( 1f, PedalTime, true );
 		}
 	}
@@ -524,7 +509,7 @@ internal partial class UnicycleController : BasePlayerController
 	private void CheckBrake()
 	{
 		if ( GroundEntity == null ) return;
-		if ( !Input.Down( InputButton.Run ) ) return;
+		if ( !InputActions.Brake.Down() ) return;
 
 		if ( !pl.PrevGrounded && Velocity.WithZ( 0 ).Length < 300 )
 		{

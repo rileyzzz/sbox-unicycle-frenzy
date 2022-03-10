@@ -39,16 +39,4 @@ internal partial class TutorialTrigger : BaseTrigger
 		pl.DisplayedAction = InputActions.None;
 	}
 
-	public enum InputActions
-	{ 
-		None,
-		Pedal,
-		Lean,
-		Brake,
-		Jump,
-		Look,
-		BrakeAndLean,
-		JumpHigher
-	}
-
 }

@@ -6,7 +6,7 @@ partial class UnicyclePlayer
 {
 
 	[Net]
-	public TutorialTrigger.InputActions DisplayedAction { get; set; }
+	public InputActions DisplayedAction { get; set; }
 	[Net]
 	public bool PerfectPedalGlow { get; set; }
 

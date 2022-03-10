@@ -109,7 +109,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 				ResetTimer();
 			}
 
-			if ( IsServer && Input.Pressed( InputButton.Flashlight ) )
+			if ( IsServer && InputActions.Spray.Pressed() )
 			{
 				Spray();
 			}
@@ -121,12 +121,12 @@ internal partial class UnicyclePlayer : Sandbox.Player
 				Respawn();
 		}
 
-		if ( Input.Pressed( InputButton.Drop ) || Input.Pressed( InputButton.Reload ) )
+		if ( InputActions.RestartAtCheckpoint.Pressed() || InputActions.RestartCourse.Pressed() )
 		{
 			if ( LifeState != LifeState.Dead )
 				AddRespawnOnClient();
 
-			if ( Input.Pressed( InputButton.Drop ) )
+			if ( InputActions.RestartCourse.Pressed() )
 				ResetTimer();
 
 			Fall( false );
