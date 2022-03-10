@@ -1,10 +1,13 @@
 ﻿using Sandbox;
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 internal class UnicycleCamera : CameraMode
 {
 
 	private List<UfProp> viewblockers = new();
+	private Vector2 controllerrot;
 
 	public override void Update()
 	{
@@ -16,9 +19,23 @@ internal class UnicycleCamera : CameraMode
 		ClearViewBlockers();
 		UpdateViewBlockers( pawn );
 
+		var targetRot = Input.Rotation;
+
+		if ( Input.UsingController )
+		{
+			var angles = Input.Rotation.Angles();
+			var delta = Input.GetAnalog( InputAnalog.Look );
+			float mx = delta.x * 8f;
+			float my = delta.y * 8f;
+			var targetAng = angles + new Vector3( -my, -mx, 0f );
+			targetAng.pitch = Math.Clamp( targetAng.pitch, - 65f, 65f );
+
+			targetRot = Rotation.From( targetAng );
+		}
+
 		var center = pawn.Position + Vector3.Up * 80;
 		var distance = 150.0f * pawn.Scale;
-		var targetPos = center + Input.Rotation.Forward * -distance;
+		var targetPos = center + targetRot.Forward * -distance;
 
 		var tr = Trace.Ray( center, targetPos )
 			.Ignore( pawn )
@@ -34,12 +51,20 @@ internal class UnicycleCamera : CameraMode
 		}
 
 		Position = endpos;
-		Rotation = Input.Rotation;
+		Rotation = targetRot;
 
 		var rot = pawn.Rotation.Angles() * .015f;
 		rot.yaw = 0;
 
 		Rotation *= Rotation.From( rot );
+
+		if ( Input.UsingController && pawn.Velocity.WithZ( 0 ).Length > 50 )
+		{
+			var snapback = pawn.TargetForward.Angles();
+			snapback.roll = 0;
+			snapback.pitch = 30;
+			Rotation = Rotation.Lerp( Rotation, Rotation.From( snapback ), Time.Delta );
+		}
 
 		var spd = pawn.Velocity.WithZ( 0 ).Length / 350f;
 		var fov = 82f.LerpTo( 92f, spd );
@@ -47,6 +72,16 @@ internal class UnicycleCamera : CameraMode
 		FieldOfView = FieldOfView.LerpTo( fov, Time.Delta );
 
 		Viewer = null;
+	}
+
+	public override void BuildInput( InputBuilder input )
+	{
+		base.BuildInput( input );
+
+		if ( !Input.UsingController ) return;
+
+		// controllers get special handling so update ViewAngles here
+		input.ViewAngles = Rotation.Angles();
 	}
 
 	public override void Activated()
