@@ -10,6 +10,8 @@ partial class UnicyclePlayer
 	[Net]
 	public bool PerfectPedalGlow { get; set; }
 
+	private TimeSince tsVelocityLow;
+
 	[Event.Frame]
 	private void OnFrame()
 	{
@@ -52,16 +54,21 @@ partial class UnicyclePlayer
 	[Event.Tick.Server]
 	private void CheckStopDoorTrigger()
 	{
+		if( Velocity.WithZ(0).Length > 35 )
+		{
+			tsVelocityLow = 0;
+		}
+
 		if ( !StopDoorTrigger.IsValid() || !StopDoor.IsValid() ) return;
 
-		var openit = Velocity.WithZ( 0 ).Length <= 35 
+		var openit = tsVelocityLow >= 1
 			&& StopDoorTrigger.TouchingEntities.Contains( this )
-			&& StopDoor.State != DoorEntity.DoorState.Opening;
+			&& StopDoor.State == DoorEntity.DoorState.Closed;
 
 		if ( openit )
 		{
-			StopDoor.TimeBeforeReset = -1;
 			StopDoor.Open();
+			Sound.FromEntity( "collect", this );
 		}
 	}
 
