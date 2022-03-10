@@ -103,7 +103,10 @@ internal partial class UnicyclePlayer
 		{
 			ClearCheckpoints();
 
-			Collectible.ResetCollection( "collection_tutorial" );
+			if (Global.MapName.EndsWith("uf_tutorial"))
+            {
+				ResetTutorial();
+			}
 		}
 	}
 

@@ -49,34 +49,41 @@ partial class UnicyclePlayer
 		ent.Open();
 	}
 
-	[Event("collection.reset")]
-	public void OnCollectionReset( string collection )
-	{
-		if ( !Host.IsServer ) return;
-		if ( !string.Equals( collection, "collection_tutorial" ) ) return;
-
-		var ent = Entity.All.FirstOrDefault( x => x is DoorEntity && x.Name == "tut_door" ) as DoorEntity;
-		if ( !ent.IsValid() ) return;
-
-		ent.Close();
-	}
-
-	[Event.Tick]
+	[Event.Tick.Server]
 	private void CheckStopDoorTrigger()
 	{
 		if ( !StopDoorTrigger.IsValid() || !StopDoor.IsValid() ) return;
-
-		StopDoor.TimeBeforeReset = 4;
 
 		var openit = Velocity.WithZ( 0 ).Length <= 35 
 			&& StopDoorTrigger.TouchingEntities.Contains( this )
 			&& StopDoor.State != DoorEntity.DoorState.Opening;
 
 		if ( openit )
+		{
+			StopDoor.TimeBeforeReset = -1;
 			StopDoor.Open();
+		}
+	}
+
+	private void ResetTutorial()
+	{
+		Host.AssertServer();
+
+		Collectible.ResetCollection( "collection_tutorial" );
+
+		if ( CollectionDoor.IsValid() )
+		{
+			CollectionDoor.Close();
+		}
+
+		if ( StopDoor.IsValid() )
+		{
+			StopDoor.Close();
+		}
 	}
 
 	private static BaseTrigger StopDoorTrigger => All.FirstOrDefault( x => x.Name.Equals( "tut_trigger_top" ) ) as BaseTrigger;
 	private static DoorEntity StopDoor => All.FirstOrDefault( x => x.Name == "tut_door_stop" ) as DoorEntity;
+	private static DoorEntity CollectionDoor => All.FirstOrDefault( x => x is DoorEntity && x.Name == "tut_door" ) as DoorEntity;
 
 }
