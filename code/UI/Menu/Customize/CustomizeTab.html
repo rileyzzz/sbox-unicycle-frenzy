@@ -3,15 +3,15 @@
 
 <root>
     <div class="container">
-        <div class="columns">
-            <div class="column is-4">
-               <label class="title is-styled is-size-1">
-                   Render
-               </label>
+        <div class="columns ">
+            <div class="column is-5">
+            <div class="preview gamepanel">
+                <CustomizeRenderScene @ref="RenderScene" class="render"></CustomizeRenderScene>
             </div>
-            <div class="column is-8 gradient pt-64 pl-32">
-
-                <div class="tabs is-large pb-32">
+            </div>
+            <div class="column is-7 gradient pt-64 pl-32">
+                <div @ref="PartsTypeList" class="part-types"></div>
+                <!-- <div class="tabs is-large pb-32">
                     <div href="/" class="tab">
                         <label>Seat</label>
                         <div class="stroke"></div>
@@ -36,13 +36,14 @@
                         <label>Spray</label>
                         <div class="stroke"></div>
                     </div>
-                </div>
+                </div> -->
             
                 <div class="columns is-multiline">
 
+                    <div @ref="PartsList" class="parts"></div>
+                    
 
-
-                    <div class="column is-2">
+                    <!-- <div class="column is-2">
                         <div class="customize-item">
                             <div class="icon"></div>
                         </div>
@@ -115,11 +116,11 @@
                             <label class="tag is-styled">New</label>
                             <div class="icon"></div>
                         </div>
-                    </div>
+                    </div> -->
             
                 </div>
                 <div class="customize-footer">
-                    <label class="title is-styled is-size-1">Facepunch Wheel</label>
+                    <label class="title is-styled is-size-1 text-orange">Facepunch Wheel</label>
                     <label class="subtitle is-styled">Unlocked by being a Facepunch Employee</label>
                 </div>
             </div>
