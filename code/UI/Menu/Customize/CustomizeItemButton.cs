@@ -52,12 +52,12 @@ internal class CustomizeItemButton : Panel
 
 	private void UpdateState()
 	{
-		// just exposing tag on first item rn so it's visible for styling
-		Tag = SiblingIndex == 1 ? "100" : string.Empty;
-
+		var canequip = CanEquip();
 		var customization = Local.Client.Components.Get<CustomizationComponent>();
 		StateTarget.SetClass( "is-selected", customization.IsEquipped( Part ) );
-		StateTarget.SetClass( "is-locked", !CanEquip() );
+		StateTarget.SetClass( "is-locked", !canequip );
+
+		Tag = canequip ? string.Empty : 100.ToString();
 	}
 
 	private bool CanEquip()

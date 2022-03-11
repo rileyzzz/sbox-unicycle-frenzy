@@ -49,7 +49,7 @@ internal class CustomizeTab : Panel
 
         foreach (var part in parts)
         {
-            if (!CanShowPart(part)) continue;
+            //if (!CanShowPart(part)) continue;
 
             var icon = new CustomizeItemButton(part);
             icon.Parent = PartsList;
