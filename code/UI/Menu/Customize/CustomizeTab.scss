@@ -8,9 +8,9 @@ CustomizeTab {
     padding-top: 10px;
     flex-direction: column;
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 64px;
+    left: 64px;
+    right: 64px;
 
     .subtitle {
       color: $lightest-purple;

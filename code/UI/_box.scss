@@ -1,7 +1,15 @@
 .box {
   background-color: $light-purple;
-  box-shadow: $box-shadow-hard-dark-purple;
+  box-shadow: $box-shadow-black;
   flex-direction: column;
+
+  &.flex-end {
+    align-self: flex-end;
+  }
+
+  &.mb {
+    margin-bottom: 32px;
+  }
 
   .box-header-image {
     box-shadow: $box-shadow-hard-dark-purple;
@@ -10,6 +18,27 @@
     width: 100%;
     background-size: cover;
     background-position: center;
+  }
+
+  .box-header {
+    padding-left: 16px;
+    margin-top: -24px;
+
+    .title {
+      color: $orange-light;
+    }
+  }
+
+  .box-footer {
+    margin-bottom: -30px;
+    justify-content: flex-end;
+    padding: 8px 16px 16px 16px;
+  }
+
+  .box-body {
+    padding: 16px 32px;
+    flex-direction: column;
+    width: 100%;
   }
 
   .list {

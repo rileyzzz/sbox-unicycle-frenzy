@@ -1,33 +1,34 @@
 ﻿@import "../Vars.scss";
 
 ControlsTab {
-  flex-grow: 1;
-  flex-direction: column;
+  .keybind {
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 16px;
+    flex-grow: 1;
 
-  .howto {
-    flex-direction: column;
-  }
-
-  .misc-binds {
-    flex-direction: column;
-    margin-bottom: 64px;
-    .bind {
-      margin-bottom: 6px;
+    &:last-child {
+      margin-bottom: 0;
     }
 
     .key {
-      padding: 6px 8px;
-      background-color: rgba($primary 0.1);
-      border-radius: $smallradius;
-      min-width: 32px;
+      align-items: center;
+      background: $grey-gradient;
+      border: 2px solid #000;
+      border-radius: 8px;
+      box-shadow: $box-shadow-black;
+      font-size: 20px;
+      min-width: 40px;
+      padding-left: 8px;
+      padding-right: 8px;
+      height: 40px;
       text-align: center;
-      margin-right: 8px;
-      box-shadow: 2px 2px 0 1px black;
+      margin-right: 10px;
       text-transform: uppercase;
     }
 
     .action {
-      align-items: center;
+      font-size: 18px;
     }
   }
 
@@ -45,39 +46,44 @@ ControlsTab {
       font-size: 20px;
 
       .control-name {
+        color: $pink;
         margin-bottom: 10px;
       }
 
       .control-bind {
+        background-color: $grey;
+        box-shadow: $box-shadow-black;
+        border-radius: 4px;
+        text-align: center;
         font-weight: 600;
       }
     }
 
     .brake {
-      right: 30%;
-      top: 21.9%;
+      right: 22.5%;
+      top: 23%;
       text-align: right;
     }
 
     .right-pedal {
-      right: 27.5%;
-      top: 55.9%;
+      right: 20%;
+      top: 57%;
       text-align: right;
     }
 
     .left-pedal {
-      left: 23%;
-      top: 62.3%;
+      left: 10%;
+      top: 63%;
     }
 
     .jump {
-      left: 29.8%;
-      top: 80.8%;
+      left: 22%;
+      top: 82%;
     }
 
     .lean {
-      left: 21%;
-      top: 19.25%;
+      left: 14%;
+      top: 20%;
     }
   }
 }
