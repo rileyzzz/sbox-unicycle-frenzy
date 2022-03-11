@@ -47,6 +47,8 @@ internal class CustomizeTab : Panel
     {
         PartsList.DeleteChildren(true);
 
+		parts = parts.OrderBy( x => CanEquip( x ) ? 0 : 1 );
+
         foreach (var part in parts)
         {
             //if (!CanShowPart(part)) continue;
@@ -76,7 +78,7 @@ internal class CustomizeTab : Panel
         }
     }
 
-	private static bool CanShowPart( CustomizationPart part )
+	private static bool CanEquip( CustomizationPart part )
 	{
 		var cat = Customization.Config.Categories.FirstOrDefault( x => x.Id == part.CategoryId );
 
