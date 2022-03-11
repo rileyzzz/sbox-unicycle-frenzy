@@ -12,7 +12,8 @@
 
 button,
 navlink,
-.button {
+.button,
+.button-sound {
   &:active {
     sound-in: button.click;
   }

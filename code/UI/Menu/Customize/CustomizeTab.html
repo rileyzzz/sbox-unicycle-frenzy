@@ -10,7 +10,7 @@
             </div>
             </div>
             <div class="column is-7 gradient pt-64 pl-32">
-                <div @ref="PartsTypeList" class="part-types"></div>
+                <div @ref="CategoryTabs" class="tabs tabs-part-categories is-large pb-32"></div>
                 <!-- <div class="tabs is-large pb-32">
                     <div href="/" class="tab">
                         <label>Seat</label>
@@ -38,11 +38,17 @@
                     </div>
                 </div> -->
             
-                <div class="columns is-multiline">
-
-                    <div @ref="PartsList" class="parts"></div>
-                    
-
+                <div @ref="PartsList" class="columns is-multiline">
+                    <div class="column is-2">
+                        <div class="customize-item">
+                            <div class="icon"></div>
+                        </div>
+                    </div>
+                    <div class="column is-2">
+                        <div class="customize-item is-selected">
+                            <div class="icon"></div>
+                        </div>
+                    </div>
                     <!-- <div class="column is-2">
                         <div class="customize-item">
                             <div class="icon"></div>

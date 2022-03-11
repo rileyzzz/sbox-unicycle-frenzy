@@ -2,9 +2,7 @@
 using Sandbox.UI.Construct;
 using System.Collections.Generic;
 using System.Linq;
-
 using Facepunch.Customization;
-using Sandbox;
 
 [UseTemplate]
 [NavigatorTarget("menu/customize")]
@@ -12,7 +10,7 @@ internal class CustomizeTab : Panel
 {
 
     public CustomizeRenderScene RenderScene { get; set; }
-    public Panel PartsTypeList { get; set; }
+    public Panel CategoryTabs { get; set; }
     public Panel PartsList { get; set; }
 
     public CustomizeTab()
@@ -20,7 +18,7 @@ internal class CustomizeTab : Panel
         UnicycleFrenzy.Game.CustomizationChanged += () =>
         {
             BuildRenderScene();
-            BuildPartTypeButtons();
+            BuildPartCategories();
         };
     }
 
@@ -29,7 +27,7 @@ internal class CustomizeTab : Panel
         base.OnHotloaded();
 
         BuildRenderScene();
-        BuildPartTypeButtons();
+        BuildPartCategories();
     }
 
     protected override void PostTemplateApplied()
@@ -37,7 +35,7 @@ internal class CustomizeTab : Panel
         base.PostTemplateApplied();
 
         BuildRenderScene();
-        BuildPartTypeButtons();
+        BuildPartCategories();
     }
 
     public void BuildRenderScene()
@@ -53,54 +51,39 @@ internal class CustomizeTab : Panel
         {
             if (!CanShowPart(part)) continue;
 
-            var icon = new CustomizePartIcon(part);
+            var icon = new CustomizeItemButton(part);
             icon.Parent = PartsList;
         }
     }
 
-    private bool CanShowPart(CustomizationPart part)
+    private void BuildPartCategories()
     {
-        var cat = Customization.Config.Categories.FirstOrDefault(x => x.Id == part.CategoryId);
+        CategoryTabs.DeleteChildren( true );
 
-        if (cat.DefaultPartId == part.Id) return true;
-        if (TrailPassProgress.CurrentSeason.IsUnlockedByPartId(part.Id)) return true;
+        var categories = Customization.Config.Categories;
+		var first = true;
 
-        return false;
-    }
-
-    private Button activeBtn;
-    private void BuildPartTypeButtons()
-    {
-        PartsTypeList.DeleteChildren();
-        activeBtn = null;
-
-        var cfg = Customization.Config;
-
-        foreach (var category in cfg.Categories)
+        foreach ( var category in categories )
         {
-            var btn = PartsTypeList.Add.Button(category.DisplayName);
-            btn.AddClass("tab");
+			var btn = new CustomizeCategoryButton( category );
+			btn.Parent = CategoryTabs;
 
-            if (activeBtn == null)
-            {
-                activeBtn = btn;
-                activeBtn.AddClass("active");
-
-                BuildParts(cfg.Parts.Where(x => x.CategoryId == category.Id));
-            }
-
-
-
-            btn.AddEventListener("onclick", () =>
-           {
-               activeBtn?.RemoveClass("active");
-               btn.AddClass("active");
-               activeBtn = btn;
-
-               BuildParts(cfg.Parts.Where(x => x.CategoryId == category.Id));
-           });
+			if ( first )
+			{
+				btn.SetActive();
+				first = false;
+			}
         }
-
     }
+
+	private static bool CanShowPart( CustomizationPart part )
+	{
+		var cat = Customization.Config.Categories.FirstOrDefault( x => x.Id == part.CategoryId );
+
+		if ( cat.DefaultPartId == part.Id ) return true;
+		if ( TrailPassProgress.CurrentSeason.IsUnlockedByPartId( part.Id ) ) return true;
+
+		return false;
+	}
 
 }
