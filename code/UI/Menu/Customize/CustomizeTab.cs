@@ -47,12 +47,10 @@ internal class CustomizeTab : Panel
     {
         PartsList.DeleteChildren(true);
 
-		parts = parts.OrderBy( x => CanEquip( x ) ? 0 : 1 );
+        parts = parts.OrderBy(x => CanEquip(x) ? 0 : 1);
 
         foreach (var part in parts)
         {
-            //if (!CanShowPart(part)) continue;
-
             var icon = new CustomizeItemButton(part);
             icon.Parent = PartsList;
         }
@@ -60,32 +58,32 @@ internal class CustomizeTab : Panel
 
     private void BuildPartCategories()
     {
-        CategoryTabs.DeleteChildren( true );
+        CategoryTabs.DeleteChildren(true);
 
         var categories = Customization.Config.Categories;
-		var first = true;
+        var first = true;
 
-        foreach ( var category in categories )
+        foreach (var category in categories)
         {
-			var btn = new CustomizeCategoryButton( category );
-			btn.Parent = CategoryTabs;
+            var btn = new CustomizeCategoryButton(category);
+            btn.Parent = CategoryTabs;
 
-			if ( first )
-			{
-				btn.SetActive();
-				first = false;
-			}
+            if (first)
+            {
+                btn.SetActive();
+                first = false;
+            }
         }
     }
 
-	private static bool CanEquip( CustomizationPart part )
-	{
-		var cat = Customization.Config.Categories.FirstOrDefault( x => x.Id == part.CategoryId );
+    private static bool CanEquip(CustomizationPart part)
+    {
+        var cat = Customization.Config.Categories.FirstOrDefault(x => x.Id == part.CategoryId);
 
-		if ( cat.DefaultPartId == part.Id ) return true;
-		if ( TrailPassProgress.CurrentSeason.IsUnlockedByPartId( part.Id ) ) return true;
+        if (cat.DefaultPartId == part.Id) return true;
+        if (TrailPassProgress.CurrentSeason.IsUnlockedByPartId(part.Id)) return true;
 
-		return false;
-	}
+        return false;
+    }
 
 }

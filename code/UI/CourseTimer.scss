@@ -9,10 +9,14 @@ CourseTimer {
   left: 0;
 
   .game-timer {
+    background-image: url("textures/ui/splatter.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
     top: 48px;
     align-self: flex-start;
     flex-direction: column;
-    min-width: 160px;
+    min-width: 200px;
     text-align: center;
     align-items: center;
     justify-content: center;
@@ -33,16 +37,22 @@ CourseTimer {
   }
 
   .course-time {
+    background-image: url("textures/ui/splatter.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
     position: absolute;
-    bottom: 64px;
+    bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
+    min-width: 200px;
     padding: 10px 20px;
     color: $orange-light;
     font-family: $title-font;
     font-size: 40px;
     text-stroke: 6px #000;
     text-shadow: $text-shadow-black-4;
+    text-align: center;
   }
 
   .menu-info {

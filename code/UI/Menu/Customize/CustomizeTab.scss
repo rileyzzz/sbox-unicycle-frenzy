@@ -43,20 +43,40 @@ CustomizeTab {
       }
     }
 
+    &.is-locked {
+      .icon {
+        opacity: 0.1;
+      }
+      .tag-container {
+        .tag-icon {
+          background-image: url(textures/ui/icon-lock-pink.png);
+          display: flex;
+          margin-right: -3px;
+        }
+        .tag {
+          color: $pink;
+        }
+      }
+    }
+
     &.is-locked-level {
-      .tag {
-        color: $green;
-        font-family: $title-font;
-        right: 8px;
-        text-align: right;
+      right: 8px;
+      .tag-container {
+        .tag {
+          color: $green;
+          font-family: $title-font;
+          text-align: right;
+        }
       }
     }
 
     &.is-locked {
-      .tag {
-        font-family: $title-font;
+      .tag-container {
         right: 8px;
-        text-align: right;
+        .tag {
+          font-family: $title-font;
+          text-align: right;
+        }
       }
     }
 
@@ -66,17 +86,28 @@ CustomizeTab {
     }
 
     .icon {
-      background-color: #fff;
-      width: 64px;
-      height: 64px;
+      width: 100px;
+      height: 100px;
       background-size: 100%;
     }
 
-    .tag {
-      font-size: 16px;
+    .tag-container {
       position: absolute;
       top: 8px;
       z-index: 1;
+
+      .tag-icon {
+        background-position: center;
+        background-size: cover;
+        display: none;
+        width: 21px;
+        height: 25px;
+      }
+
+      .tag {
+        font-size: 16px;
+        z-index: 3;
+      }
     }
   }
 
