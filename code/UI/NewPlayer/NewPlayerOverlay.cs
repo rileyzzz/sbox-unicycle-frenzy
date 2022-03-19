@@ -1,4 +1,4 @@
-﻿using Sandbox;
+﻿
 using Sandbox.UI;
 
 [UseTemplate]
@@ -24,7 +24,7 @@ internal class NewPlayerOverlay : Panel
 	{
 		if ( Global.MapName.EndsWith( "uf_tutorial" ) ) return false;
 
-		return Cookie.Get( "uf.hasplayed", false );
+		return !Cookie.Get( "uf.hasplayed", false );
 	}
 
 	public void Close()
