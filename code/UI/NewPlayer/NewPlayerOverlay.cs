@@ -15,29 +15,16 @@ internal class NewPlayerOverlay : Panel
 
 	public NewPlayerOverlay()
 	{
-		ShowOrNot();
-	}
-
-	private async void ShowOrNot()
-	{
-		// just wait til the tutorial map is up
-		var pkg = await Package.Fetch( "facepunch.uf_tutorial", false );
-		if ( pkg == null )
-		{
-			Open = false;
-			return;
-		}
-
-		var show = Cookie.Get( "uf.hasplayed", false );
-
-		if ( show )
-		{
-			Open = false;
-			return;
-		}
+		Open = ShouldShow();
 
 		Cookie.Set( "uf.hasplayed", true );
-		Open = true;
+	}
+
+	private bool ShouldShow()
+	{
+		if ( Global.MapName.EndsWith( "uf_tutorial" ) ) return false;
+
+		return Cookie.Get( "uf.hasplayed", false );
 	}
 
 	public void Close()
