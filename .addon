@@ -28,6 +28,7 @@
     "RankType": 2,
     "LeaderboardType": 2,
     "PerMapRanking": true,
-    "MapSelect": 3
+    "MapSelect": 3,
+    "MinPlayers": 1
   }
 }
