@@ -33,7 +33,7 @@ internal partial class UnicycleFrenzy
 			return;
 		}
 
-		var availablemaps = new List<string>( pkg.GameConfiguration.MapList );
+		var availablemaps = pkg.GetMeta<List<string>>( "MapList" );
 		availablemaps.RemoveAll( x => x == Global.MapName );
 
 		for ( int i = 0; i < 5; i++ )
