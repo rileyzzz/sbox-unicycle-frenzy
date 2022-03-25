@@ -1595,7 +1595,7 @@
 			{
 				_class = "CSelectorAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ 2816.0, -352.0 ]
+				m_vecPosition = [ 2784.0, -352.0 ]
 				m_nNodeID = 
 				{
 					m_id = 620015896
@@ -1837,7 +1837,7 @@
 			{
 				_class = "CTwoBoneIKAnimNode"
 				m_sName = "IK left foot"
-				m_vecPosition = [ 2352.0, -240.0 ]
+				m_vecPosition = [ 2368.0, -288.0 ]
 				m_nNodeID = 
 				{
 					m_id = 770235078
@@ -1851,7 +1851,7 @@
 				m_ikChainName = "left_leg_IK"
 				m_endEffectorType = "IkEndEffector_Bone"
 				m_endEffectorAttachmentName = ""
-				m_targetType = "IkTarget_Parameter_ModelSpace"
+				m_targetType = "IkTarget_Parameter_WorldSpace"
 				m_attachmentName = ""
 				m_targetBoneName = "hand_R_IK_target"
 				m_targetParam = 
@@ -2623,7 +2623,7 @@
 			{
 				_class = "CTwoBoneIKAnimNode"
 				m_sName = "IK right foot"
-				m_vecPosition = [ 2528.0, -240.0 ]
+				m_vecPosition = [ 2544.0, -288.0 ]
 				m_nNodeID = 
 				{
 					m_id = 985251156
@@ -2873,7 +2873,7 @@
 				m_tagSpans = [  ]
 				m_sequenceName = "Unicycle_Pedaling_Default"
 				m_playbackSpeed = 1.0
-				m_bLoop = false
+				m_bLoop = true
 			}
 		},
 		{
