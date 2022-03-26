@@ -16,19 +16,12 @@
   "RootNamespace": "Sandbox",
   "Metadata": {
     "MapList": [
-      "facepunch.uf_flow",
-      "facepunch.uf_hop_stop",
-      "facepunch.uf_beach",
-      "facepunch.uf_pop_rock",
-      "willow.uf_climb",
-      "facepunch.uf_splinter",
-      "facepunch.uf_bookworm",
-      "facepunch.uf_wooden_gaps"
+      "facepunch.uf_hop_stop"
     ],
     "RankType": 2,
     "LeaderboardType": 2,
     "PerMapRanking": true,
-    "MapSelect": 3,
+    "MapSelect": 2,
     "MinPlayers": 1
   }
 }
