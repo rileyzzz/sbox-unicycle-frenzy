@@ -1851,7 +1851,7 @@
 				m_ikChainName = "left_leg_IK"
 				m_endEffectorType = "IkEndEffector_Bone"
 				m_endEffectorAttachmentName = ""
-				m_targetType = "IkTarget_Parameter_WorldSpace"
+				m_targetType = "IkTarget_Parameter_ModelSpace"
 				m_attachmentName = ""
 				m_targetBoneName = "hand_R_IK_target"
 				m_targetParam = 
@@ -2637,7 +2637,7 @@
 				m_ikChainName = "right_leg_IK"
 				m_endEffectorType = "IkEndEffector_Bone"
 				m_endEffectorAttachmentName = ""
-				m_targetType = "IkTarget_Parameter_WorldSpace"
+				m_targetType = "IkTarget_Parameter_ModelSpace"
 				m_attachmentName = ""
 				m_targetBoneName = "hand_L_IK_target"
 				m_targetParam = 
