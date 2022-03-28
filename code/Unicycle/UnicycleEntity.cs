@@ -107,6 +107,8 @@ internal partial class UnicycleEntity : Entity
 		{
 			trailParticle = Particles.Create( trail.AssetPath, this );
 		}
+
+		Scale = .85f;
 	}
 
 	private void AssemblePedals( CustomizationPart pedal, ModelEntity frame, out Entity pivot, out ModelEntity leftPedal, out ModelEntity rightPedal )
@@ -149,7 +151,7 @@ internal partial class UnicycleEntity : Entity
 		AssembleParts();
 
 		pl.Terry.Position = GetAssPosition();
-		pl.Terry.Position -= Vector3.Up * 12; // remove this when proper ass attachment
+		//pl.Terry.Position -= Vector3.Up * 4; // remove this when proper ass attachment
 	}
 
 	[Event.Tick]
