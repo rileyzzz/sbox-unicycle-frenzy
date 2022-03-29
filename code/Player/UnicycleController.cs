@@ -112,6 +112,11 @@ internal partial class UnicycleController : BasePlayerController
 			AddEvent( "fall" );
 		}
 
+		if( GroundEntity != null && !pl.PrevGrounded )
+		{
+			AddEvent( "grounded" );
+		}
+
 		pl.TimeSincePedalStart += Time.Delta;
 		pl.PrevGrounded = beforeGrounded;
 		pl.PrevVelocity = beforeVelocity;
