@@ -6,16 +6,10 @@ internal partial class UnicyclePlayer
 
 	private ModelEntity RagdollModel( ModelEntity modelEnt )
 	{
-		if ( !modelEnt.IsValid() )
-		{
-			Log.Error( "??" );
-			return null;
-		}
-
 		var ent = new ModelEntity();
-		ent.Position = Position;
-		ent.Rotation = Rotation;
-		ent.Scale = Scale;
+		ent.Position = modelEnt.Position;
+		ent.Rotation = modelEnt.Rotation;
+		ent.Scale = modelEnt.Scale;
 		ent.MoveType = MoveType.Physics;
 		ent.UsePhysicsCollision = true;
 		ent.EnableAllCollisions = true;
@@ -29,8 +23,8 @@ internal partial class UnicyclePlayer
 		ent.EnableHitboxes = true;
 		ent.EnableAllCollisions = true;
 		ent.SurroundingBoundsMode = SurroundingBoundsType.Physics;
-		ent.RenderColor = RenderColor;
-		ent.PhysicsGroup.Velocity = Velocity;
+		ent.RenderColor = modelEnt.RenderColor;
+		ent.PhysicsGroup.Velocity = modelEnt.Velocity;
 
 		ent.SetInteractsAs( CollisionLayer.Debris );
 		ent.SetInteractsWith( CollisionLayer.WORLD_GEOMETRY );
