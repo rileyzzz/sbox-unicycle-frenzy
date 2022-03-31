@@ -426,7 +426,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		//var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
 		var targetRot = pl.TargetForward;
-		targetRot *= Rotation.From( pl.Tilt * .25f );
+		targetRot *= Rotation.From( pl.Tilt * .75f );
 		Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
 
 		// zero velocity if on flat ground and moving slow
