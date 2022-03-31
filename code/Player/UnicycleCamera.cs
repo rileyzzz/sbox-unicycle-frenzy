@@ -28,10 +28,12 @@ internal class UnicycleCamera : CameraMode
 			float mx = delta.x * 8f;
 			float my = delta.y * 8f;
 			var targetAng = angles + new Vector3( -my, -mx, 0f );
-			targetAng.pitch = Math.Clamp( targetAng.pitch, - 65f, 65f );
-
 			targetRot = Rotation.From( targetAng );
 		}
+
+		var ang = targetRot.Angles();
+		ang.pitch = Math.Clamp( ang.pitch, -35f, 65f );
+		targetRot = Rotation.From( ang );
 
 		var center = pawn.Position + Vector3.Up * 80;
 		var distance = 150.0f * pawn.Scale;
