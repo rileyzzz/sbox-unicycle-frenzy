@@ -163,7 +163,7 @@ internal partial class UnicycleController : BasePlayerController
 			}
 		}
 
-		var ang = pl.Tilt;
+		var ang = pl.Rotation.Angles();
 		var aroll = Math.Abs( ang.roll );
 		var apitch = Math.Abs( ang.pitch );
 		var maxLean = GroundEntity != null ? MaxLean : 180;
@@ -426,7 +426,7 @@ internal partial class UnicycleController : BasePlayerController
 
 		//var targetRot = FromToRotation( Vector3.Up, !NoTilt ? GroundNormal : Vector3.Up );
 		var targetRot = pl.TargetForward;
-		targetRot *= Rotation.From( pl.Tilt * .75f );
+		targetRot *= Rotation.From( pl.Tilt );
 		Rotation = Rotation.Slerp( Rotation, targetRot, 6.5f * Time.Delta );
 
 		// zero velocity if on flat ground and moving slow
