@@ -14,8 +14,8 @@ internal class UnicycleAnimator : PawnAnimator
         var target = pl.Terry;
         var unicycle = pl.Unicycle;
 
-        var leftpos = unicycle.DisplayedLeftPedal.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
-        var rightpos = unicycle.DisplayedRightPedal.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
+        var leftpos = unicycle.DisplayedLeftPedal?.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
+        var rightpos = unicycle.DisplayedRightPedal?.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
         leftpos = target.Transform.PointToLocal( leftpos + Rotation.Up * 5 );
         rightpos = target.Transform.PointToLocal( rightpos + Rotation.Up * 5 );
 
