@@ -193,7 +193,7 @@ public class UnicycleBot : Bot
 		}
 
 		// if we're just moving in circles
-		if ( TimeSinceStart > 15.0f && GetFitness() < 500.0f )
+		if ( TimeSinceStart > 15.0f && GetFitness() < 1000.0f )
 		{
 			DamageInfo dmg = new DamageInfo();
 			dmg.Damage = 1000.0f;
@@ -201,6 +201,14 @@ public class UnicycleBot : Bot
 			return;
 		}
 
+		// if we've lasted an absurdly long time, abort
+		if ( TimeSinceStart > 80.0f )
+		{
+			DamageInfo dmg = new DamageInfo();
+			dmg.Damage = 1000.0f;
+			player.TakeDamage( dmg );
+			return;
+		}
 
 		//if ( TimeSinceStart > 200.0f )
 
@@ -288,6 +296,7 @@ public class UnicycleBot : Bot
 		inputs[1] = Math.Clamp(player.Velocity.Length / 400.0f, 0.0f, 1.0f);
 
 		// distance to nearest gaps
+		int center = 3;
 		float[] searchAngles = new float[] {
 			-90.0f,
 			-40.0f,
@@ -297,6 +306,7 @@ public class UnicycleBot : Bot
 		};
 
 		float[] searchDists = new float[searchAngles.Length];
+		float jumpDist = 1.0f;
 		for ( int i = 0; i < searchAngles.Length; i++ )
 		{
 			Vector3 gapStart = player.Position + new Vector3( 0.0f, 0.0f, 20.0f );
@@ -332,11 +342,38 @@ public class UnicycleBot : Bot
 					break;
 			}
 
+			searchDists[i] = testDistance / (testInterval * numSteps);
+
+			if (i == center)
+			{
+				// search for jumpable gap
+				for ( int step = 0; step < numSteps; step++ )
+				{
+					if ( testDistance + testInterval >= wallTrace.Distance )
+						break;
+
+					testDistance += testInterval;
+
+					Vector3 gapPos = gapStart + gapDir.Forward * testDistance;
+					TraceResult gapTr = Trace.Ray( gapPos, gapPos + Vector3.Down * searchHeight )
+						.WorldAndEntities()
+						.Run();
+
+					//DebugOverlay.TraceResult( gapTr );
+
+					if ( gapTr.Hit )
+					{
+						jumpDist = testDistance / (testInterval * numSteps);
+						break;
+					}
+				}
+			}
+
 			//DebugOverlay.Line( gapStart, gapStart + gapDir.Forward * testDistance, Color.Orange, 0.0f );
 
 			// invert - closeness of gap instaed of distance to gap?
 			//searchDists[i] = 1.0f - (testDistance / (testInterval * numSteps));
-			searchDists[i] = testDistance / (testInterval * numSteps);
+			
 			//searchDists[i] = testDistance;
 		}
 
@@ -346,12 +383,13 @@ public class UnicycleBot : Bot
 		inputs[4] = searchDists[2];
 		inputs[5] = searchDists[3];
 		inputs[6] = searchDists[4];
+		inputs[7] = jumpDist;
 
-		inputs[7] = (Time.Now * 1.5f) % 1.0f;
+		inputs[8] = (Time.Now * 1.5f) % 1.0f;
 
 		// copy speed and search dists from last
-		for ( int i = 1; i < 7; i++ )
-			inputs[i + 7] = (inputs[i] - lastInputs[i]) * Time.Delta;
+		for ( int i = 1; i < 8; i++ )
+			inputs[i + 8] = (inputs[i] - lastInputs[i]) * Time.Delta;
 			//inputs[i + 8] = lastInputs[i + 1];
 
 		//Log.Info($"NN inputs {string.Join(",", Brain.Inputs)}");

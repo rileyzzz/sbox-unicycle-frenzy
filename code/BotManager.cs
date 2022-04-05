@@ -26,9 +26,9 @@ class BotManager
 		return a + f * (b - a);
 	}
 
-	public const int NumInputs = 14;
+	public const int NumInputs = 16;
 	public const int NumOutputs = 5;
-	public const int LayerSize = 10;
+	public const int LayerSize = 12;
 	public const int NumLayers = 1;
 
 	public static UnicycleBrain CreateBrain()
@@ -127,9 +127,9 @@ class BotManager
 			// fuck with the weights a bit, mutate our beautiful creature
 			//const float mutationScale = 0.08f;
 			// increase for each bot, have some that play it safe and some that get wacky with it
-			float mutationScale = 0.1f;
+			float mutationScale = 0.3f;
 			//float mutationStep = 0.12f;
-			float mutationChance = 0.02f;
+			float mutationChance = 0.01f;
 			foreach ( var brain in newBrains )
 				brain.Mutate( mutationScale, mutationChance );
 
