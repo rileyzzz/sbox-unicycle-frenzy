@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿
+using Sandbox;
 using Sandbox.UI;
 using System;
 
@@ -7,6 +8,7 @@ internal class GameEnd : Panel
 {
 
 	public Panel MapCanvas { get; set; }
+	public Panel PodiumCanvas { get; set; }
 	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.GameTimer );
 
 	[Event.Frame]
@@ -35,13 +37,17 @@ internal class GameEnd : Panel
 		if ( newhash == maphash ) return;
 
 		maphash = newhash;
-		RefreshMaps();
+		Refresh();
 	}
 
-	private void RefreshMaps()
+	private void Refresh()
 	{
-		MapCanvas.DeleteChildren( true );
+		PodiumCanvas.DeleteChildren( true );
+		PodiumCanvas.AddChild( new PodiumPanel( 2 ) );
+		PodiumCanvas.AddChild( new PodiumPanel( 1 ) );
+		PodiumCanvas.AddChild( new PodiumPanel( 3 ) );
 
+		MapCanvas.DeleteChildren( true );
 		foreach ( var map in UnicycleFrenzy.Game.MapOptions )
 		{
 			var btn = new MapVoteButton( map );
@@ -49,7 +55,7 @@ internal class GameEnd : Panel
 		}
 	}
 
-	protected override void PostTemplateApplied() => RefreshMaps();
-	public override void OnHotloaded() => RefreshMaps();
+	protected override void PostTemplateApplied() => Refresh();
+	public override void OnHotloaded() => Refresh();
 
 }
