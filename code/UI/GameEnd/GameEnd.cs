@@ -8,7 +8,7 @@ internal class GameEnd : Panel
 {
 
 	public Panel MapCanvas { get; set; }
-	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.TimeLeft );
+	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.GameTimer );
 
 	public string FirstName { get; set; }
 	public string FirstTime { get; set; }
@@ -35,7 +35,7 @@ internal class GameEnd : Panel
 	{
 		MapCanvas.DeleteChildren();
 
-		foreach ( var map in UnicycleFrenzy.Game.MapCycle )
+		foreach ( var map in UnicycleFrenzy.Game.MapOptions )
 		{
 			var btn = new MapVoteButton( map );
 			MapCanvas.AddChild( btn );
@@ -47,7 +47,7 @@ internal class GameEnd : Panel
 	[Event.Frame]
 	private void OnFrame()
 	{
-		var open = UnicycleFrenzy.Game.TimeLeft < UnicycleFrenzy.EndGameDuration;
+		var open = UnicycleFrenzy.Game.GameTimer < UnicycleFrenzy.EndGameDuration;
 
 		SetClass( "open", open );
 
@@ -87,7 +87,7 @@ internal class GameEnd : Panel
 	private void EnsureMaps()
 	{
 		var newhash = 0;
-		foreach ( var map in UnicycleFrenzy.Game.MapCycle )
+		foreach ( var map in UnicycleFrenzy.Game.MapOptions )
 		{
 			newhash = HashCode.Combine( map );
 		}

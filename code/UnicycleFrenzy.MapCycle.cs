@@ -5,25 +5,25 @@ using System.Linq;
 internal partial class UnicycleFrenzy
 {
 
-	//
-	// NOTE: Add new maps in the in-game setup menu
-	//
-
 	[ConVar.Replicated( "uf_endgame_duration" )]
 	public static float EndGameDuration { get; set; } = 60 * 1.5f;
 
+	public const float GameDuration = 30 * 60f; // 30 mins
+
 	[Net]
-	public float TimeLeft { get; set; }
+	public RealTimeUntil GameTimer { get; set; }
 	[Net]
 	public string NextMap { get; set; }
 	[Net]
-	public Dictionary<long, string> MapVotes { get; set; } = new();
+	public Dictionary<long, string> MapVotes { get; set; }
 	[Net]
-	public List<string> MapCycle { get; set; } = new();
+	public List<string> MapOptions { get; set; }
 
 	private async void InitMapCycle()
 	{
-		TimeLeft = 1800;
+		Host.AssertServer();
+
+		GameTimer = GameDuration;
 		NextMap = Global.MapName;
 
 		var pkg = await Package.Fetch( Global.GameIdent, true );
@@ -33,69 +33,41 @@ internal partial class UnicycleFrenzy
 			return;
 		}
 
-		var availablemaps = pkg.GetMeta<List<string>>( "MapList" );
-		availablemaps.RemoveAll( x => x == Global.MapName );
+		var maps = pkg.GetMeta<List<string>>( "MapList" )
+			.Where( x => x != Global.MapName )
+			.OrderBy( x => Rand.Int( 99999 ) )
+			.Take( 5 )
+			.ToList();
 
-		for ( int i = 0; i < 5; i++ )
-		{
-			var chosen = Rand.FromList( availablemaps );
-			availablemaps.Remove( chosen );
-			MapCycle.Add( chosen );
-		}
-
-		NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
+		MapOptions = maps;
+		NextMap = Rand.FromList( maps );
 	}
 
 	[Event.Tick.Server]
 	private void OnTick()
 	{
-		if ( TimeLeft > 0 )
-		{
-			TimeLeft -= Time.Delta;
+		if ( GameTimer > 0 ) return;
 
-			if ( TimeLeft <= 0 )
-			{
-				ChangeMapInternal( NextMap );
-			}
-		}
-	}
-
-	public void ChangeMap( string mapident )
-	{
-		if ( !IsServer && !Global.IsListenServer ) return;
-
-		ChangeMapInternal( mapident );
+		ServerCmd_ChangeMap( NextMap );
 	}
 
 	[ServerCmd]
-	private static void ChangeMapInternal( string mapident )
+	public static void ServerCmd_ChangeMap( string mapident )
 	{
 		Global.ChangeLevel( mapident );
 	}
 
 	[ServerCmd]
-	public static void SetMapVote( string mapIdent )
+	public static void ServerCmd_SetMapVote( string mapIdent )
 	{
-		if ( !ConsoleSystem.Caller.IsValid() ) return;
-
-		if(Game.MapVotes.ContainsKey(ConsoleSystem.Caller.PlayerId)
-			&& Game.MapVotes[ConsoleSystem.Caller.PlayerId] == mapIdent )
-		{
+		if ( !ConsoleSystem.Caller.IsValid() ) 
 			return;
-		}
+
+		if ( Game.MapVotes.TryGetValue( ConsoleSystem.Caller.PlayerId, out var vote ) && vote == mapIdent )
+			return;
 
 		Game.MapVotes[ConsoleSystem.Caller.PlayerId] = mapIdent;
-
-		var sort = new Dictionary<string, int>();
-		foreach( var kvp in Game.MapVotes )
-		{
-			if ( !sort.ContainsKey( kvp.Value ) )
-			{
-				sort.Add( kvp.Value, 0 );
-			}
-			sort[kvp.Value]++;
-		}
-		Game.NextMap = sort.OrderByDescending( x => x.Value ).First().Key;
+		Game.NextMap = Game.MapVotes.OrderByDescending( x => x.Value ).First().Value;
 
 		UfChatbox.AddInfo( To.Everyone, string.Format( "{0} voted for {1}", ConsoleSystem.Caller.Name, mapIdent ) );
 	}

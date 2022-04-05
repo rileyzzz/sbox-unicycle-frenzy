@@ -21,7 +21,7 @@ internal class CourseTimer : Panel
 		} 
 	}
 
-	public string GameTime => FormattedTimeMs( UnicycleFrenzy.Game.TimeLeft );
+	public string GameTime => FormattedTimeMs( UnicycleFrenzy.Game.GameTimer );
 
 	public string NextMap => UnicycleFrenzy.Game.NextMap;
 

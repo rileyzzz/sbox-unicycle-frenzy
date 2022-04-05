@@ -1,4 +1,5 @@
-﻿using Facepunch.Customization;
+﻿
+using Facepunch.Customization;
 using Sandbox;
 using System;
 using System.Collections.Generic;
@@ -182,7 +183,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
     }
 
     [ServerCmd]
-    public static void SetSpectateTargetOnServer( int entityId )
+    public static void ServerCmd_SetSpectateTarget( int entityId )
     {
         if ( !ConsoleSystem.Caller.IsValid() ) return;
 
