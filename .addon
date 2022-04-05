@@ -1,8 +1,8 @@
 {
-  "Title": "Unicycle Frenzy",
+  "Title": "Unicycle Frenzy (Future Edition)",
   "Type": "game",
-  "Org": "facepunch",
-  "Ident": "unicycle_frenzy",
+  "Org": "rileyzzz",
+  "Ident": "unicycle_frenzy_nn",
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
@@ -31,6 +31,7 @@
     "LeaderboardType": 2,
     "PerMapRanking": true,
     "MapSelect": 3,
-    "MinPlayers": 1
+    "MinPlayers": 1,
+    "MaxPlayers": 128
   }
 }

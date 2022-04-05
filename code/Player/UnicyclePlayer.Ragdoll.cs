@@ -78,7 +78,7 @@ internal partial class UnicyclePlayer
 
 		if ( Terry.IsValid() )
 		{
-			corpse = RagdollModel( Terry );
+			//corpse = RagdollModel( Terry );
 		}
 
 		if ( Unicycle.IsValid() )

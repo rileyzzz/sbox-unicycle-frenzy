@@ -23,7 +23,8 @@ internal partial class UnicycleFrenzy
 
 	private async void InitMapCycle()
 	{
-		TimeLeft = 1800;
+		//TimeLeft = 1800;
+		TimeLeft = 0;
 		NextMap = Global.MapName;
 
 		var pkg = await Package.Fetch( Global.GameIdent, true );
@@ -49,15 +50,16 @@ internal partial class UnicycleFrenzy
 	[Event.Tick.Server]
 	private void OnTick()
 	{
-		if ( TimeLeft > 0 )
-		{
-			TimeLeft -= Time.Delta;
+		TimeLeft += Time.Delta;
+		//if ( TimeLeft > 0 )
+		//{
+		//	TimeLeft -= Time.Delta;
 
-			if ( TimeLeft <= 0 )
-			{
-				ChangeMapInternal( NextMap );
-			}
-		}
+		//	if ( TimeLeft <= 0 )
+		//	{
+		//		ChangeMapInternal( NextMap );
+		//	}
+		//}
 	}
 
 	public void ChangeMap( string mapident )

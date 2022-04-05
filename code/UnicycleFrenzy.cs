@@ -37,6 +37,8 @@ partial class UnicycleFrenzy : Sandbox.Game
 			{
 				Precache.Add( part.AssetPath );
 			}
+
+			//BotManager.Init();
 		}
 	}
 
@@ -44,15 +46,24 @@ partial class UnicycleFrenzy : Sandbox.Game
 	{
 		base.ClientJoined( cl );
 
-		cl.Components.Add( new CustomizationComponent() );
-
-		cl.Pawn = new UnicyclePlayer();
-		(cl.Pawn as Player).Respawn();
-
-		if ( cl.IsBot )
+		if (!cl.IsBot)
 		{
-			(cl.Pawn as UnicyclePlayer).BestTime = new System.Random().Next( 180, 1800 );
+			cl.Pawn = new SpectatorPlayer();
+			(cl.Pawn as Player).Respawn();
 		}
+		else
+		{
+			cl.Components.Add( new CustomizationComponent() );
+
+			cl.Pawn = new UnicyclePlayer();
+			(cl.Pawn as Player).Respawn();
+
+			//if ( cl.IsBot )
+			//{
+			//	(cl.Pawn as UnicyclePlayer).BestTime = new System.Random().Next( 180, 1800 );
+			//}
+		}
+
 
 		UfChatbox.AddInfo( To.Everyone, $"{cl.Name} has joined the game" );
 	}
