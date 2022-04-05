@@ -33,7 +33,8 @@ internal class PodiumRenderScene : Panel
 		ScenePanel.Style.Height = Length.Percent( 100 );
 
 		new SceneModel( SceneWorld, "models/citizen/citizen.vmdl", Transform.Zero.WithRotation( Rotation.FromYaw( 180 ) ) );
-		new SceneLight( SceneWorld, Vector3.Backward * 50 + Vector3.Up * 50, 200f, Color.White * 10 );
+		new SceneLight( SceneWorld, Vector3.Backward * 50 + Vector3.Up * 50, 200f, Color.White * 20 );
+		new SceneLight( SceneWorld, Vector3.Left * 50, 200f, Color.White * 20 );
 	}
 
 	public override void Tick()
