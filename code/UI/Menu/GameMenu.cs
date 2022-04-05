@@ -18,7 +18,8 @@ internal class GameMenu : NavigatorPanel
 	[Event.BuildInput]
 	private void BuildInput( InputBuilder b )
 	{
-		if ( InputActions.Menu.Pressed() )
+		var btn = InputActionsExtensions.GetInputButton( InputActions.Menu );
+		if ( b.Pressed( btn ) )
 		{
 			SetClass( "open", !HasClass( "open" ) );
 		}
