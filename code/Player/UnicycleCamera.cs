@@ -25,8 +25,8 @@ internal class UnicycleCamera : CameraMode
 		{
 			var angles = Input.Rotation.Angles();
 			var delta = Input.GetAnalog( InputAnalog.Look );
-			float mx = delta.x * 8f;
-			float my = delta.y * 8f;
+			float mx = delta.x * 6f;
+			float my = delta.y * 6f;
 			var targetAng = angles + new Vector3( -my, -mx, 0f );
 			targetRot = Rotation.From( targetAng );
 		}
@@ -55,12 +55,13 @@ internal class UnicycleCamera : CameraMode
 		Position = endpos;
 		Rotation = targetRot;
 
-		var rot = pawn.Rotation.Angles() * .015f;
-		rot.yaw = 0;
+		if ( !Input.UsingController )
+		{
+			var rot = pawn.Tilt * .015f;
+			Rotation *= Rotation.From( rot );
+		}
 
-		Rotation *= Rotation.From( rot );
-
-		if ( Input.UsingController && pawn.Velocity.WithZ( 0 ).Length > 50 )
+		if ( Input.UsingController && pawn.Velocity.WithZ( 0 ).Length > 35 )
 		{
 			var snapback = pawn.TargetForward.Angles();
 			snapback.roll = 0;
@@ -72,7 +73,6 @@ internal class UnicycleCamera : CameraMode
 		var fov = 82f.LerpTo( 92f, spd );
 
 		FieldOfView = FieldOfView.LerpTo( fov, Time.Delta );
-
 		Viewer = null;
 	}
 
