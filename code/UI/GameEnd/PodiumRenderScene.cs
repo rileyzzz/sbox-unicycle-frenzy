@@ -35,14 +35,7 @@ internal class PodiumRenderScene : Panel
 		new SceneLight( SceneWorld, Vector3.Backward * 50 + Vector3.Up * 50, 200f, Color.White * 20 );
 		new SceneLight( SceneWorld, Vector3.Left * 50, 200f, Color.White * 20 );
 
-		try
-		{
-			Dress( citizen, player.Avatar );
-		}
-		catch( System.Exception e )
-		{
-			Log.Warning( e.Message );
-		}
+		Dress( citizen, player.Avatar );
 	}
 
 	public override void Tick()
