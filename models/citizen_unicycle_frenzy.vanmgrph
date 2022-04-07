@@ -558,6 +558,40 @@
 				m_fMaxValue = 1.0
 				m_bInterpolate = false
 			},
+			{
+				_class = "CFloatAnimParameter"
+				m_name = "unicycle_lean_x"
+				m_id = 
+				{
+					m_id = 504777313
+				}
+				m_previewButton = "ANIMPARAM_BUTTON_NONE"
+				m_bNetwork = true
+				m_bUseMostRecentValue = false
+				m_bAutoReset = false
+				m_bPredicted = true
+				m_fDefaultValue = 0.5
+				m_fMinValue = 0.0
+				m_fMaxValue = 1.0
+				m_bInterpolate = true
+			},
+			{
+				_class = "CFloatAnimParameter"
+				m_name = "unicycle_lean_y"
+				m_id = 
+				{
+					m_id = 108479131
+				}
+				m_previewButton = "ANIMPARAM_BUTTON_NONE"
+				m_bNetwork = true
+				m_bUseMostRecentValue = false
+				m_bAutoReset = false
+				m_bPredicted = true
+				m_fDefaultValue = 0.5
+				m_fMinValue = 0.0
+				m_fMaxValue = 1.0
+				m_bInterpolate = true
+			},
 		]
 	}
 	m_pTagManager = 
@@ -660,6 +694,7 @@
 			{
 				_class = "CAnimGraphNetworkSettings"
 				m_bNetworkingEnabled = true
+				m_defaultNetworkMode = "ServerAuthoritative"
 			},
 		]
 	}
@@ -708,7 +743,7 @@
 			{
 				_class = "CCommentAnimNode"
 				m_sName = "THE STARTING POINT"
-				m_vecPosition = [ -2893.0, -909.0 ]
+				m_vecPosition = [ -1920.0, -352.0 ]
 				m_nNodeID = 
 				{
 					m_id = 41806672
@@ -859,7 +894,7 @@
 			{
 				_class = "CSingleFrameAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -2160.0, -864.0 ]
+				m_vecPosition = [ -1920.0, -544.0 ]
 				m_nNodeID = 
 				{
 					m_id = 179357804
@@ -988,6 +1023,28 @@
 				m_sequenceName = "Airborne_Down_R"
 				m_nFrameIndex = 0
 				m_tagSpans = [  ]
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 269598727
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "Unnamed"
+				m_vecPosition = [ -1472.0, -704.0 ]
+				m_nNodeID = 
+				{
+					m_id = 269598727
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "Unicycle_Lean_Y_delta"
+				m_playbackSpeed = 1.0
+				m_bLoop = false
 			}
 		},
 		{
@@ -1213,7 +1270,7 @@
 			{
 				_class = "CLookAtAnimNode"
 				m_sName = "Aim Head (less neck)"
-				m_vecPosition = [ 448.0, -576.0 ]
+				m_vecPosition = [ 704.0, -576.0 ]
 				m_nNodeID = 
 				{
 					m_id = 390251455
@@ -1222,7 +1279,7 @@
 				m_sNote = ""
 				m_childID = 
 				{
-					m_id = 577509338
+					m_id = 1866766276
 				}
 				m_target = "VectorParameter"
 				m_param = 
@@ -1338,7 +1395,7 @@
 			{
 				_class = "CCycleControlAnimNode"
 				m_sName = "Cycle Control pedaling"
-				m_vecPosition = [ -1248.0, -896.0 ]
+				m_vecPosition = [ -1248.0, -928.0 ]
 				m_nNodeID = 
 				{
 					m_id = 399165866
@@ -1347,7 +1404,7 @@
 				m_sNote = ""
 				m_childID = 
 				{
-					m_id = 1186135593
+					m_id = 886229591
 				}
 				m_valueSource = "Parameter"
 				m_param = 
@@ -1447,8 +1504,8 @@
 			value = 
 			{
 				_class = "CCommentAnimNode"
-				m_sName = "Cycle Control values"
-				m_vecPosition = [ -1408.0, -672.0 ]
+				m_sName = "Balance & Lean Cycle Control values"
+				m_vecPosition = [ -1920.0, -768.0 ]
 				m_nNodeID = 
 				{
 					m_id = 517730679
@@ -1456,7 +1513,7 @@
 				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_commentText = "0.0 = left (Y) / backwards (X)\n0.5 = center\n1.0 = right (Y) / forwards (X)"
-				m_size = [ 320.0, 128.0 ]
+				m_size = [ 352.0, 128.0 ]
 				m_color = [ 49, 139, 146, 255 ]
 			}
 		},
@@ -1523,7 +1580,7 @@
 			{
 				_class = "CAddAnimNode"
 				m_sName = "Add Fw/Bw balance"
-				m_vecPosition = [ -752.0, -784.0 ]
+				m_vecPosition = [ -864.0, -832.0 ]
 				m_nNodeID = 
 				{
 					m_id = 577509338
@@ -1670,7 +1727,7 @@
 			{
 				_class = "CSolveIKChainAnimNode"
 				m_sName = "Solve IK arms"
-				m_vecPosition = [ 720.0, -512.0 ]
+				m_vecPosition = [ 848.0, -480.0 ]
 				m_nNodeID = 
 				{
 					m_id = 674615398
@@ -1805,6 +1862,33 @@
 				m_sequenceName = "FacialFidget_02"
 				m_playbackSpeed = 1.0
 				m_bLoop = false
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 736080971
+			}
+			value = 
+			{
+				_class = "CCycleControlAnimNode"
+				m_sName = "Cycle Control lean_y"
+				m_vecPosition = [ -1152.0, -704.0 ]
+				m_nNodeID = 
+				{
+					m_id = 736080971
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_childID = 
+				{
+					m_id = 269598727
+				}
+				m_valueSource = "Parameter"
+				m_param = 
+				{
+					m_id = 108479131
+				}
 			}
 		},
 		{
@@ -2056,6 +2140,38 @@
 		{
 			key = 
 			{
+				m_id = 849959793
+			}
+			value = 
+			{
+				_class = "CAddAnimNode"
+				m_sName = "Add L/R lean"
+				m_vecPosition = [ -704.0, -768.0 ]
+				m_nNodeID = 
+				{
+					m_id = 849959793
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_baseChildID = 
+				{
+					m_id = 577509338
+				}
+				m_additiveChildID = 
+				{
+					m_id = 736080971
+				}
+				m_timingBehavior = "UseChild2"
+				m_flTimingBlend = 0.5
+				m_footMotionTiming = "Child1"
+				m_bResetBase = true
+				m_bResetAdditive = true
+				m_bApplyChannelsSeparately = true
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 865597138
 			}
 			value = 
@@ -2118,6 +2234,61 @@
 		{
 			key = 
 			{
+				m_id = 886229591
+			}
+			value = 
+			{
+				_class = "CBlendAnimNode"
+				m_sName = "Unnamed"
+				m_vecPosition = [ -1424.0, -944.0 ]
+				m_nNodeID = 
+				{
+					m_id = 886229591
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_children = 
+				[
+					{
+						m_nodeID = 
+						{
+							m_id = 1186135593
+						}
+						m_name = "0"
+						m_blendValue = 0.0
+					},
+					{
+						m_nodeID = 
+						{
+							m_id = 1167841254
+						}
+						m_name = "351"
+						m_blendValue = 351.0
+					},
+				]
+				m_blendValueSource = "Parameter"
+				m_param = 
+				{
+					m_id = 1285441981
+				}
+				m_blendKeyType = "BlendKey_UserValue"
+				m_bLockBlendOnReset = false
+				m_bSyncCycles = true
+				m_bLoop = true
+				m_bLockWhenWaning = true
+				m_damping = 
+				{
+					_class = "CAnimInputDamping"
+					m_speedFunction = "NoDamping"
+					m_fSpeedScale = 1.0
+					m_fMinSpeed = 10.0
+					m_fMaxTension = 1000.0
+				}
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 896541861
 			}
 			value = 
@@ -2139,13 +2310,40 @@
 		{
 			key = 
 			{
+				m_id = 907897161
+			}
+			value = 
+			{
+				_class = "CCycleControlAnimNode"
+				m_sName = "Cycle Control lean_x"
+				m_vecPosition = [ -1120.0, -640.0 ]
+				m_nNodeID = 
+				{
+					m_id = 907897161
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_childID = 
+				{
+					m_id = 1758726036
+				}
+				m_valueSource = "Parameter"
+				m_param = 
+				{
+					m_id = 504777313
+				}
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 933547013
 			}
 			value = 
 			{
 				_class = "CSingleFrameAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -2877.0, -829.0 ]
+				m_vecPosition = [ -1901.0, -269.0 ]
 				m_nNodeID = 
 				{
 					m_id = 933547013
@@ -2700,7 +2898,7 @@
 			{
 				_class = "CBlendAnimNode"
 				m_sName = "Blend 1D Coasting or braking"
-				m_vecPosition = [ -1840.0, -864.0 ]
+				m_vecPosition = [ -1696.0, -528.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1044403765
@@ -2835,6 +3033,28 @@
 		{
 			key = 
 			{
+				m_id = 1167841254
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "Unnamed"
+				m_vecPosition = [ -1696.0, -912.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1167841254
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "Unicycle_Pedaling_Fast"
+				m_playbackSpeed = 1.0
+				m_bLoop = true
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 1179797376
 			}
 			value = 
@@ -2863,7 +3083,7 @@
 			{
 				_class = "CSequenceAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -1568.0, -896.0 ]
+				m_vecPosition = [ -1696.0, -960.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1186135593
@@ -3584,7 +3804,7 @@
 			{
 				_class = "CAddAnimNode"
 				m_sName = "Add L/R balance"
-				m_vecPosition = [ -976.0, -880.0 ]
+				m_vecPosition = [ -1024.0, -896.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1404403465
@@ -3836,7 +4056,7 @@
 				m_networkMode = "ServerAuthoritative"
 				m_sNote = ""
 				m_commentText = ""
-				m_size = [ 832.0, 368.0 ]
+				m_size = [ 832.0, 336.0 ]
 				m_color = [ 49, 139, 146, 255 ]
 			}
 		},
@@ -3912,7 +4132,7 @@
 			{
 				_class = "CSingleFrameAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -2878.0, -733.0 ]
+				m_vecPosition = [ -1902.0, -173.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1449392910
@@ -3944,7 +4164,7 @@
 			{
 				_class = "CBlendAnimNode"
 				m_sName = "Duck"
-				m_vecPosition = [ -2461.0, -797.0 ]
+				m_vecPosition = [ -1485.0, -237.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1458689683
@@ -4275,7 +4495,7 @@
 			{
 				_class = "CSingleFrameAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -2160.0, -816.0 ]
+				m_vecPosition = [ -1920.0, -496.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1737510116
@@ -4311,13 +4531,35 @@
 		{
 			key = 
 			{
+				m_id = 1758726036
+			}
+			value = 
+			{
+				_class = "CSequenceAnimNode"
+				m_sName = "Unnamed"
+				m_vecPosition = [ -1440.0, -640.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1758726036
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_tagSpans = [  ]
+				m_sequenceName = "Unicycle_Lean_Y_delta"
+				m_playbackSpeed = 1.0
+				m_bLoop = false
+			}
+		},
+		{
+			key = 
+			{
 				m_id = 1760300339
 			}
 			value = 
 			{
 				_class = "CSingleFrameAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -1744.0, -592.0 ]
+				m_vecPosition = [ -1888.0, -864.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1760300339
@@ -4451,6 +4693,38 @@
 				m_sequenceName = "Airborne_R"
 				m_nFrameIndex = 0
 				m_tagSpans = [  ]
+			}
+		},
+		{
+			key = 
+			{
+				m_id = 1866766276
+			}
+			value = 
+			{
+				_class = "CAddAnimNode"
+				m_sName = "Add Fw/Bw balance"
+				m_vecPosition = [ -544.0, -704.0 ]
+				m_nNodeID = 
+				{
+					m_id = 1866766276
+				}
+				m_networkMode = "ClientPredicted"
+				m_sNote = ""
+				m_baseChildID = 
+				{
+					m_id = 849959793
+				}
+				m_additiveChildID = 
+				{
+					m_id = 907897161
+				}
+				m_timingBehavior = "UseChild2"
+				m_flTimingBlend = 0.5
+				m_footMotionTiming = "Child1"
+				m_bResetBase = true
+				m_bResetAdditive = true
+				m_bApplyChannelsSeparately = true
 			}
 		},
 		{
@@ -5347,7 +5621,7 @@
 			{
 				_class = "CSingleFrameAnimNode"
 				m_sName = "Unnamed"
-				m_vecPosition = [ -2878.0, -781.0 ]
+				m_vecPosition = [ -1902.0, -221.0 ]
 				m_nNodeID = 
 				{
 					m_id = 1928759506
