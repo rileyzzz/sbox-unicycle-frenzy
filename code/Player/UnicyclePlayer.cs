@@ -13,6 +13,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
     public UnicycleEntity Unicycle { get; set; }
     [Net]
     public List<Checkpoint> Checkpoints { get; set; } = new();
+	[Net]
+	public string Avatar { get; set; }
 
     public const float MaxRenderDistance = 300f;
     public const float RespawnDelay = 3f;
@@ -48,6 +50,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 		Clothing ??= new();
 		Clothing.LoadFromClient( Client );
         Clothing.DressEntity( Terry );
+		Avatar = Client.GetClientData( "avatar" );
 
 		ResetMovement();
         GotoBestCheckpoint();
