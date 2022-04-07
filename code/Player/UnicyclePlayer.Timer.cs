@@ -34,6 +34,11 @@ internal partial class UnicyclePlayer
 
 	private const float defaultBestTime = 3600f; // easier to check for this than sorting out 0/default
 
+	public void ResetBestTime()
+	{
+		BestTime = defaultBestTime;
+	}
+
 	public void EnterStartZone()
 	{
 		ResetTimer();

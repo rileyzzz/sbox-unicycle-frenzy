@@ -31,12 +31,13 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 		if ( IsServer )
 		{
-			InitMapCycle();
-
 			foreach( var part in Customization.Config.Parts )
 			{
 				Precache.Add( part.AssetPath );
 			}
+
+			InitMapCycle();
+			_ = GameLoopAsync();
 		}
 	}
 

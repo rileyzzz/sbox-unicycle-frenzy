@@ -9,12 +9,12 @@ internal class GameEnd : Panel
 
 	public Panel MapCanvas { get; set; }
 	public Panel PodiumCanvas { get; set; }
-	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.GameTimer );
+	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.StateTimer );
 
 	[Event.Frame]
 	private void OnFrame()
 	{
-		var open = UnicycleFrenzy.Game.GameTimer < UnicycleFrenzy.EndGameDuration;
+		var open = UnicycleFrenzy.Game.GameState == UnicycleFrenzy.GameStates.End;
 
 		SetClass( "open", open );
 

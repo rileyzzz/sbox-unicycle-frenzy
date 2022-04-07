@@ -5,13 +5,6 @@ using System.Linq;
 internal partial class UnicycleFrenzy
 {
 
-	[ConVar.Replicated( "uf_endgame_duration" )]
-	public static float EndGameDuration { get; set; } = 60 * 1.5f;
-
-	public const float GameDuration = 30 * 60f; // 30 mins
-
-	[Net]
-	public RealTimeUntil GameTimer { get; set; }
 	[Net]
 	public string NextMap { get; set; }
 	[Net]
@@ -23,7 +16,6 @@ internal partial class UnicycleFrenzy
 	{
 		Host.AssertServer();
 
-		GameTimer = GameDuration;
 		NextMap = Global.MapName;
 
 		var pkg = await Package.Fetch( Global.GameIdent, true );
@@ -41,14 +33,6 @@ internal partial class UnicycleFrenzy
 
 		MapOptions = maps;
 		NextMap = Rand.FromList( maps );
-	}
-
-	[Event.Tick.Server]
-	private void OnTick()
-	{
-		if ( GameTimer > 0 ) return;
-
-		ServerCmd_ChangeMap( NextMap );
 	}
 
 	[ServerCmd]
