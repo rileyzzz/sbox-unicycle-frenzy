@@ -2,16 +2,6 @@
 using Sandbox;
 using System;
 
-public enum PartType
-{
-	Frame,
-	Wheel,
-	Seat,
-	Pedal,
-	Trail,
-	Spray
-}
-
 internal partial class UnicycleEntity : Entity
 {
 
@@ -49,16 +39,6 @@ internal partial class UnicycleEntity : Entity
 		}
 
 		return assAttachment.Value.Position;
-	}
-
-	public void SetRenderAlphaOnAllParts( float a )
-	{
-		// this is kind of annoying, alternatives?
-		if ( FrameModel.IsValid() ) FrameModel.RenderColor = FrameModel.RenderColor.WithAlpha( a );
-		if ( SeatModel.IsValid() ) SeatModel.RenderColor = SeatModel.RenderColor.WithAlpha( a );
-		if ( WheelModel.IsValid() ) WheelModel.RenderColor = WheelModel.RenderColor.WithAlpha( a );
-		if ( LeftPedalModel.IsValid() ) LeftPedalModel.RenderColor = LeftPedalModel.RenderColor.WithAlpha( a );
-		if ( RightPedalModel.IsValid() ) RightPedalModel.RenderColor = RightPedalModel.RenderColor.WithAlpha( a );
 	}
 
 	private void AssembleParts()

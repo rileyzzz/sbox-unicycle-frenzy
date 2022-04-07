@@ -24,12 +24,7 @@ internal class UfNametag : WorldPanel
 	[Event.Frame]
 	private void OnFrame()
 	{
-		if( !player.IsValid() )
-		{
-			Delete();
-			return;
-		}
-
+		if ( !player.IsValid() ) return;
 		if ( !player.Client.IsValid() ) return;
 		if ( !player.Terry.IsValid() ) return;
 

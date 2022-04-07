@@ -17,46 +17,39 @@ internal partial class UnicyclePlayer : Sandbox.Player
     public const float MaxRenderDistance = 300f;
     public const float RespawnDelay = 3f;
 
-    private TimeSince timeSinceDied;
-    private Clothing.Container clothing;
-    private UfNametag nametag;
-    private JumpIndicator jumpindicator;
-    private Particles speedParticle;
+    private TimeSince TimeSinceDied;
+    private Clothing.Container Clothing;
+    private UfNametag Nametag;
+    private JumpIndicator JumpIndicator;
+    private Particles SpeedParticle;
 
     public override void Respawn()
     {
         base.Respawn();
 
-        // todo: not sure I like this setup, might prefer it like CarEntity
-        // so the player is actually a normal terry instead of an invisible entity w/ controller
-        SetModel( "models/parts/seats/dev_seat.vmdl" );
-        EnableDrawing = false;
+        SetModel( "models/sbox_props/watermelon/watermelon.vmdl" );
+		SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, new Vector3( -12, -12, 0 ), new Vector3( 12, 12, 64 ) );
+		RemoveCollisionLayer( CollisionLayer.Solid );
+
+		EnableDrawing = false;
         EnableAllCollisions = true;
 
         Unicycle = new UnicycleEntity();
         Unicycle.SetParent( this, null, Transform.Zero );
 
         Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
-        Terry.SetParent( this, null, Transform.Zero );
-        //Terry.SetAnimParameter( "b_sit", true );
+		Terry.SetParent( this, null, Transform.Zero );
         Terry.SetAnimGraph( "models/citizen_unicycle_frenzy.vanmgrph" );
 
         CameraMode = new UnicycleCamera();
         Controller = new UnicycleController();
         Animator = new UnicycleAnimator();
 
-        SetupPhysicsFromAABB( PhysicsMotionType.Keyframed, new Vector3( -12, -12, 0 ), new Vector3( 12, 12, 64 ) );
-        RemoveCollisionLayer( CollisionLayer.Solid );
+		Clothing ??= new();
+		Clothing.LoadFromClient( Client );
+        Clothing.DressEntity( Terry );
 
-        if ( clothing == null )
-        {
-            clothing = new();
-            clothing.LoadFromClient( Client );
-        }
-
-        clothing.DressEntity( Terry );
-
-        ResetMovement();
+		ResetMovement();
         GotoBestCheckpoint();
     }
 
@@ -64,22 +57,22 @@ internal partial class UnicyclePlayer : Sandbox.Player
     {
         base.ClientSpawn();
 
-        nametag = new( this );
-        speedParticle = Particles.Create( "particles/player/speed_lines.vpcf" );
+        Nametag = new( this );
 
         if ( IsLocalPawn )
-            jumpindicator = new( this );
+		{
+			SpeedParticle = Particles.Create( "particles/player/speed_lines.vpcf" );
+			JumpIndicator = new( this );
+		}
     }
 
     public override void OnKilled()
     {
         base.OnKilled();
 
-        timeSinceDied = 0;
-
+        TimeSinceDied = 0;
         EnableAllCollisions = false;
         EnableDrawing = false;
-
         CameraMode = new SpectateRagdollCamera();
 
         Unicycle?.Delete();
@@ -92,12 +85,14 @@ internal partial class UnicyclePlayer : Sandbox.Player
     {
         base.OnDestroy();
 
-        crown?.Destroy();
-        jumpindicator?.Delete();
-    }
+        Crown?.Destroy();
+        JumpIndicator?.Delete();
+		Nametag?.Delete();
+	}
 
     public override void Simulate( Client cl )
     {
+		// don't simulate when spectating somebody
         if ( SpectateTarget.IsValid() ) return;
 
         if ( LifeState == LifeState.Alive )
@@ -119,7 +114,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
         if ( LifeState == LifeState.Dead )
         {
-            if ( IsServer && timeSinceDied > RespawnDelay )
+            if ( IsServer && TimeSinceDied > RespawnDelay )
                 Respawn();
         }
 
@@ -132,7 +127,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
                 ResetTimer();
 
             Fall( false );
-            timeSinceDied = Math.Max( timeSinceDied, RespawnDelay - .5f );
+            TimeSinceDied = Math.Max( TimeSinceDied, RespawnDelay - .5f );
         }
     }
 
@@ -140,49 +135,43 @@ internal partial class UnicyclePlayer : Sandbox.Player
     private void UpdateRenderAlpha()
     {
         if ( Local.Pawn == this ) return;
-        if ( Local.Pawn == null ) return;
         if ( !Terry.IsValid() || !Unicycle.IsValid() ) return;
 
         var a = GetRenderAlpha();
-
-        Terry.RenderColor = Terry.RenderColor.WithAlpha( a );
-
-        foreach ( var child in Terry.Children )
-        {
-            if ( child is not ModelEntity m || !child.IsValid() ) continue;
-            m.RenderColor = m.RenderColor.WithAlpha( a );
-        }
-
-        Unicycle.SetRenderAlphaOnAllParts( a );
+		Terry.SetRenderAlphaRecursive( a );
+		Unicycle.SetRenderAlphaRecursive( a );
     }
 
-    private float targetSpeedParticle = 0;
-    private float currentSpeedParticle = 0;
-    [Event.Frame]
-    private void UpdateSpeedParticle()
-    {
-        if ( speedParticle == null ) return;
+	private float targetSpeedParticle;
+	private float currentSpeedParticle;
+	[Event.Frame]
+	private void UpdateSpeedParticle()
+	{
+		if ( SpeedParticle == null ) return;
 
-        var spd = Math.Min( Velocity.Length, 800 );
-        targetSpeedParticle = spd < 400 || Fallen ? 0 : (spd - 400) / 400f;
+		// ?
+		var spd = Math.Min( Velocity.Length, 800 );
+		targetSpeedParticle = spd < 400 || Fallen ? 0 : (spd - 400) / 400f;
 
-        var lerpSpd = targetSpeedParticle == 0 ? 6 : 1;
+		var lerpSpd = targetSpeedParticle == 0 ? 6 : 1;
 
-        currentSpeedParticle = currentSpeedParticle.LerpTo( targetSpeedParticle, Time.Delta * lerpSpd );
-        speedParticle.SetPosition( 1, new Vector3( currentSpeedParticle, 0, 0 ) );
-    }
+		currentSpeedParticle = currentSpeedParticle.LerpTo( targetSpeedParticle, Time.Delta * lerpSpd );
+		SpeedParticle.SetPosition( 1, new Vector3( currentSpeedParticle, 0, 0 ) );
+	}
 
-    public float GetRenderAlpha()
-    {
-        var dist = Local.Pawn.Position.Distance( Position );
-        var a = 1f - dist.LerpInverse( MaxRenderDistance, MaxRenderDistance * .1f );
-        a = Math.Max( a, .15f );
-        a = Easing.EaseOut( a );
+	public float GetRenderAlpha()
+	{
+		if ( !Local.Pawn.IsValid() ) return 1f;
 
-        return a;
-    }
+		var dist = Local.Pawn.Position.Distance( Position );
+		var a = 1f - dist.LerpInverse( MaxRenderDistance, MaxRenderDistance * .1f );
+		a = Math.Max( a, .15f );
+		a = Easing.EaseOut( a );
 
-    [ServerCmd]
+		return a;
+	}
+
+	[ServerCmd]
     public static void ServerCmd_SetSpectateTarget( int entityId )
     {
         if ( !ConsoleSystem.Caller.IsValid() ) return;
