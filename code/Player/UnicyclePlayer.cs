@@ -53,7 +53,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
         GotoBestCheckpoint();
     }
 
-    public override void ClientSpawn()
+	public override void ClientSpawn()
     {
         base.ClientSpawn();
 
@@ -131,7 +131,14 @@ internal partial class UnicyclePlayer : Sandbox.Player
         }
     }
 
-    [Event.Frame]
+	public override void PostCameraSetup( ref CameraSetup setup )
+	{
+		base.PostCameraSetup( ref setup );
+
+		setup.Rotation *= Rotation.From( Tilt * .015f );
+	}
+
+	[Event.Frame]
     private void UpdateRenderAlpha()
     {
         if ( Local.Pawn == this ) return;
