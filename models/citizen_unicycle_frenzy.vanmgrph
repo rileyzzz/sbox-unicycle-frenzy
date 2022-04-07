@@ -4545,7 +4545,7 @@
 				m_networkMode = "ClientPredicted"
 				m_sNote = ""
 				m_tagSpans = [  ]
-				m_sequenceName = "Unicycle_Lean_Y_delta"
+				m_sequenceName = "Unicycle_Lean_X_delta"
 				m_playbackSpeed = 1.0
 				m_bLoop = false
 			}
