@@ -10,14 +10,15 @@ internal class UnicycleAnimator : PawnAnimator
         if ( !pl.Terry.IsValid() ) return;
         if ( !pl.Unicycle.IsValid() ) return;
 
-        // todo: still hate how I'm targeting pl.Terry like this
-
         var target = pl.Terry;
         var unicycle = pl.Unicycle;
 
+		var speed = Pawn.Velocity.WithZ( 0 ).Length;
+		target.SetAnimParameter( "move_groundspeed", speed );
+
 		var aimPos = Pawn.EyePosition + Input.Rotation.Forward * 200 + Vector3.Up * 50;
-		pl.Terry.SetAnimLookAt( "aim_eyes", aimPos );
-		pl.Terry.SetAnimLookAt( "aim_head", aimPos );
+		target.SetAnimLookAt( "aim_eyes", aimPos );
+		target.SetAnimLookAt( "aim_head", aimPos );
 
 		var leftpos = unicycle.DisplayedLeftPedal?.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
         var rightpos = unicycle.DisplayedRightPedal?.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
