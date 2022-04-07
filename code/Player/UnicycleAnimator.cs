@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 
 internal class UnicycleAnimator : PawnAnimator
 {
@@ -14,7 +15,11 @@ internal class UnicycleAnimator : PawnAnimator
         var target = pl.Terry;
         var unicycle = pl.Unicycle;
 
-        var leftpos = unicycle.DisplayedLeftPedal?.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
+		var aimPos = Pawn.EyePosition + Input.Rotation.Forward * 200 + Vector3.Up * 50;
+		pl.Terry.SetAnimLookAt( "aim_eyes", aimPos );
+		pl.Terry.SetAnimLookAt( "aim_head", aimPos );
+
+		var leftpos = unicycle.DisplayedLeftPedal?.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
         var rightpos = unicycle.DisplayedRightPedal?.GetAttachment( "foot" )?.Position ?? Vector3.Zero;
         leftpos = target.Transform.PointToLocal( leftpos + Rotation.Up * 5 );
         rightpos = target.Transform.PointToLocal( rightpos + Rotation.Up * 5 );
@@ -25,6 +30,9 @@ internal class UnicycleAnimator : PawnAnimator
 
         target.SetAnimParameter( "left_foot_ik.rotation", Rotation.From( 90, -90, 0 ) );
         target.SetAnimParameter( "right_foot_ik.rotation", Rotation.From( 90, -90, 0 ) );
+
+		var a = pl.PedalPosition.LerpInverse( -1f, 1f ) * .5f;
+		target.SetAnimParameter( "unicycle_pedaling", a );
 
         if ( pl.Controller is not UnicycleController ctrl ) return;
 
@@ -37,8 +45,8 @@ internal class UnicycleAnimator : PawnAnimator
 		var balx = target.GetAnimParameterFloat( "unicycle_balance_x" );
 		var baly = target.GetAnimParameterFloat( "unicycle_balance_y" );
 
-		balx = balx.LerpTo( targetbalx, Time.Delta * 6f );
-		baly = baly.LerpTo( targetbaly, Time.Delta * 6f );
+		balx = balx.LerpTo( targetbalx, Time.Delta * 3f );
+		baly = baly.LerpTo( targetbaly, Time.Delta * 3f );
 
 		target.SetAnimParameter( "unicycle_balance_x", balx );
 		target.SetAnimParameter( "unicycle_balance_y", baly );

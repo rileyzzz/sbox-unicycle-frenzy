@@ -1,5 +1,4 @@
 ﻿
-
 using Sandbox;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
@@ -32,9 +31,11 @@ internal class PodiumRenderScene : Panel
 		ScenePanel.Style.Width = Length.Percent( 100 );
 		ScenePanel.Style.Height = Length.Percent( 100 );
 
-		new SceneModel( SceneWorld, "models/citizen/citizen.vmdl", Transform.Zero.WithRotation( Rotation.FromYaw( 180 ) ) );
+		var citizen = new SceneModel( SceneWorld, "models/citizen/citizen.vmdl", Transform.Zero.WithRotation( Rotation.FromYaw( 180 ) ) );
 		new SceneLight( SceneWorld, Vector3.Backward * 50 + Vector3.Up * 50, 200f, Color.White * 20 );
 		new SceneLight( SceneWorld, Vector3.Left * 50, 200f, Color.White * 20 );
+
+		Dress( citizen, player.Avatar );
 	}
 
 	public override void Tick()
@@ -47,6 +48,39 @@ internal class PodiumRenderScene : Panel
 		{
 			if ( obj is not SceneModel m ) continue;
 			m.Update( RealTime.Delta );
+		}
+	}
+
+	private void Dress( SceneModel m, string json )
+	{
+		var container = new Clothing.Container();
+		container.Deserialize( json );
+
+		m.SetMaterialGroup( "Skin01" );
+
+		foreach ( var c in container.Clothing )
+		{
+			if ( c.Model == "models/citizen/citizen.vmdl" )
+			{
+				m.SetMaterialGroup( c.MaterialGroup );
+				continue;
+			}
+
+			var model = Model.Load( c.Model );
+
+			var anim = new SceneModel( SceneWorld, model, m.Transform );
+
+			if ( !string.IsNullOrEmpty( c.MaterialGroup ) )
+				anim.SetMaterialGroup( c.MaterialGroup );
+
+			m.AddChild( "clothing", anim );
+
+			anim.Update( 1.0f );
+		}
+
+		foreach ( var group in container.GetBodyGroups() )
+		{
+			m.SetBodyGroup( group.name, group.value );
 		}
 	}
 

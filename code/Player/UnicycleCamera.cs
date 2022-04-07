@@ -1,13 +1,12 @@
-﻿using Sandbox;
+﻿
+using Sandbox;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 
 internal class UnicycleCamera : CameraMode
 {
 
 	private List<UfProp> viewblockers = new();
-	private Vector2 controllerrot;
 
 	public override void Update()
 	{
@@ -19,22 +18,18 @@ internal class UnicycleCamera : CameraMode
 		ClearViewBlockers();
 		UpdateViewBlockers( pawn );
 
-		var targetRot = Input.Rotation;
+		var viewangles = Input.Rotation.Angles();
 
+		// hack in sensitivity boost until we get sens slider for controllers
 		if ( Input.UsingController )
 		{
-			var angles = Input.Rotation.Angles();
 			var delta = Input.GetAnalog( InputAnalog.Look );
-			float mx = delta.x * 8f;
-			float my = delta.y * 8f;
-			var targetAng = angles + new Vector3( -my, -mx, 0f );
-			targetRot = Rotation.From( targetAng );
+			viewangles += new Vector3( -delta.y * 6f, -delta.x * 6f, 0f );
 		}
 
-		var ang = targetRot.Angles();
-		ang.pitch = Math.Clamp( ang.pitch, -35f, 65f );
-		targetRot = Rotation.From( ang );
+		viewangles.pitch = Math.Clamp( viewangles.pitch, -35f, 65f );
 
+		var targetRot = Rotation.From( viewangles );
 		var center = pawn.Position + Vector3.Up * 80;
 		var distance = 150.0f * pawn.Scale;
 		var targetPos = center + targetRot.Forward * -distance;
@@ -46,34 +41,23 @@ internal class UnicycleCamera : CameraMode
 
 		var endpos = tr.EndPosition;
 
-		if ( tr.Entity is UfProp ufp )
-		{
-			if ( ufp.NoCameraCollide )
-				endpos = targetPos;
-		}
+		if ( tr.Entity is UfProp ufp && ufp.NoCameraCollide )
+			endpos = targetPos;
 
 		Position = endpos;
 		Rotation = targetRot;
 
-		var rot = pawn.Rotation.Angles() * .015f;
-		rot.yaw = 0;
-
-		Rotation *= Rotation.From( rot );
-
-		if ( Input.UsingController && pawn.Velocity.WithZ( 0 ).Length > 50 )
+		// controller constantly tries to center itself
+		if ( Input.UsingController && pawn.Velocity.WithZ( 0 ).Length > 35 )
 		{
-			var snapback = pawn.TargetForward.Angles();
-			snapback.roll = 0;
-			snapback.pitch = 30;
-			Rotation = Rotation.Lerp( Rotation, Rotation.From( snapback ), Time.Delta );
+			var defaultPosition = pawn.TargetForward.Angles().WithPitch( 30 );
+			Rotation = Rotation.Lerp( Rotation, Rotation.From( defaultPosition ), Time.Delta );
 		}
 
 		var spd = pawn.Velocity.WithZ( 0 ).Length / 350f;
 		var fov = 82f.LerpTo( 92f, spd );
 
 		FieldOfView = FieldOfView.LerpTo( fov, Time.Delta );
-
-		Viewer = null;
 	}
 
 	public override void BuildInput( InputBuilder input )
@@ -91,6 +75,7 @@ internal class UnicycleCamera : CameraMode
 		base.Activated();
 
 		FieldOfView = 85;
+		Viewer = null;
 	}
 
 	public override void Deactivated()

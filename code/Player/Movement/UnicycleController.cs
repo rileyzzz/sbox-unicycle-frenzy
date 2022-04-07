@@ -490,18 +490,18 @@ internal partial class UnicycleController : BasePlayerController
 
 		if ( InputActions.Jump.Down() ) return;
 
-		if ( Input.UsingController )
-		{
-			var ra = Input.GetAnalog( InputAnalog.RightTrigger ).x;
-			var la = Input.GetAnalog( InputAnalog.LeftTrigger ).x;
+		//if ( Input.UsingController )
+		//{
+		//	var ra = Input.GetAnalog( InputAnalog.RightTrigger ).x;
+		//	var la = Input.GetAnalog( InputAnalog.LeftTrigger ).x;
 
-			if ( ra > 0 && pl.PedalPosition <= .4f && ra > pl.PedalTargetPosition )
-				SetPedalTarget( ra, PedalTime * ra, InputActions.LeftPedal.Pressed() );
+		//	if ( ra > 0 && pl.PedalPosition <= .4f && ra > pl.PedalTargetPosition )
+		//		SetPedalTarget( ra, PedalTime * ra, InputActions.LeftPedal.Pressed() );
 
-			if ( la > 0 && pl.PedalPosition >= -.4f && -la < pl.PedalTargetPosition )
-				SetPedalTarget( -la, PedalTime * la, InputActions.RightPedal.Pressed() );
-		}
-		else
+		//	if ( la > 0 && pl.PedalPosition >= -.4f && -la < pl.PedalTargetPosition )
+		//		SetPedalTarget( -la, PedalTime * la, InputActions.RightPedal.Pressed() );
+		//}
+		//else
 		{
 			if ( InputActions.LeftPedal.Pressed() && pl.PedalPosition >= -.4f )
 				SetPedalTarget( -1f, PedalTime, true );
