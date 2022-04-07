@@ -1,4 +1,5 @@
 ﻿using Sandbox;
+using System;
 
 internal class UnicycleAnimator : PawnAnimator
 {
@@ -26,6 +27,9 @@ internal class UnicycleAnimator : PawnAnimator
         target.SetAnimParameter( "left_foot_ik.rotation", Rotation.From( 90, -90, 0 ) );
         target.SetAnimParameter( "right_foot_ik.rotation", Rotation.From( 90, -90, 0 ) );
 
+		var a = pl.PedalPosition.LerpInverse( -1f, 1f ) * .5f;
+		target.SetAnimParameter( "unicycle_pedaling", a );
+
         if ( pl.Controller is not UnicycleController ctrl ) return;
 
         var jumpcharge = InputActions.Jump.Down() ? (pl.TimeSinceJumpDown / ctrl.MaxJumpStrengthTime) : 0f;
@@ -37,8 +41,8 @@ internal class UnicycleAnimator : PawnAnimator
 		var balx = target.GetAnimParameterFloat( "unicycle_balance_x" );
 		var baly = target.GetAnimParameterFloat( "unicycle_balance_y" );
 
-		balx = balx.LerpTo( targetbalx, Time.Delta * 6f );
-		baly = baly.LerpTo( targetbaly, Time.Delta * 6f );
+		balx = balx.LerpTo( targetbalx, Time.Delta * 3f );
+		baly = baly.LerpTo( targetbaly, Time.Delta * 3f );
 
 		target.SetAnimParameter( "unicycle_balance_x", balx );
 		target.SetAnimParameter( "unicycle_balance_y", baly );
