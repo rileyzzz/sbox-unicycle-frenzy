@@ -1,52 +1,20 @@
-﻿using Sandbox;
+﻿
+using Sandbox;
 using Sandbox.UI;
 using System;
-using System.Linq;
 
 [UseTemplate]
 internal class GameEnd : Panel
 {
 
 	public Panel MapCanvas { get; set; }
-	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.TimeLeft );
+	public Panel PodiumCanvas { get; set; }
+	public string TimeLeft => CourseTimer.FormattedTimeMs( UnicycleFrenzy.Game.StateTimer );
 
-	public string FirstName { get; set; }
-	public string FirstTime { get; set; }
-	public string SecondName { get; set; }
-	public string SecondTime { get; set; }
-	public string ThirdName { get; set; }
-	public string ThirdTime { get; set; }
-
-	protected override void PostTemplateApplied()
-	{
-		base.PostTemplateApplied();
-		
-		RefreshMaps();
-	}
-
-	public override void OnHotloaded()
-	{
-		base.OnHotloaded();
-
-		RefreshMaps();
-	}
-
-	private void RefreshMaps()
-	{
-		MapCanvas.DeleteChildren();
-
-		foreach ( var map in UnicycleFrenzy.Game.MapCycle )
-		{
-			var btn = new MapVoteButton( map );
-			MapCanvas.AddChild( btn );
-		}
-	}
-
-	private int maphash = 0;
-		
 	[Event.Frame]
 	private void OnFrame()
 	{
+<<<<<<< HEAD
 		//var open = UnicycleFrenzy.Game.TimeLeft < UnicycleFrenzy.EndGameDuration;
 
 		//SetClass( "open", open );
@@ -82,21 +50,50 @@ internal class GameEnd : Panel
 		//	}
 		//	rank++;
 		//}
+=======
+		var open = UnicycleFrenzy.Game.GameState == UnicycleFrenzy.GameStates.End;
+
+		SetClass( "open", open );
+
+		if ( !open ) return;
+
+		EnsureMaps();
+>>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
 	}
 
+	private int maphash = 0;
 	private void EnsureMaps()
 	{
 		var newhash = 0;
-		foreach ( var map in UnicycleFrenzy.Game.MapCycle )
+		var options = UnicycleFrenzy.Game.MapOptions;
+
+		foreach ( var map in options )
 		{
-			newhash = HashCode.Combine( map );
+			newhash = HashCode.Combine( newhash, map );
 		}
 
-		if ( newhash != maphash )
+		if ( newhash == maphash ) return;
+
+		maphash = newhash;
+		Refresh();
+	}
+
+	private void Refresh()
+	{
+		PodiumCanvas.DeleteChildren( true );
+		PodiumCanvas.AddChild( new PodiumPanel( 2 ) );
+		PodiumCanvas.AddChild( new PodiumPanel( 1 ) );
+		PodiumCanvas.AddChild( new PodiumPanel( 3 ) );
+
+		MapCanvas.DeleteChildren( true );
+		foreach ( var map in UnicycleFrenzy.Game.MapOptions )
 		{
-			RefreshMaps();
-			maphash = newhash;
+			var btn = new MapVoteButton( map );
+			MapCanvas.AddChild( btn );
 		}
 	}
+
+	protected override void PostTemplateApplied() => Refresh();
+	public override void OnHotloaded() => Refresh();
 
 }

@@ -38,8 +38,8 @@ public static class InputActionsExtensions
 				InputActions.Jump => InputButton.SlotNext,
 				InputActions.RestartAtCheckpoint => InputButton.Reload,
 				InputActions.RestartCourse => InputButton.Use,
-				InputActions.LeftPedal => InputButton.Attack1,
-				InputActions.RightPedal => InputButton.Attack2,
+				InputActions.LeftPedal => InputButton.Attack2,
+				InputActions.RightPedal => InputButton.Attack1,
 				InputActions.Spray => InputButton.Flashlight,
 				InputActions.Menu => InputButton.Score,
 				_ => default

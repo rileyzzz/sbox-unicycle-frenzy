@@ -70,31 +70,16 @@ internal partial class UnicyclePlayer
 	[ClientRpc]
 	private void RagdollOnClient()
 	{
-		// todo: might be able to tidy up the player's hierarchy and networked life/death cycle 
-		//		 so we're not paranoid about an nre here
-		//		 maybe also predicted ragdolling to smooth out high ping deaths
-
-		ModelEntity corpse = null;
-
-		if ( Terry.IsValid() )
-		{
-			//corpse = RagdollModel( Terry );
-		}
-
-		if ( Unicycle.IsValid() )
-		{
-			RagdollModel( Unicycle.FrameModel );
-			RagdollModel( Unicycle.WheelModel );
-			RagdollModel( Unicycle.SeatModel );
-		}
-
+		if ( !Terry.IsValid() || !Unicycle.IsValid() ) return;
 		if ( Local.Pawn is not UnicyclePlayer pl ) return;
 
-		if( Local.Pawn == this || pl.SpectateTarget == this )
+		if ( IsLocalPawn || pl.SpectateTarget == this )
 			new Perlin( 2f, 2, 3 );
 
-		if ( corpse.IsValid() )
-			pl.Corpse = corpse;
+		pl.Corpse = RagdollModel( Terry );
+		RagdollModel( Unicycle.FrameModel );
+		RagdollModel( Unicycle.WheelModel );
+		RagdollModel( Unicycle.SeatModel );
 	}
 
 }

@@ -34,7 +34,9 @@ internal class ControlsTab : Panel
 
 	public void TryPlayTutorial()
 	{
-		UnicycleFrenzy.Game.ChangeMap( "facepunch.uf_tutorial" );
+		if ( !Global.IsListenServer ) return;
+
+		UnicycleFrenzy.ServerCmd_ChangeMap( "facepunch.uf_tutorial" );
 	}
 
 }

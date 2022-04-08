@@ -36,7 +36,7 @@ internal class GameMenu : NavigatorPanel
 
 	public void StopSpectating()
 	{
-		UnicyclePlayer.SetSpectateTargetOnServer( -1 );
+		UnicyclePlayer.ServerCmd_SetSpectateTarget( -1 );
 		Close();
 	}
 

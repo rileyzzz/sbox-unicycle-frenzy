@@ -15,33 +15,22 @@ internal class NewPlayerOverlay : Panel
 
 	public NewPlayerOverlay()
 	{
-		Open = ShouldShow();
+		Open = !Global.MapName.EndsWith( "uf_tutorial" ) && !Cookie.Get( "uf.hasplayed", false );
 
 		Cookie.Set( "uf.hasplayed", true );
 	}
 
-	private bool ShouldShow()
-	{
-		if ( Global.MapName.EndsWith( "uf_tutorial" ) ) return false;
-
-		return !Cookie.Get( "uf.hasplayed", false );
-	}
-
-	public void Close()
-	{
-		Open = false;
-	}
+	public void Close() => Open = false;
 
 	public void LoadTutorial()
 	{
 		if( !Global.IsListenServer )
 		{
 			Warning.Style.Display = DisplayMode.Flex;
+			return;
 		}
-		else
-		{
-			UnicycleFrenzy.Game.ChangeMap( "facepunch.uf_tutorial" );
-		}
+
+		UnicycleFrenzy.ServerCmd_ChangeMap( "facepunch.uf_tutorial" );
 	}
 
 }
