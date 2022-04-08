@@ -5,6 +5,8 @@ Properties
 tools_asset_info.bin
 *.csproj
 *.los
+*.vmat_c
+*.vmdl_c
 
 # User-specific files
 *.rsuser

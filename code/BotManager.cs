@@ -5,9 +5,9 @@ using Sandbox;
 
 class BotManager
 {
-	static int generation = 1;
+	public static int Generation = 1;
 
-	static List<UnicycleBot> Bots = new();
+	public static List<UnicycleBot> Bots = new();
 
 	[ServerCmd("nn_start")]
 	public static void Init()
@@ -26,9 +26,11 @@ class BotManager
 		return a + f * (b - a);
 	}
 
-	public const int NumInputs = 16;
+	//public const int NumInputs = 16;
+	public const int NumInputs = 2 + (UnicycleBot.VisionRange + 1) * (UnicycleBot.VisionRange + 1);
 	public const int NumOutputs = 5;
-	public const int LayerSize = 12;
+	//public const int LayerSize = 12;
+	public const int LayerSize = 40;
 	public const int NumLayers = 1;
 
 	public static UnicycleBrain CreateBrain()
@@ -75,7 +77,7 @@ class BotManager
 			}
 			if ( !FileSystem.Data.DirectoryExists( "output" ) )
 				FileSystem.Data.CreateDirectory("output");
-			FileSystem.Data.WriteJson( $"output/gen_{generation}.json", sorted[0].Brain );
+			FileSystem.Data.WriteJson( $"output/gen_{Generation}.json", sorted[0].Brain );
 			
 			const int elitism = 6;
 			const int newRandom = 3;
@@ -158,8 +160,8 @@ class BotManager
 
 			//	//mutationScale += mutationStep;
 			//}
-			Log.Info($"Finished generation {generation}.");
-			generation++;
+			Log.Info($"Finished generation {Generation}.");
+			Generation++;
 		}
 	}
 }

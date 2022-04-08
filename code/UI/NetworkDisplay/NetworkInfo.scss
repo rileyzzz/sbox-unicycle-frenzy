@@ -1,0 +1,43 @@
+
+networkinfo {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30%;
+    height: 20%;
+    backdrop-filter: blur(32px);
+    background-color: #2626266a;
+    border-top-left-radius: 8px;
+    flex-direction: column;
+    padding: 8px;
+
+    .text {
+        font-family: Poppins;
+        font-weight: bold;
+        font-size: 36px;
+        color: white;
+    }
+
+    .subtext {
+        font-family: Poppins;
+        /*font-weight: bold;*/
+        text-shadow: 0 0 1px black;
+        font-size: 36px;
+        color: white;
+    }
+
+    .header {
+        top: -58px;
+        width: 100%;
+        text-shadow: 0 0 2px black;
+        /*justify-content: center;*/
+    }
+
+    .content {
+        height: 100%;
+        width: 100%;
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-direction: column;
+    }
+}

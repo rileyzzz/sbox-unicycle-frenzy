@@ -5,6 +5,10 @@ using System.Collections.Generic;
 
 internal partial class UnicyclePlayer : Sandbox.Player
 {
+	[Net]
+	public float BotFitness { get; set; } = 0;
+	[Net]
+	public List<double> BotVision { get; set; }
 
     [Net]
     public AnimEntity Terry { get; set; }

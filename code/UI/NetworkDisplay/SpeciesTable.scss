@@ -1,0 +1,77 @@
+
+speciestable {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 38%;
+    /*backdrop-filter: blur(32px);*/
+    background-color: #000000;
+    border-bottom-left-radius: 8px;
+    flex-direction: column;
+    padding: 8px;
+
+    .text {
+        font-family: Poppins;
+        font-weight: bold;
+        font-size: 28px;
+        color: white;
+    }
+
+    .subtext {
+        font-family: Poppins;
+        /*font-weight: bold;*/
+        text-shadow: 0 0 1px black;
+        font-size: 36px;
+        color: white;
+    }
+
+    .header {
+        width: 100%;
+        text-shadow: 0 0 2px black;
+        /*justify-content: center;*/
+    }
+
+    .species-canvas {
+        /*height: 100%;*/
+        width: 100%;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-direction: column;
+        overflow: scroll;
+        /*background-color: purple;*/
+    }
+
+    SpeciesTableEntry {
+        width: 100%;
+        height: 30px;
+        padding: 2px 12px;
+        margin-bottom: 4px;
+        border-radius: 2px;
+        /*transition: all .15s ease-out;*/
+        border: 1px solid #33303d;
+        /*background-color: #2431ba;*/
+        background-color: #2b2b51;
+        flex-shrink: 0;
+        flex-grow: 0;
+        font-family: Poppins;
+        font-weight: bold;
+        font-size: 18px;
+        color: white;
+
+        .rank {
+            width: 40px;
+            align-items: center;
+        }
+
+        .name {
+            flex-grow: 1;
+            align-items: center;
+        }
+
+        .fitness {
+            width: 120px;
+            align-items: center;
+        }
+    }
+}
