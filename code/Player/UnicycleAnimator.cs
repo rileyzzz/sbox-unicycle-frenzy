@@ -53,13 +53,13 @@ internal class UnicycleAnimator : PawnAnimator
 		target.SetAnimParameter( "unicycle_balance_y", baly );
 
 		var targetLeanX = Input.Forward.LerpInverse( -1f, 1f );
-		var targetLeanY = Input.Left.LerpInverse( -1f, 1f );
+		var targetLeanY = 1f - Input.Left.LerpInverse( -1f, 1f );
 
 		var leanx = target.GetAnimParameterFloat( "unicycle_lean_x" );
 		var leany = target.GetAnimParameterFloat( "unicycle_lean_y" );
 
-		leanx = leanx.LerpTo( targetLeanX, Time.Delta * 1.5f );
-		leany = leany.LerpTo( targetLeanY, Time.Delta * 1.5f );
+		leanx = leanx.LerpTo( targetLeanX, Time.Delta * 7f );
+		leany = leany.LerpTo( targetLeanY, Time.Delta * 7f );
 
 		target.SetAnimParameter( "unicycle_lean_x", leanx );
 		target.SetAnimParameter( "unicycle_lean_y", leany );
