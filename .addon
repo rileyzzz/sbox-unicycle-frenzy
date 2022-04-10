@@ -31,11 +31,7 @@
     "PerMapRanking": true,
     "MapSelect": 3,
     "MinPlayers": 1,
-<<<<<<< HEAD
-    "MaxPlayers": 128
-=======
     "GameNetworkType": 0,
-    "MaxPlayers": 16
->>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
+    "MaxPlayers": 128
   }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Sandbox;
 
 class BotManager
@@ -9,11 +10,59 @@ class BotManager
 
 	public static List<UnicycleBot> Bots = new();
 
+	public static UnicycleAI.NetworkModel Model;
+
+	static bool Resetting = false;
+	static bool ResetFinished = false;
+	static bool Initialized = false;
+
+	public static Client Leader
+	{
+		get
+		{
+			var bots = Client.All.Where( x => x.IsBot && x.Pawn is UnicyclePlayer && x.Pawn.LifeState == LifeState.Alive )
+				//.Select( x => x.Pawn as UnicyclePlayer )
+				.OrderByDescending( x => ((UnicyclePlayer)x.Pawn).BotFitness );
+			return bots.FirstOrDefault();
+		}
+	}
+
+
+	//public const int NumInputs = 16;
+	public const int NumInputs = 2 + (UnicycleBot.VisionRange + 1) * (UnicycleBot.VisionRange + 1);
+	//public const int NumInputs = 2;
+	public const int NumOutputs = 4;
+	//public const int LayerSize = 12;
+	public const int LayerSize = 40;
+	public const int NumLayers = 1;
 	[ServerCmd("nn_start")]
 	public static void Init()
 	{
-		for ( int i = 0; i < 48; i++ )
-			Bots.Add(UnicycleBot.Create());
+		//Model = new UnicycleAI.PerceptronModel();
+		Model = new UnicycleAI.NEATModel();
+
+		var agents = new List<UnicycleAI.NetworkAgent>();
+		for ( int i = 0; i < 25; i++ )
+		{
+			var bot = UnicycleBot.Create();
+			Bots.Add( bot );
+			agents.Add( bot );
+		}
+
+		// nice one, facepunch
+		// Task`1.* is whitelisted but not Task.*
+		//_ = Model.Init(agents, NumInputs, NumOutputs).ContinueWith(e => {
+		//	Initialized = true;
+		//} );
+		_ = InitInternal(agents);
+
+		//_ = Model.StartGeneration();
+	}
+
+	private static async Task InitInternal( List<UnicycleAI.NetworkAgent> agents )
+	{
+		await Model.Init( agents, NumInputs, NumOutputs );
+		Initialized = true;
 	}
 
 	static float Lerp( float a, float b, float f )
@@ -26,17 +75,13 @@ class BotManager
 		return a + f * (b - a);
 	}
 
-	//public const int NumInputs = 16;
-	public const int NumInputs = 2 + (UnicycleBot.VisionRange + 1) * (UnicycleBot.VisionRange + 1);
-	public const int NumOutputs = 5;
-	//public const int LayerSize = 12;
-	public const int LayerSize = 40;
-	public const int NumLayers = 1;
 
-	public static UnicycleBrain CreateBrain()
-	{
-		return new UnicycleBrain( NumInputs, NumOutputs, NumLayers, LayerSize );
-	}
+
+	//public static UnicycleAI.UnicycleBrain CreateBrain()
+	//{
+	//	//return new UnicycleAI.UnicycleBrain( NumInputs, NumOutputs, NumLayers, LayerSize );
+	//	return new UnicycleAI.PerceptronBrain( NumInputs, NumOutputs, NumLayers, LayerSize );
+	//}
 
 	[Event.Tick]
 	public static void Update()
@@ -45,123 +90,44 @@ class BotManager
 			return;
 		//Log.Info("bot update");
 
+		if ( !Initialized )
+			return;
+
 		bool finished = Bots.All( x => x.Client.Pawn != null && x.Client.Pawn.LifeState == LifeState.Dead );
-		if (finished)
+		if ( finished && !Resetting )
 		{
-			//UnicycleBot best = Bots[0];
-			//float bestFitness = Bots[0].GetFitness();
+			Resetting = true;
+			ResetFinished = false;
 
-			var sorted = Bots.OrderByDescending(x => x.GetFitness()).ToList();
+			_ = FinishGeneration();
+		}
+		
+		if (ResetFinished)
+		{
+			Resetting = false;
+			ResetFinished = false;
+			Log.Info( $"Finished generation {Generation}." );
+			Generation++;
+			UnicycleFrenzy.Game.BotGeneration = Generation;
 
-			foreach ( var bot in sorted )
-			{
-				Log.Info( $"{bot.Client.Name} fitness = {bot.GetFitness()}" );
-			}
-
-			foreach (var bot in Bots)
+			foreach ( var bot in Bots )
 			{
 				if ( bot.Client.Pawn == null || bot.Client.Pawn is not Player player )
 					continue;
 
-				//bot.Fitness
-				//float fitness = bot.GetFitness();
-				//if ( fitness > bestFitness)
-				//{
-				//	bestFitness = fitness;
-				//	best = bot;
-				//}
-
-				//Log.Info($"{bot.Client.Name} fitness = {bot.GetFitness()}");
 				bot.Reset();
 				player.Respawn();
 			}
-			if ( !FileSystem.Data.DirectoryExists( "output" ) )
-				FileSystem.Data.CreateDirectory("output");
-			FileSystem.Data.WriteJson( $"output/gen_{Generation}.json", sorted[0].Brain );
-			
-			const int elitism = 6;
-			const int newRandom = 3;
 
-			var newBrains = new List<UnicycleBrain>();
-
-			for (int i = 0; i < newRandom; i++ )
-			{
-				newBrains.Add(CreateBrain());
-			}
-			//for ( int i = 0; i < elitism; i++ )
-			//{
-			//	for ( int j = 0; j < elitism; j++ )
-			//	{
-			//		// no inbreeding thank you
-			//		if ( i == j )
-			//			continue;
-			//		newBrains.Add(UnicycleBrain.Cross(sorted[i].Brain, sorted[j].Brain));
-			//	}
-			//}
-
-			int max = 0;
-			while (newBrains.Count < Bots.Count)
-			{
-				if ( ++max >= Bots.Count - 1 )
-					max = 0;
-				for ( int i = 0; i < max; i++ )
-				{
-					newBrains.Add( UnicycleBrain.Cross( sorted[i].Brain, sorted[max].Brain ) );
-					if ( newBrains.Count >= Bots.Count )
-						break;
-				}
-
-				//for ( int i = 0; i < elitism; i++ )
-				//{
-				//	for ( int j = 0; j < elitism; j++ )
-				//	{
-				//		// no inbreeding thank you
-				//		if ( i == j )
-				//			continue;
-				//		newBrains.Add( UnicycleBrain.Cross( sorted[i].Brain, sorted[j].Brain ) );
-
-				//		if ( newBrains.Count >= Bots.Count )
-				//			goto done;
-				//	}
-				//}
-			}
-
-			// fuck with the weights a bit, mutate our beautiful creature
-			//const float mutationScale = 0.08f;
-			// increase for each bot, have some that play it safe and some that get wacky with it
-			float mutationScale = 0.3f;
-			//float mutationStep = 0.12f;
-			float mutationChance = 0.01f;
-			foreach ( var brain in newBrains )
-				brain.Mutate( mutationScale, mutationChance );
-
-			int brainIdx = 0;
-			foreach (var bot in Bots)
-			{
-				// you're good, keep doin' what you're doin'
-				if ( sorted.IndexOf( bot ) < elitism )
-					continue;
-
-				//if ( bot == sorted[0] )
-					//continue;
-
-				bot.Brain = newBrains[brainIdx++];
-			}
-			// create variations of the best of that generation, keep the best the same
-			//foreach (var bot in Bots)
-			//{
-			//	// you're good, keep doin' what you're doin'
-			//	if ( bot == best )
-			//		continue;
-
-			//	//bot.Brain = best.Brain.Clone();
-			//	bot.Brain = UnicycleBrain.Cross(best.Brain, bot.Brain);
-			//	bot.Brain.Mutate( mutationScale, mutationChance );
-
-			//	//mutationScale += mutationStep;
-			//}
-			Log.Info($"Finished generation {Generation}.");
-			Generation++;
+			Model.StartGeneration();
 		}
+	}
+
+	static async Task FinishGeneration()
+	{
+		Log.Info("Finishing generation...");
+		await Model.FinishGeneration();
+
+		ResetFinished = true;
 	}
 }

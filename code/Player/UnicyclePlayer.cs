@@ -43,17 +43,11 @@ internal partial class UnicyclePlayer : Sandbox.Player
         Unicycle = new UnicycleEntity();
         Unicycle.SetParent( this, null, Transform.Zero );
 
-<<<<<<< HEAD
         Terry = new AnimEntity();
         //Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
         //Terry.SetParent( this, null, Transform.Zero );
 		//Terry.SetAnimGraph( "models/citizen_unicycle_frenzy.vanmgrph" );
 		//Terry.EnableDrawing = false;
-=======
-        Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
-		Terry.SetParent( this, null, Transform.Zero );
-        Terry.SetAnimGraph( "models/citizen_unicycle_frenzy.vanmgrph" );
->>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
 
         CameraMode = new UnicycleCamera();
         Controller = new UnicycleController();
@@ -131,13 +125,8 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
         if ( LifeState == LifeState.Dead )
         {
-<<<<<<< HEAD
             //if ( IsServer && timeSinceDied > RespawnDelay )
             //    Respawn();
-=======
-            if ( IsServer && TimeSinceDied > RespawnDelay )
-                Respawn();
->>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
         }
 
         if ( InputActions.RestartAtCheckpoint.Pressed() || InputActions.RestartCourse.Pressed() )

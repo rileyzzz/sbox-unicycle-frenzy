@@ -14,51 +14,13 @@ internal class GameEnd : Panel
 	[Event.Frame]
 	private void OnFrame()
 	{
-<<<<<<< HEAD
-		//var open = UnicycleFrenzy.Game.TimeLeft < UnicycleFrenzy.EndGameDuration;
+		//var open = UnicycleFrenzy.Game.GameState == UnicycleFrenzy.GameStates.End;
 
 		//SetClass( "open", open );
 
 		//if ( !open ) return;
 
 		//EnsureMaps();
-
-		//var players = Player.All.Where( x => x is UnicyclePlayer && x.IsValid() && x.Client.IsValid() ).ToList();
-		//var orderedPlayers = players.OrderBy( x => (x as UnicyclePlayer).BestTime );
-
-		//int rank = 1;
-
-		//foreach ( var player in orderedPlayers )
-		//{
-		//	var pl = player as UnicyclePlayer;
-		//	switch ( rank )
-		//	{
-		//		case 1:
-		//			FirstName = $"#1 " + pl.Client.Name;
-		//			FirstTime = pl.CourseIncomplete ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( pl.BestTime );
-		//			break;
-		//		case 2:
-		//			SecondName = $"#2 " + pl.Client.Name;
-		//			SecondTime = pl.CourseIncomplete ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( pl.BestTime );
-		//			break;
-		//		case 3:
-		//			ThirdName = $"#3 " + pl.Client.Name;
-		//			ThirdTime = pl.CourseIncomplete ? "INCOMPLETE" : CourseTimer.FormattedTimeMsf( pl.BestTime );
-		//			break;
-		//		default: 
-		//			return;
-		//	}
-		//	rank++;
-		//}
-=======
-		var open = UnicycleFrenzy.Game.GameState == UnicycleFrenzy.GameStates.End;
-
-		SetClass( "open", open );
-
-		if ( !open ) return;
-
-		EnsureMaps();
->>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
 	}
 
 	private int maphash = 0;

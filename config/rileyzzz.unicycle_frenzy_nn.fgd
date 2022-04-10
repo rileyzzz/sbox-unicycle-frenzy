@@ -121,6 +121,25 @@ metadata
 ]
 
 //
+// FitnessNode
+//
+@PathNodeClass = path_uf_fitness_node : ""
+[
+]
+
+//
+// FitnessPath
+//
+@PathClass base(BaseProperties_rileyzzz_unicycle_frenzy_nn) 
+metadata
+{
+	node_entity_class = "path_uf_fitness_node"
+}
+= path_uf_fitness : ""
+[
+]
+
+//
 // LeaderboardPost
 //
 @PointClass base(BaseProperties_rileyzzz_unicycle_frenzy_nn) editormodel( "models/leaderboard_post.vmdl" ) 

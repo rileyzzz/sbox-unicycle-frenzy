@@ -4,7 +4,7 @@ speciestable {
     top: 0;
     right: 0;
     width: 30%;
-    height: 38%;
+    height: 58%;
     /*backdrop-filter: blur(32px);*/
     background-color: #000000;
     border-bottom-left-radius: 8px;
@@ -44,20 +44,20 @@ speciestable {
 
     SpeciesTableEntry {
         width: 100%;
-        height: 30px;
+        height: 18px;
         padding: 2px 12px;
         margin-bottom: 4px;
         border-radius: 2px;
         /*transition: all .15s ease-out;*/
         border: 1px solid #33303d;
         /*background-color: #2431ba;*/
-        background-color: #2b2b51;
+        background-color: #171717;
         flex-shrink: 0;
         flex-grow: 0;
         font-family: Poppins;
         font-weight: bold;
-        font-size: 18px;
-        color: white;
+        font-size: 12px;
+        color: #454545;
 
         .rank {
             width: 40px;
@@ -72,6 +72,11 @@ speciestable {
         .fitness {
             width: 120px;
             align-items: center;
+        }
+
+        &.active {
+            background-color: #2b2b51;
+            color: white;
         }
     }
 }

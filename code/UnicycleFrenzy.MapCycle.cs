@@ -8,19 +8,15 @@ internal partial class UnicycleFrenzy
 	[Net]
 	public string NextMap { get; set; }
 	[Net]
-	public Dictionary<long, string> MapVotes { get; set; }
+	public IDictionary<long, string> MapVotes { get; set; }
 	[Net]
 	public List<string> MapOptions { get; set; }
 
 	private async void InitMapCycle()
 	{
-<<<<<<< HEAD
-		//TimeLeft = 1800;
-		TimeLeft = 0;
-=======
+
 		Host.AssertServer();
 
->>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
 		NextMap = Global.MapName;
 
 		var pkg = await Package.Fetch( Global.GameIdent, true );
@@ -36,14 +32,12 @@ internal partial class UnicycleFrenzy
 			.Take( 5 )
 			.ToList();
 
-<<<<<<< HEAD
-		NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
+		//NextMap = Rand.FromArray( MapCycle.Where( x => x != Global.MapName ).ToArray() );
 	}
 
 	[Event.Tick.Server]
 	private void OnTick()
 	{
-		TimeLeft += Time.Delta;
 		//if ( TimeLeft > 0 )
 		//{
 		//	TimeLeft -= Time.Delta;
@@ -59,11 +53,7 @@ internal partial class UnicycleFrenzy
 	{
 		if ( !IsServer && !Global.IsListenServer ) return;
 
-		ChangeMapInternal( mapident );
-=======
-		MapOptions = maps;
-		NextMap = Rand.FromList( maps );
->>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
+		//ChangeMapInternal( mapident );
 	}
 
 	[ServerCmd]

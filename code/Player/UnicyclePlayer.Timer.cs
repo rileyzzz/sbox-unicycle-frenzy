@@ -126,6 +126,9 @@ internal partial class UnicyclePlayer
 	{
 		Host.AssertServer();
 
+		if ( Client.IsBot )
+			return;
+
 		if ( Checkpoints.Contains( checkpoint ) )
 		{
 			if ( overridePosition )

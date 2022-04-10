@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 partial class UnicycleFrenzy : Sandbox.Game
 {
+	[Net] public int BotGeneration { get; set; } = 1;
 
 	public static UnicycleFrenzy Game => Current as UnicycleFrenzy;
 
@@ -36,12 +37,8 @@ partial class UnicycleFrenzy : Sandbox.Game
 				Precache.Add( part.AssetPath );
 			}
 
-<<<<<<< HEAD
-			//BotManager.Init();
-=======
 			//InitMapCycle();
-			_ = GameLoopAsync();
->>>>>>> 4846b82009dbeb1080bd32b7f034aef2be3c98ae
+			//_ = GameLoopAsync();
 		}
 	}
 

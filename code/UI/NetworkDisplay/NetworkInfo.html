@@ -5,15 +5,19 @@
         <label class="text">NN Stats</label>
     </div>
     <div class="content">
-        <div>
-            <!--<label class="subtext">Generation</label>-->
-            <label class="subtext" @text="Generation"></label>
+        <div class="info">
+            <div>
+                <!--<label class="subtext">Generation</label>-->
+                <label class="subtext" @text="Generation"></label>
+            </div>
+            <div>
+                <label class="subtext" style="margin-right:10px;">Leader:</label>
+                <label class="subtext" @text="LeaderName"></label>
+            </div>
         </div>
         <div>
-            <label class="subtext">Leader:</label>
-            <label class="subtext" @text="LeaderName"></label>
+            <div class="vision" @ref="Vision"></div>
         </div>
-
     </div>
 
 </root>

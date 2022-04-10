@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using Sandbox;
 using System.Linq;
 
-public class UnicycleBot : Bot
+public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 {
-	public UnicycleBrain Brain = BotManager.CreateBrain();
+	//public UnicycleAI.UnicycleBrain Brain = BotManager.CreateBrain();
 
-	int test = 0;
 	float Fitness = 0.0f;
 	Vector3 lastGroundPosition = new Vector3();
 	public TimeSince TimeSinceLastMovement;
@@ -21,7 +20,10 @@ public class UnicycleBot : Bot
 	bool StoppedLast = false;
 	bool PedaledLast = false;
 
-	double[] lastInputs = new double[BotManager.NumInputs];
+	//double[] lastInputs = new double[BotManager.NumInputs];
+	double[] Inputs = new double[BotManager.NumInputs];
+	double[] Outputs = null;
+	double[] Vision = null;
 
 	public static UnicycleBot Create()
 	{
@@ -56,12 +58,16 @@ public class UnicycleBot : Bot
 
 	public override void BuildInput( InputBuilder builder )
 	{
-		var inputs = GatherInputs();
-		lastInputs = inputs;
-		Brain.SetInputs( inputs );
-		Brain.Execute();
-		double[] outputs = Brain.GetOutputs();
-		//Log.Info( $"NN outputs {string.Join( ",", outputs )}" );
+		//var inputs = GatherInputs();
+		//lastInputs = inputs;
+		//Brain.SetInputs( inputs );
+		//Brain.Execute();
+		//double[] outputs = Brain.GetOutputs();
+
+		if ( Outputs == null )
+			return;
+
+		//Log.Info( $"NN outputs {string.Join( ",", Outputs )}" );
 		// Outputs:
 		// LMB
 		// RMB
@@ -76,9 +82,10 @@ public class UnicycleBot : Bot
 
 		//if ( outputs[1] > 0.5f )
 		//	Log.Info( "right pedal" );
-
 		// automatically alternate pedal, there aren't really circumstances where you'd pedal the same twice
-		bool wantPedal = outputs[0] > 0.5f;
+		//bool wantPedal = Outputs[0] > 0.25f;
+		//bool wantPedal = (Time.Now * 1.5f) % 1.0f > 0.5f;
+		bool wantPedal = (Time.Now * 1.0f) % 1.0f > 0.5f;
 		//bool wantPedal = Time.Now * 1.5f % 1.0f > 0.5f;
 		if (wantPedal)
 			PedaledLast = true;
@@ -91,7 +98,7 @@ public class UnicycleBot : Bot
 
 		builder.SetButton( Pedal ? InputButton.Attack1 : InputButton.Attack2, wantPedal );
 		builder.SetButton( Pedal ? InputButton.Attack2 : InputButton.Attack1, false );
-		
+
 
 		//builder.SetButton( InputButton.Attack1, outputs[0] > 0.5f );
 
@@ -99,15 +106,17 @@ public class UnicycleBot : Bot
 		//builder.SetButton( InputButton.Attack2, outputs[1] > 0.5f );
 
 		// jump
-		builder.SetButton( InputButton.Jump, outputs[1] > 0.5f );
+		builder.SetButton( InputButton.Jump, Outputs[0] > 0.5f );
 
 		// brake
-		builder.SetButton( InputButton.SlotPrev, outputs[2] > 0.5f );
+		builder.SetButton( InputButton.SlotPrev, Outputs[1] > 0.5f );
 
 		// WASD/arrow keys
 		// tilt pitch
 		//builder.InputDirection.x = ((float)outputs[3] - 0.5f) * 2.0f;
-		builder.InputDirection.x = ((float)outputs[3] - 0.5f) * 0.4f;
+		//builder.InputDirection.x = ((float)outputs[3] - 0.5f) * 0.4f;
+		builder.InputDirection.x = ((float)Outputs[2] - 0.5f) * 1.0f;
+
 		//builder.InputDirection.y = ((float)outputs[4] - 0.5f) * 2.0f;
 		//builder.InputDirection.y = ((float)outputs[4] - 0.5f) * 0.4f;
 
@@ -119,8 +128,11 @@ public class UnicycleBot : Bot
 		if ( Client.Pawn is not UnicyclePlayer player )
 			return;
 
-		float dir = ((float)outputs[4] - 0.5f) * 2.0f;
-		builder.ViewAngles = new Angles( 0.0f, player.Rotation.Yaw() + dir * 80.0f, 0.0f );
+		//Log.Info($"output dir {Outputs[3]}");
+		//float dir = ((float)Outputs[3] - 0.5f) * 2.0f;
+		//float dir = ((float)Outputs[3] - 0.5f) * 1.0f;
+		float dir = (float)Outputs[3] * 1.0f;
+		builder.ViewAngles = new Angles( 0.0f, player.Rotation.Yaw() - dir * 80.0f, 0.0f );
 
 		Vector3 eyePos = player.Position + new Vector3(0.0f, 0.0f, 72.0f);
 		//DebugOverlay.Line( eyePos, eyePos + Rotation.From(builder.ViewAngles).Forward * 50.0f, Color.Blue, 0.01f );
@@ -144,27 +156,150 @@ public class UnicycleBot : Bot
 
 	public float GetFitness()
 	{
-		float fitness = Fitness;
+		return Fitness;
+	}
 
-		if ( Client.Pawn is not UnicyclePlayer player )
-			return fitness;
+	private void UpdateFitness()
+	{
+		float fitness = 0.0f;
 
-		// distance to goal
-		var checkpoints = Entity.All.OfType<Checkpoint>();
-		Checkpoint start = checkpoints.FirstOrDefault( x => x.IsStart );
-		Checkpoint end = checkpoints.FirstOrDefault( x => x.IsEnd );
-		if (start == null || end == null)
+		if ( Client.Pawn is UnicyclePlayer player )
 		{
-			Log.Warning("Couldn't find start or end checkpoint!");
-			return fitness;
+			// distance to goal
+			//var checkpoints = Entity.All.OfType<Checkpoint>();
+			//Checkpoint start = checkpoints.FirstOrDefault( x => x.IsStart );
+			//Checkpoint end = checkpoints.FirstOrDefault( x => x.IsEnd );
+			//if (start == null || end == null)
+			//{
+			//	Log.Warning("Couldn't find start or end checkpoint!");
+			//	return fitness;
+			//}
+			fitness += FitnessPath.Current.GetKeyAlongPath( lastGroundPosition ) * 1000.0f;
+
+			//float dist = (end.Position - start.Position).Length;
+			//fitness += (1.0f - (lastGroundPosition - end.Position).Length / dist) * 10000.0f;
+
+			//fitness += avgVelocity / numVelocitySteps * 5.0f;
 		}
+		Fitness = fitness;
+	}
 
-		float dist = (end.Position - start.Position).Length;
-		fitness += (1.0f - (lastGroundPosition - end.Position).Length / dist) * 10000.0f;
+	private void UpdateInputs()
+	{
+		if ( Client.Pawn is not UnicyclePlayer player )
+			return;
 
-		fitness += avgVelocity / numVelocitySteps * 5.0f;
 
-		return fitness;
+		Vector3 direction = FitnessPath.Current.GetDirectionVector( player.Position );
+		float targetDir = (Rotation.LookAt( direction.WithZ( 0 ) ).Yaw() - player.Rotation.Yaw()).NormalizeDegrees() / 180.0f;
+		if ( targetDir > 1.0f )
+			targetDir = targetDir - 2.0f;
+		Inputs[0] = targetDir;
+
+
+		// player speed
+		Inputs[1] = Math.Clamp( player.Velocity.Length / 400.0f, 0.0f, 1.0f );
+
+		//Inputs[2] = (Time.Now * 1.5f) % 1.0f;
+
+		if ( Vision != null )
+			Vision.CopyTo( Inputs, 2 );
+
+		// distance to nearest gaps
+		//int center = 3;
+		//float[] searchAngles = new float[] {
+		//	-90.0f,
+		//	-40.0f,
+		//	0.0f,
+		//	40.0f,
+		//	90.0f
+		//};
+
+		//float[] searchDists = new float[searchAngles.Length];
+		//float jumpDist = 1.0f;
+		//for ( int i = 0; i < searchAngles.Length; i++ )
+		//{
+		//	Vector3 gapStart = player.Position + new Vector3( 0.0f, 0.0f, 20.0f );
+		//	Angles gapAngle = player.Rotation.Angles();
+		//	gapAngle.yaw += searchAngles[i];
+		//	Rotation gapDir = Rotation.From( gapAngle );
+
+		//	const float searchDist = 1000.0f;
+		//	TraceResult wallTrace = Trace.Ray( gapStart, gapStart + gapDir.Forward * searchDist )
+		//		.WorldAndEntities()
+		//		.Run();
+
+		//	const float testInterval = 8.0f;
+		//	const int numSteps = 25;
+		//	float testDistance = 0.0f;
+		//	float searchHeight = 1000.0f;
+
+		//	for ( int step = 0; step < numSteps; step++ )
+		//	{
+		//		if ( testDistance + testInterval >= wallTrace.Distance )
+		//			break;
+
+		//		testDistance += testInterval;
+
+		//		Vector3 gapPos = gapStart + gapDir.Forward * testDistance;
+		//		TraceResult gapTr = Trace.Ray( gapPos, gapPos + Vector3.Down * searchHeight )
+		//			.WorldAndEntities()
+		//			.Run();
+
+		//		//DebugOverlay.TraceResult( gapTr );
+
+		//		if ( !gapTr.Hit )
+		//			break;
+		//	}
+
+		//	searchDists[i] = testDistance / (testInterval * numSteps);
+
+		//	if (i == center)
+		//	{
+		//		// search for jumpable gap
+		//		for ( int step = 0; step < numSteps; step++ )
+		//		{
+		//			if ( testDistance + testInterval >= wallTrace.Distance )
+		//				break;
+
+		//			testDistance += testInterval;
+
+		//			Vector3 gapPos = gapStart + gapDir.Forward * testDistance;
+		//			TraceResult gapTr = Trace.Ray( gapPos, gapPos + Vector3.Down * searchHeight )
+		//				.WorldAndEntities()
+		//				.Run();
+
+		//			//DebugOverlay.TraceResult( gapTr );
+
+		//			if ( gapTr.Hit )
+		//			{
+		//				jumpDist = testDistance / (testInterval * numSteps);
+		//				break;
+		//			}
+		//		}
+		//	}
+
+		//	//DebugOverlay.Line( gapStart, gapStart + gapDir.Forward * testDistance, Color.Orange, 0.0f );
+
+		//	// invert - closeness of gap instaed of distance to gap?
+		//	//searchDists[i] = 1.0f - (testDistance / (testInterval * numSteps));
+
+		//	//searchDists[i] = testDistance;
+		//}
+
+		//inputs[2] = searchDists[0];
+		//inputs[3] = searchDists[1];
+		//inputs[4] = searchDists[2];
+		//inputs[5] = searchDists[3];
+		//inputs[6] = searchDists[4];
+		//inputs[7] = jumpDist;
+
+
+		// copy speed and search dists from last
+		//for ( int i = 1; i < 8; i++ )
+		//inputs[i + 8] = (inputs[i] - lastInputs[i]) * Time.Delta;
+
+		//Log.Info($"NN inputs {string.Join(",", Brain.Inputs)}");
 	}
 
 	public override void Tick()
@@ -174,6 +309,11 @@ public class UnicycleBot : Bot
 
 		if ( Client.Pawn is not UnicyclePlayer player )
 			return;
+
+		Vision = GatherVision();
+		UpdateInputs();
+		UpdateFitness();
+		player.BotVision = new List<double>( Vision );
 
 		player.BotFitness = GetFitness();
 
@@ -186,7 +326,7 @@ public class UnicycleBot : Bot
 		if (player.Velocity.Length > 0.5f)
 			TimeSinceLastMovement = 0;
 
-		if ( TimeSinceLastMovement > 1.0f )
+		if ( TimeSinceLastMovement > 2.0f )
 		{
 			DamageInfo dmg = new DamageInfo();
 			dmg.Damage = 1000.0f;
@@ -249,173 +389,50 @@ public class UnicycleBot : Bot
 		return nearest;
 	}
 
-	private double[] GatherInputs()
+	public bool IsActive()
 	{
-		double[] inputs = new double[BotManager.NumInputs];
 		if ( Client.Pawn is not UnicyclePlayer player )
-			return inputs;
+			return false;
 
-		// set up our inputs
-		// distance to wall in front
-		//const float searchDist = 1000.0f;
-		//Vector3 start = player.Position + new Vector3(0.0f, 0.0f, 10.0f);
-		//Vector3 searchDir = player.Rotation.Forward.WithZ( 0 ).Normal;
-		//TraceResult tr = Trace.Ray( start, start + searchDir * searchDist )
-		//	.WorldAndEntities()
-		//	.Run();
-		//DebugOverlay.TraceResult(tr);
-		//inputs[0] = tr.Fraction;
-
-		// player tilt left/ right
-		//inputs[0] = player.Rotation.Roll() / 15.0f;
-		// player tilt forward / back
-		//inputs[1] = player.Rotation.Pitch() / 15.0f;
-
-		// distance to next checkpoint
-		//Checkpoint nearest = (Checkpoint)Entity.All.FirstOrDefault( x => x is Checkpoint );
-		//float nearestDist = (nearest.Position - player.Position).Length;
-		//foreach (var ent in Entity.All.OfType<Checkpoint>())
-		//{
-		//	float dist = (ent.Position - player.Position).Length;
-		//	if (dist < nearestDist)
-		//	{
-		//		nearest = ent;
-		//		nearestDist = dist;
-		//	}
-		//}
-		//inputs[1] = nearestDist / 4000.0f;
-
-		var checkpoints = Entity.All.OfType<Checkpoint>().OrderBy(x => (x.Position - player.Position).LengthSquared).ToArray();
-		if (checkpoints.Length > 0)
-		{
-			Vector3 forward = player.Rotation.Forward;
-			Vector3 checkpointDir = checkpoints[0].Position - player.Position;
-			inputs[0] = Vector3.Dot(forward, checkpointDir);
-		}
-
-
-		// player speed
-		inputs[1] = Math.Clamp(player.Velocity.Length / 400.0f, 0.0f, 1.0f);
-
-		// distance to nearest gaps
-		//int center = 3;
-		//float[] searchAngles = new float[] {
-		//	-90.0f,
-		//	-40.0f,
-		//	0.0f,
-		//	40.0f,
-		//	90.0f
-		//};
-
-		//float[] searchDists = new float[searchAngles.Length];
-		//float jumpDist = 1.0f;
-		//for ( int i = 0; i < searchAngles.Length; i++ )
-		//{
-		//	Vector3 gapStart = player.Position + new Vector3( 0.0f, 0.0f, 20.0f );
-		//	Angles gapAngle = player.Rotation.Angles();
-		//	gapAngle.yaw += searchAngles[i];
-		//	Rotation gapDir = Rotation.From( gapAngle );
-
-		//	const float searchDist = 1000.0f;
-		//	TraceResult wallTrace = Trace.Ray( gapStart, gapStart + gapDir.Forward * searchDist )
-		//		.WorldAndEntities()
-		//		.Run();
-			
-		//	const float testInterval = 8.0f;
-		//	const int numSteps = 25;
-		//	float testDistance = 0.0f;
-		//	float searchHeight = 1000.0f;
-
-		//	for ( int step = 0; step < numSteps; step++ )
-		//	{
-		//		if ( testDistance + testInterval >= wallTrace.Distance )
-		//			break;
-
-		//		testDistance += testInterval;
-
-		//		Vector3 gapPos = gapStart + gapDir.Forward * testDistance;
-		//		TraceResult gapTr = Trace.Ray( gapPos, gapPos + Vector3.Down * searchHeight )
-		//			.WorldAndEntities()
-		//			.Run();
-
-		//		//DebugOverlay.TraceResult( gapTr );
-
-		//		if ( !gapTr.Hit )
-		//			break;
-		//	}
-
-		//	searchDists[i] = testDistance / (testInterval * numSteps);
-
-		//	if (i == center)
-		//	{
-		//		// search for jumpable gap
-		//		for ( int step = 0; step < numSteps; step++ )
-		//		{
-		//			if ( testDistance + testInterval >= wallTrace.Distance )
-		//				break;
-
-		//			testDistance += testInterval;
-
-		//			Vector3 gapPos = gapStart + gapDir.Forward * testDistance;
-		//			TraceResult gapTr = Trace.Ray( gapPos, gapPos + Vector3.Down * searchHeight )
-		//				.WorldAndEntities()
-		//				.Run();
-
-		//			//DebugOverlay.TraceResult( gapTr );
-
-		//			if ( gapTr.Hit )
-		//			{
-		//				jumpDist = testDistance / (testInterval * numSteps);
-		//				break;
-		//			}
-		//		}
-		//	}
-
-		//	//DebugOverlay.Line( gapStart, gapStart + gapDir.Forward * testDistance, Color.Orange, 0.0f );
-
-		//	// invert - closeness of gap instaed of distance to gap?
-		//	//searchDists[i] = 1.0f - (testDistance / (testInterval * numSteps));
-			
-		//	//searchDists[i] = testDistance;
-		//}
-
-		//inputs[2] = searchDists[0];
-		//inputs[3] = searchDists[1];
-		//inputs[4] = searchDists[2];
-		//inputs[5] = searchDists[3];
-		//inputs[6] = searchDists[4];
-		//inputs[7] = jumpDist;
-
-		inputs[2] = (Time.Now * 1.5f) % 1.0f;
-
-		double[] vision = GatherVision();
-		player.BotVision = new List<double>(vision);
-		vision.CopyTo( inputs, 3 );
-
-		// copy speed and search dists from last
-		//for ( int i = 1; i < 8; i++ )
-			//inputs[i + 8] = (inputs[i] - lastInputs[i]) * Time.Delta;
-
-		//Log.Info($"NN inputs {string.Join(",", Brain.Inputs)}");
-		return inputs;
+		return player.LifeState == LifeState.Alive;
 	}
 
-	public const int VisionRange = 14;
-	const float VisionScale = 2.0f;
+	public double[] GetInputs()
+	{
+		return Inputs;
+	}
+
+	public void SetOutputs( double[] outputs )
+	{
+		//Log.Info($"setting outputs for {Client.Name}");
+		Outputs = outputs;
+	}
+
+	public const int VisionRange = 10;
+	const float VisionScale = 40.0f;
+
+	public static Dictionary<Vector2, float> VisionCache = new();
 
 	double VisionTrace(Vector3 pos)
 	{
+		// quantize
+		pos = new Vector3((int)pos.x, (int)pos.y, pos.z);
+
+		if ( VisionCache.TryGetValue( new Vector2( pos ), out float value ) )
+			return value;
+
 		Vector3 startPos = pos + Vector3.Up * 72.0f;
-		float searchHeight = 400.0f;
+		float searchHeight = 800.0f;
 		TraceResult tr = Trace.Ray( startPos, startPos + Vector3.Down * searchHeight )
 			.WorldAndEntities()
 			.Run();
 
-		//DebugOverlay.TraceResult( gapTr );
+		//DebugOverlay.TraceResult( tr );
 
-		if ( !tr.Hit )
-			return 0.0f;
-		return 1.0f - tr.Fraction;
+		//float val = 1.0f - tr.Fraction;
+		float val = tr.Fraction;
+		VisionCache[pos] = val;
+		return val;
 	}
 
 	double[] GatherVision()
@@ -424,14 +441,15 @@ public class UnicycleBot : Bot
 		if ( Client.Pawn is not UnicyclePlayer player )
 			return vision;
 
-		for (int y = -VisionRange / 2; y <= VisionRange / 2; y++ )
+		for (int y = 0; y <= VisionRange; y++ )
 		{
-			for (int x = -VisionRange / 2; x <= VisionRange / 2; x++ )
+			for (int x = 0; x <= VisionRange; x++ )
 			{
-				int idx = y * (VisionRange / 2 + 1) + x;
+				int idx = y * (VisionRange + 1) + x;
 
-				Vector3 pos = new Vector3( x * VisionScale, y * VisionScale, 0 );
-				Transform t = new Transform( player.Position, Rotation.FromRoll( player.Rotation.Roll() ) );
+				Vector3 pos = new Vector3( (x - VisionRange / 2) * VisionScale, (y - VisionRange / 2) * VisionScale, 0 );
+				Transform t = new Transform( player.Position, Rotation.FromYaw( player.Rotation.Yaw() ) );
+				//Transform t = new Transform( player.Position );
 				Vector3 worldPos = t.PointToWorld(pos);
 
 				vision[idx] = VisionTrace(worldPos);
