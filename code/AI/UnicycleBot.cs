@@ -20,6 +20,9 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 	bool StoppedLast = false;
 	bool PedaledLast = false;
 
+	bool Jumping = false;
+	TimeSince LastJump;
+	const float JumpDuration = 0.5f;
 	//double[] lastInputs = new double[BotManager.NumInputs];
 	double[] Inputs = new double[BotManager.NumInputs];
 	double[] Outputs = null;
@@ -56,6 +59,21 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 			lastGroundPosition = player.Position;
 	}
 
+	[ServerCmd("test_jump")]
+	public static void TestJump()
+	{
+		Log.Info( "jump" );
+		foreach ( var bot in BotManager.Bots )
+		{
+			if ( bot.Client.Pawn is not UnicyclePlayer player )
+				return;
+
+			player.FakeJump( 0.8f );
+			//bot.Jumping = true;
+			//bot.LastJump = 0;
+		}
+	}
+
 	public override void BuildInput( InputBuilder builder )
 	{
 		//var inputs = GatherInputs();
@@ -65,6 +83,10 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 		//double[] outputs = Brain.GetOutputs();
 
 		if ( Outputs == null )
+			return;
+
+
+		if ( Client.Pawn is not UnicyclePlayer player )
 			return;
 
 		//Log.Info( $"NN outputs {string.Join( ",", Outputs )}" );
@@ -83,10 +105,9 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 		//if ( outputs[1] > 0.5f )
 		//	Log.Info( "right pedal" );
 		// automatically alternate pedal, there aren't really circumstances where you'd pedal the same twice
-		//bool wantPedal = Outputs[0] > 0.25f;
+		bool wantPedal = Outputs[0] > 0.5f;
 		//bool wantPedal = (Time.Now * 1.5f) % 1.0f > 0.5f;
-		bool wantPedal = (Time.Now * 1.0f) % 1.0f > 0.5f;
-		//bool wantPedal = Time.Now * 1.5f % 1.0f > 0.5f;
+		//bool wantPedal = (Time.Now * 1.0f) % 1.0f > 0.5f;
 		if (wantPedal)
 			PedaledLast = true;
 
@@ -106,16 +127,42 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 		//builder.SetButton( InputButton.Attack2, outputs[1] > 0.5f );
 
 		// jump
-		builder.SetButton( InputButton.Jump, Outputs[0] > 0.5f );
+		bool wantJump = Outputs[1] > 0.75f;
+		//if ( wantJump )
+		//player.FakeJump( 0.75f );
+
+		//bool wantJump = false;
+		//if ( wantJump && !Jumping )
+		//{
+		//	Jumping = true;
+		//	LastJump = 0;
+		//}
+
+		if (wantJump != Jumping)
+		{
+			Jumping = wantJump;
+
+			if (wantJump)
+				player.FakeJump( 0.75f );
+		}
+
+		//if ( Jumping && LastJump >= JumpDuration )
+		//	Jumping = false;
+
+		//// InputButton.Jump
+		//builder.SetButton( InputButton.Jump, Jumping );
+
+		//builder.SetButton( InputButton.Jump, Outputs[1] > 0.75f );
 
 		// brake
-		builder.SetButton( InputButton.SlotPrev, Outputs[1] > 0.5f );
+		//builder.SetButton( InputButton.Run, Outputs[2] > 0.75f );
 
 		// WASD/arrow keys
 		// tilt pitch
 		//builder.InputDirection.x = ((float)outputs[3] - 0.5f) * 2.0f;
 		//builder.InputDirection.x = ((float)outputs[3] - 0.5f) * 0.4f;
 		builder.InputDirection.x = ((float)Outputs[2] - 0.5f) * 1.0f;
+		builder.InputDirection.y = ((float)Outputs[3] - 0.5f) * 1.0f;
 
 		//builder.InputDirection.y = ((float)outputs[4] - 0.5f) * 2.0f;
 		//builder.InputDirection.y = ((float)outputs[4] - 0.5f) * 0.4f;
@@ -125,14 +172,12 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 		//builder.SetButton( InputButton.Left, outputs[6] > 0.5f );
 		//builder.SetButton( InputButton.Right, outputs[7] > 0.5f );
 
-		if ( Client.Pawn is not UnicyclePlayer player )
-			return;
 
-		//Log.Info($"output dir {Outputs[3]}");
-		//float dir = ((float)Outputs[3] - 0.5f) * 2.0f;
-		//float dir = ((float)Outputs[3] - 0.5f) * 1.0f;
-		float dir = (float)Outputs[3] * 1.0f;
-		builder.ViewAngles = new Angles( 0.0f, player.Rotation.Yaw() - dir * 80.0f, 0.0f );
+		//Log.Info($"output dir {Outputs[4]}");
+		//float dir = ((float)Outputs[4] - 0.5f) * 2.0f;
+		float dir = ((float)Outputs[4] - 0.5f) * 1.0f;
+		//float dir = (float)Outputs[4] * 1.0f;
+		builder.ViewAngles = new Angles( 0.0f, player.Rotation.Yaw() + dir * 90.0f, 0.0f );
 
 		Vector3 eyePos = player.Position + new Vector3(0.0f, 0.0f, 72.0f);
 		//DebugOverlay.Line( eyePos, eyePos + Rotation.From(builder.ViewAngles).Forward * 50.0f, Color.Blue, 0.01f );
@@ -191,19 +236,31 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 
 
 		Vector3 direction = FitnessPath.Current.GetDirectionVector( player.Position );
-		float targetDir = (Rotation.LookAt( direction.WithZ( 0 ) ).Yaw() - player.Rotation.Yaw()).NormalizeDegrees() / 180.0f;
+		float targetDir = (Rotation.LookAt( direction.WithZ( 0 ) ).Yaw() - player.Rotation.Yaw()).NormalizeDegrees() / 90.0f;
 		if ( targetDir > 1.0f )
 			targetDir = targetDir - 2.0f;
 		Inputs[0] = targetDir;
 
 
 		// player speed
-		Inputs[1] = Math.Clamp( player.Velocity.Length / 400.0f, 0.0f, 1.0f );
+		// LocalVelocity does not work here for whatever reason
+		//float vel = player.Transform.NormalToLocal( player.Velocity ).x;
+		float vel = ( player.Velocity * player.Rotation.Inverse ).x;
+		//Inputs[1] = Math.Clamp( player.Velocity.Length / 400.0f, 0.0f, 1.0f );
+		//Inputs[1] = Math.Clamp( vel / 400.0f, -1.0f, 1.0f );
 
-		//Inputs[2] = (Time.Now * 1.5f) % 1.0f;
+		// player tilt
+		var ang = player.Rotation.Angles();
+		var roll = ang.roll;
+		var pitch = ang.pitch;
+
+		Inputs[1] = roll / 42.0f;
+		Inputs[2] = pitch / 42.0f;
+
+		Inputs[3] = (Time.Now * 1.5f) % 1.0f;
 
 		if ( Vision != null )
-			Vision.CopyTo( Inputs, 2 );
+			Vision.CopyTo( Inputs, 4 );
 
 		// distance to nearest gaps
 		//int center = 3;
@@ -408,29 +465,40 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 		Outputs = outputs;
 	}
 
-	public const int VisionRange = 10;
-	const float VisionScale = 40.0f;
+	//public const int VisionRange = 14;
+	public const int VisionRange = 12;
+	const float VisionScale = 50.0f;
 
-	public static Dictionary<Vector2, float> VisionCache = new();
+	//public static Dictionary<Vector2, float> VisionCache = new();
+	public static Dictionary<Vector3, float> VisionCache = new();
 
 	double VisionTrace(Vector3 pos)
 	{
 		// quantize
-		pos = new Vector3((int)pos.x, (int)pos.y, pos.z);
+		pos = new Vector3((int)pos.x, (int)pos.y, (int)pos.z);
 
-		if ( VisionCache.TryGetValue( new Vector2( pos ), out float value ) )
+		//if ( VisionCache.TryGetValue( new Vector2( pos ), out float value ) )
+		if ( VisionCache.TryGetValue( pos, out float value ) )
 			return value;
 
-		Vector3 startPos = pos + Vector3.Up * 72.0f;
-		float searchHeight = 800.0f;
-		TraceResult tr = Trace.Ray( startPos, startPos + Vector3.Down * searchHeight )
-			.WorldAndEntities()
+		//float searchHeight = 400.0f;
+		float searchHeight = 80.0f;
+		Vector3 startPos = pos + Vector3.Up * searchHeight;
+		
+		TraceResult tr = Trace.Ray( startPos, startPos + Vector3.Down * (searchHeight * 2.0f) )
+			//.WorldAndEntities()
+			.WorldOnly()
 			.Run();
 
 		//DebugOverlay.TraceResult( tr );
 
 		//float val = 1.0f - tr.Fraction;
-		float val = tr.Fraction;
+		//float val = 1.0f - tr.Fraction;
+		float val = -(tr.Fraction - 0.5f) * 2.0f;
+
+		//if ( !tr.Hit )
+			//val = 1.0f;
+
 		VisionCache[pos] = val;
 		return val;
 	}
@@ -447,7 +515,8 @@ public class UnicycleBot : Bot, UnicycleAI.NetworkAgent
 			{
 				int idx = y * (VisionRange + 1) + x;
 
-				Vector3 pos = new Vector3( (x - VisionRange / 2) * VisionScale, (y - VisionRange / 2) * VisionScale, 0 );
+				//Vector3 pos = new Vector3( (x - VisionRange / 2) * VisionScale, (y - VisionRange / 2) * VisionScale, 0 );
+				Vector3 pos = new Vector3( -(y - VisionRange / 2) * VisionScale, -(x - VisionRange / 2) * VisionScale, 0 );
 				Transform t = new Transform( player.Position, Rotation.FromYaw( player.Rotation.Yaw() ) );
 				//Transform t = new Transform( player.Position );
 				Vector3 worldPos = t.PointToWorld(pos);

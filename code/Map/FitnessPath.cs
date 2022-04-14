@@ -8,6 +8,10 @@ public partial class FitnessPath : BasePathEntity<FitnessNode>
 {
 	public static FitnessPath Current => Entity.All.OfType<FitnessPath>().FirstOrDefault();
 
+	public FitnessPath()
+	{
+	}
+
 	public FitnessNode GetNext(FitnessNode node)
 	{
 		int idx = PathNodes.IndexOf( node );

@@ -32,6 +32,6 @@
     "MapSelect": 3,
     "MinPlayers": 1,
     "GameNetworkType": 0,
-    "MaxPlayers": 128
+    "MaxPlayers": 256
   }
 }

@@ -23,7 +23,7 @@ namespace UnicycleAI
 		NeatEvolutionAlgorithm<NeatGenome> Algorithm;
 		UnicycleBlackBoxEvaluator Evaluator;
 		IGenomeListEvaluator<NeatGenome> SelectiveEvaluator;
-		IGenomeFactory<NeatGenome> GenomeFactory;
+		NeatGenomeFactory GenomeFactory;
 		List<NeatGenome> GenomeList;
 
 		public NEATModel()
@@ -31,15 +31,17 @@ namespace UnicycleAI
 		}
 
 		public const ComplexityCeilingType ceilingType = ComplexityCeilingType.Absolute;
-		public const double complexityThreshold = 10.0;
+		public const double complexityThreshold = 15.0;
 
 
 		public override async Task Init( List<NetworkAgent> agents, int numInputs, int numOutputs )
 		{
 			await base.Init( agents, numInputs, numOutputs );
 
-			//activationScheme = NetworkActivationScheme.CreateAcyclicScheme();
-			activationScheme = NetworkActivationScheme.CreateCyclicFixedTimestepsScheme(1);
+			// feed forward
+			activationScheme = NetworkActivationScheme.CreateAcyclicScheme();
+			// recurrent
+			// activationScheme = NetworkActivationScheme.CreateCyclicFixedTimestepsScheme(2);
 
 			eaParams = new NeatEvolutionAlgorithmParameters();
 			eaParams.SpecieCount = 10;
@@ -119,6 +121,31 @@ namespace UnicycleAI
 			Evaluator.Reset();
 
 			//Algorithm.RequestPauseAndWait();
+		}
+
+		public override void Save( string file )
+		{
+			if ( !FileSystem.Data.DirectoryExists( "neat" ) )
+				FileSystem.Data.CreateDirectory("neat");
+
+			string path = "neat/" + file;
+
+			// make a backup before saving anything
+			if (FileSystem.Data.FileExists(path))
+			{
+				var oldBytes = FileSystem.Data.ReadAllText( path );
+				FileSystem.Data.WriteAllText( path + "_backup", oldBytes );
+			}
+
+			var data = new NeatDataJSON();
+			NeatGenomeJSONIO.WriteComplete(ref data, GenomeList, false);
+			FileSystem.Data.WriteJson( path, data );
+		}
+
+		public List<NeatGenome> Load( string file )
+		{
+			var data = FileSystem.Data.ReadJson<NeatDataJSON>( "neat/" + file );
+			return NeatGenomeJSONIO.ReadCompleteGenomeList( data, false, GenomeFactory );
 		}
 	}
 }

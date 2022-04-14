@@ -16,6 +16,8 @@ class BotManager
 	static bool ResetFinished = false;
 	static bool Initialized = false;
 
+	public const bool DrawPlayers = false;
+
 	public static Client Leader
 	{
 		get
@@ -29,9 +31,9 @@ class BotManager
 
 
 	//public const int NumInputs = 16;
-	public const int NumInputs = 2 + (UnicycleBot.VisionRange + 1) * (UnicycleBot.VisionRange + 1);
+	public const int NumInputs = 4 + (UnicycleBot.VisionRange + 1) * (UnicycleBot.VisionRange + 1);
 	//public const int NumInputs = 2;
-	public const int NumOutputs = 4;
+	public const int NumOutputs = 5;
 	//public const int LayerSize = 12;
 	public const int LayerSize = 40;
 	public const int NumLayers = 1;
@@ -42,7 +44,8 @@ class BotManager
 		Model = new UnicycleAI.NEATModel();
 
 		var agents = new List<UnicycleAI.NetworkAgent>();
-		for ( int i = 0; i < 25; i++ )
+		//for ( int i = 0; i < 25; i++ )
+		for ( int i = 0; i < 60; i++ )
 		{
 			var bot = UnicycleBot.Create();
 			Bots.Add( bot );
@@ -107,6 +110,8 @@ class BotManager
 			Resetting = false;
 			ResetFinished = false;
 			Log.Info( $"Finished generation {Generation}." );
+			//Model.Save( $"gen_{Generation}.json" );
+			Model.Save( "gen_latest.json" );
 			Generation++;
 			UnicycleFrenzy.Game.BotGeneration = Generation;
 

@@ -1,10 +1,17 @@
 ﻿using Facepunch.Customization;
 using Sandbox;
+using System.Linq;
 using System.Collections.Generic;
 
 partial class UnicycleFrenzy : Sandbox.Game
 {
 	[Net] public int BotGeneration { get; set; } = 1;
+
+	public UnicyclePlayer BotLeader { get; set; } = null;
+
+	[Net] public Vector3 SpectatePos { get; set; } = new Vector3();
+	[Net] public Vector3 SpectateLook { get; set; } = Vector3.Forward;
+	public const float MoveSpeed = 2.0f;
 
 	public static UnicycleFrenzy Game => Current as UnicycleFrenzy;
 
@@ -40,6 +47,41 @@ partial class UnicycleFrenzy : Sandbox.Game
 			//InitMapCycle();
 			//_ = GameLoopAsync();
 		}
+	}
+
+	private void UpdateSpectatorCamera()
+	{
+		if ( !IsServer )
+			return;
+
+		var bots = Client.All.Where( x => x.IsBot && x.Pawn is UnicyclePlayer && x.Pawn.LifeState == LifeState.Alive ).Select( x => x.Pawn as UnicyclePlayer ).OrderByDescending( x => x.BotFitness ).ToArray();
+
+		Vector3 avgPos = new Vector3();
+		//Vector3 avgLook = new Vector3();
+		float totalWeight = 0.0f;
+		for ( int i = 0; i < bots.Length; i++ )
+		{
+			//float weight = 1.0f - ((float)i / bots.Length) * 0.5f;
+			float weight = 1.0f - ((float)i / bots.Length);
+			weight = weight * weight;
+			avgPos += bots[i].Position * weight;
+			//avgLook += bots[i].Rotation.Forward.WithZ(0).Normal * weight;
+			//avgLook += FitnessPath.Current.GetDirectionVector(bots[i].Position).WithZ(0).Normal;
+			totalWeight += weight;
+		}
+
+
+		if ( totalWeight > 0.0f )
+		{
+			avgPos /= totalWeight;
+			//avgLook /= totalWeight;
+			SpectatePos = Vector3.Lerp( SpectatePos, avgPos, Time.Delta * MoveSpeed );
+			//CurrentLook = Vector3.Lerp( CurrentLook, avgLook.Normal, Time.Delta * moveSpeed ).Normal;
+		}
+
+		// paths aren't replicated so we need to do this here
+		SpectateLook = FitnessPath.Current.GetDirectionVector( SpectatePos ).WithZ( 0 ).Normal;
+
 	}
 
 	public override void ClientJoined( Client cl )
@@ -91,6 +133,16 @@ partial class UnicycleFrenzy : Sandbox.Game
 
 		lastFallMessage = idx;
 		return string.Format( fallMessages[idx], playerName );
+	}
+
+	public override void Simulate( Client cl )
+	{
+		base.Simulate( cl );
+
+		BotLeader = Client.All.Select( x => x.Pawn ).OfType<UnicyclePlayer>().Where( x => x.LifeState == LifeState.Alive ).OrderByDescending( x => x.BotFitness ).FirstOrDefault();
+
+		if ( IsServer )
+			UpdateSpectatorCamera();
 	}
 
 	private float secondCounter = 0;

@@ -64,8 +64,12 @@ internal class SpeciesTable : Panel
 		Sort();
 	}
 
+	int test = 0;
 	public void Sort()
 	{
+		// only sort every few frames
+		if ( test % 4 != 0 )
+			return;
 		Canvas.SortChildren( ( x, y ) => ((SpeciesTableEntry)y).Fitness.CompareTo( ((SpeciesTableEntry)x).Fitness ) );
 	}
 }

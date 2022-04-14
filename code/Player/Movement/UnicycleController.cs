@@ -435,11 +435,52 @@ internal partial class UnicycleController : BasePlayerController
 			Velocity = 0;
 		}
 	}
+	//private bool FakeCanIncrementJump()
+	//{
+	//	if ( GroundEntity != null ) return true;
+	//	if ( pl.TimeSinceNotGrounded < .75f ) return true;
+
+	//	var tr = TraceBBox( Position, Position + Vector3.Down * 75, 5f );
+
+	//	if ( !tr.Hit ) return false;
+
+	//	return true;
+	//}
+
+	public bool FakedJump = false;
+	//public void FakeJump(float time)
+	//{
+	//	if ( !FakeCanIncrementJump() )
+	//		return;
+
+	//	if ( GroundEntity == null )
+	//		return;
+
+	//	pl.TimeSinceJumpDown = time;
+	//	FakedJump = true;
+	//	//if ( (GroundEntity != null || pl.TimeSinceNotGrounded < .1f) )
+	//	//{
+	//	//	var t = Math.Min( time / MaxJumpStrengthTime, 1f );
+	//	//	t = Easing.EaseOut( t );
+	//	//	var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
+
+	//	//	pl.JumpTilt = pl.Tilt * -1;
+	//	//	pl.PrevJumpTilt = pl.JumpTilt;
+	//	//	Velocity = Velocity.WithZ( 0 ) + BaseVelocity.WithZ( 0 );
+	//	//	Velocity += Rotation.Up * jumpStrength;
+	//	//	GroundEntity = null;
+	//	//	pl.TimeSinceJumpDown = 0;
+
+	//	//	AddEvent( "jump" );
+	//	//}
+	//}
 
 	private void CheckJump()
 	{
-		if ( InputActions.Jump.Released() && (GroundEntity != null || pl.TimeSinceNotGrounded < .1f) )
+		if ( (FakedJump || InputActions.Jump.Released()) && (GroundEntity != null || pl.TimeSinceNotGrounded < .1f) )
 		{
+			FakedJump = false;
+
 			var t = Math.Min( pl.TimeSinceJumpDown / MaxJumpStrengthTime, 1f );
 			t = Easing.EaseOut( t );
 			var jumpStrength = MinJumpStrength.LerpTo( MaxJumpStrength, t );
@@ -450,7 +491,7 @@ internal partial class UnicycleController : BasePlayerController
 			Velocity += Rotation.Up * jumpStrength;
 			GroundEntity = null;
 			pl.TimeSinceJumpDown = 0;
-
+			
 			AddEvent( "jump" );
 			return;
 		}

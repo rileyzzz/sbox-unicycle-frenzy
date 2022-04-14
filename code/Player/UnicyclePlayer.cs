@@ -2,6 +2,7 @@
 using Facepunch.Customization;
 using Sandbox;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 internal partial class UnicyclePlayer : Sandbox.Player
@@ -29,6 +30,33 @@ internal partial class UnicyclePlayer : Sandbox.Player
     private JumpIndicator JumpIndicator;
     private Particles SpeedParticle;
 
+	//[ClientRpc]
+	public void FakeJump( float time )
+	{
+		//Log.Info("fake jump client");
+		if ( Controller is not UnicycleController controller )
+			return;
+		//controller.FakeJump( time );
+		if ( GroundEntity == null )
+			return;
+
+		TimeSinceJumpDown = time;
+		controller.FakedJump = true;
+	}
+
+	private void DressRandom()
+	{
+		foreach (var category in (Clothing.ClothingCategory[])Enum.GetValues(typeof(Clothing.ClothingCategory)))
+		{
+			var clothes = Sandbox.Clothing.All.Where( x => x.Category == category ).ToArray();
+			if ( clothes.Length == 0 )
+				continue;
+
+			var item = Rand.FromArray( clothes );
+
+			Clothing.Toggle(item);
+		}
+	}
     public override void Respawn()
     {
         base.Respawn();
@@ -43,26 +71,43 @@ internal partial class UnicyclePlayer : Sandbox.Player
         Unicycle = new UnicycleEntity();
         Unicycle.SetParent( this, null, Transform.Zero );
 
-        Terry = new AnimEntity();
-        //Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
-        //Terry.SetParent( this, null, Transform.Zero );
-		//Terry.SetAnimGraph( "models/citizen_unicycle_frenzy.vanmgrph" );
+		if (BotManager.DrawPlayers)
+		{
+			Terry = new AnimEntity( "models/citizen/citizen.vmdl" );
+			Terry.SetParent( this, null, Transform.Zero );
+			Terry.SetAnimGraph( "models/citizen_unicycle_frenzy.vanmgrph" );
+		}
+		else
+		{
+			Terry = new AnimEntity();
+		}
+
 		//Terry.EnableDrawing = false;
 
-        CameraMode = new UnicycleCamera();
+		CameraMode = new UnicycleCamera();
         Controller = new UnicycleController();
 
-		if (!Client.IsBot)
-			Animator = new UnicycleAnimator();
+		//if (!Client.IsBot)
+		Animator = new UnicycleAnimator();
 
-		Clothing ??= new();
-		Clothing.LoadFromClient( Client );
-        Clothing.DressEntity( Terry );
+
+		if ( BotManager.DrawPlayers )
+		{
+			Clothing ??= new();
+			if ( !Client.IsBot )
+				Clothing.LoadFromClient( Client );
+			else
+				DressRandom();
+
+			Clothing.DressEntity( Terry );
+		}
+
 		Avatar = Client.GetClientData( "avatar" );
 
 		ResetMovement();
         GotoBestCheckpoint();
-    }
+		ShowNametag();
+	}
 
 	public override void ClientSpawn()
     {
@@ -70,7 +115,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
         Nametag = new( this );
 
-        if ( IsLocalPawn )
+		if ( IsLocalPawn )
 		{
 			SpeedParticle = Particles.Create( "particles/player/speed_lines.vpcf" );
 			JumpIndicator = new( this );
@@ -89,8 +134,25 @@ internal partial class UnicyclePlayer : Sandbox.Player
         Unicycle?.Delete();
         Terry?.Delete();
 
-        RagdollOnClient();
-    }
+		RagdollOnClient();
+		HideNametag();
+	}
+
+	[ClientRpc]
+	private void ShowNametag()
+	{
+		//Nametag?.Delete();
+		if (Nametag != null)
+			Nametag.Style.Display = Sandbox.UI.DisplayMode.Flex;
+	}
+
+	[ClientRpc]
+	private void HideNametag()
+	{
+		//Nametag?.Delete();
+		if ( Nametag != null )
+			Nametag.Style.Display = Sandbox.UI.DisplayMode.None;
+	}
 
     protected override void OnDestroy()
     {
@@ -140,7 +202,7 @@ internal partial class UnicyclePlayer : Sandbox.Player
             Fall( false );
             TimeSinceDied = Math.Max( TimeSinceDied, RespawnDelay - .5f );
         }
-    }
+	}
 
 	public override void PostCameraSetup( ref CameraSetup setup )
 	{
@@ -179,14 +241,18 @@ internal partial class UnicyclePlayer : Sandbox.Player
 
 	public float GetRenderAlpha()
 	{
-		if ( !Local.Pawn.IsValid() ) return 1f;
+		if ( this == UnicycleFrenzy.Game.BotLeader )
+			return 1.0f;
+		return 0.5f;
 
-		var dist = Local.Pawn.Position.Distance( Position );
-		var a = 1f - dist.LerpInverse( MaxRenderDistance, MaxRenderDistance * .1f );
-		a = Math.Max( a, .15f );
-		a = Easing.EaseOut( a );
+		//if ( !Local.Pawn.IsValid() ) return 1f;
 
-		return a;
+		//var dist = Local.Pawn.Position.Distance( Position );
+		//var a = 1f - dist.LerpInverse( MaxRenderDistance, MaxRenderDistance * .1f );
+		//a = Math.Max( a, .15f );
+		//a = Easing.EaseOut( a );
+
+		//return a;
 	}
 
 	[ServerCmd]

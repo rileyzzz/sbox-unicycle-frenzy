@@ -9,6 +9,7 @@ internal class UnicycleAnimator : PawnAnimator
         if ( Pawn is not UnicyclePlayer pl ) return;
         if ( !pl.Terry.IsValid() ) return;
         if ( !pl.Unicycle.IsValid() ) return;
+		if ( !BotManager.DrawPlayers ) return;
 
         var target = pl.Terry;
         var unicycle = pl.Unicycle;

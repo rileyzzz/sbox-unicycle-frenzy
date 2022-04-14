@@ -85,7 +85,7 @@ internal partial class UnicycleEntity : Entity
 
 		if ( trail != null )
 		{
-			trailParticle = Particles.Create( trail.AssetPath, this );
+			//trailParticle = Particles.Create( trail.AssetPath, this );
 		}
 
 		Scale = .85f;

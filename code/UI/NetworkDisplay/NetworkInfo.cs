@@ -29,9 +29,14 @@ internal class NetworkInfo : Panel
 		//Vision.Style.BackgroundSizeY = 128;
 	}
 
+	int test = 0;
 	public override void Tick()
 	{
 		base.Tick();
+
+		// only update every few frames
+		if ( test % 4 != 0 )
+			return;
 
 		Client leader = BotManager.Leader;
 		if (leader != null && leader.Pawn is UnicyclePlayer player)
@@ -45,10 +50,12 @@ internal class NetworkInfo : Panel
 			//	visionData[destIndex++] = val;
 			//	visionData[destIndex++] = val;
 			//}
+
 			//Log.Info($"vision size {player.BotVision.Count}");
 			for ( int i = 0; i < player.BotVision.Count; i++ )
 			{
-				byte val = (byte)(player.BotVision[i] * 255.0f);
+				//byte val = (byte)(player.BotVision[i] * 255.0f);
+				byte val = (byte)((player.BotVision[i] / 2.0f + 0.5f) * 255.0f);
 				visionData[destIndex++] = val;
 				visionData[destIndex++] = val;
 				visionData[destIndex++] = val;

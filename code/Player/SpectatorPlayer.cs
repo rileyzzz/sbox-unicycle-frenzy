@@ -14,7 +14,8 @@ internal partial class SpectatorPlayer : Sandbox.Player
 		EnableDrawing = false;
 		EnableAllCollisions = false;
 
-		CameraMode = new FirstPersonCamera();
+		//CameraMode = new FirstPersonCamera();
+		CameraMode = new SpectatorCamera();
 		Controller = new NoclipController();
 
 		//var cp = Checkpoints.LastOrDefault();

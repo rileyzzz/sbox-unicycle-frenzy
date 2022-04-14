@@ -20,5 +20,9 @@ namespace UnicycleAI
 
 		public abstract void StartGeneration();
 		public abstract Task FinishGeneration();
+
+		public abstract void Save( string file );
+		//public abstract void Load( string file );
+
 	}
 }
